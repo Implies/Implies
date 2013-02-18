@@ -1,130 +1,263 @@
 <!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <title>Explore - Reverse Mathematics Zoo</title>
-  <meta name="generator" content=
-  "HTML Tidy for Linux/x86 (vers 25 March 2009), see www.w3.org" />
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700'
-  rel='stylesheet' type='text/css' />
-  <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
-  <link rel="stylesheet" type="text/css" href="centered.css" media="screen" />
-  <script type="text/javascript" src="prototype.js"></script>
-  <script type="text/javascript" src="path.js"></script>
-  <script type="text/javascript" src="canviz.js"></script>
-  <script type="text/javascript" src=
-  "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  <script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX", "output/HTML-CSS"],
-    tex2jax: {
-      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-      processEscapes: true
-    },
-    "HTML-CSS": { availableFonts: ["TeX"] }
-  });
-  </script>
-  <script type="text/javascript">
-  var canviz;
-           
-  document.observe('dom:loaded',
-  function() {
-      canviz = new Canviz('canviz', 'file.dot');
-  });
+<html>
+    
+    <head>
+        <title>Explore - Reverse Mathematics Zoo</title>
+        <meta name="generator" content="HTML Tidy for Linux/x86 (vers 25 March 2009), see www.w3.org" />
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+        <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="centered.css" media="screen" />
+        <script type="text/javascript" src="prototype.js"></script>
+        <script type="text/javascript" src="path.js"></script>
+        <script type="text/javascript" src="canviz.js"></script>
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config(
+            {
+                extensions: ["tex2jax.js"],
+                jax: ["input/TeX", "output/HTML-CSS"],
+                tex2jax: {
+                    inlineMath: [
+                        ['$', '$'],
+                        ["\\(", "\\)"]
+                    ],
+                    displayMath: [
+                        ['$$', '$$'],
+                        ["\\[", "\\]"]
+                    ],
+                    processEscapes: true
+                },
+                "HTML-CSS": {
+                    availableFonts: ["TeX"]
+                }
+            });
+        </script>
+        <script type="text/javascript">
             
-  function click_node(node) 
-  {
-      $('info').update(node);
-      MathJax.Hub.Typeset();
-  }
-  </script>
+        </script>
+        <script type="text/javascript">
+            function getJSONP(url, success)
+            {
 
+                var ud = '_' + +new Date,
+                    script = document.createElement('script'),
+                    head = document.getElementsByTagName('head')[0] || document.documentElement;
 
-</head>
+                window[ud] = function (data)
+                {
+                    head.removeChild(script);
+                    success && success(data);
+                };
 
-<body>
-  <div id="container">
-    <div id="banner">
-      <h1>Reverse Mathematics Zoo</h1>
+                script.src = url.replace('callback=?', 'callback=' + ud);
+                head.appendChild(script);
 
-      <div id="centeredmenu">
-        <ul>
-          <li><a href="introduction.html">Introduction</a></li>
+            }
 
-          <li><a href="explore.html" class="active">Explore</a></li>
+            getJSONP('http://localhost/~ubuntu/cgi-bin/listsubsystems.cgi');
+        </script>
+        <script type="text/javascript">
+            var http_request = false;
+            var side;
+            var upper;
+            var lower;
 
-          <li><a href="edit.html">Edit</a></li>
+            document.observe('dom:loaded', function ()
+            {
+                canviz = new Canviz('canviz', 'default.dot');
+                makeRequest('http://localhost/~ubuntu/cgi-bin/listsubsystems.cgi');
 
-          <li><a href="bibliography.html">Bibliography</a></li>
+            });
 
-          <li><a href="news.html">News</a></li>
-        </ul>
-      </div>
+            function click_node(node)
+            {
+                $('info').update(node);
+                MathJax.Hub.Typeset();
+            }
 
-      <p id="layoutdims"><a href="#">Log in</a></p>
-    </div>
+            function makeRequest(url)
+            {
+                http_request = new XMLHttpRequest();
+                http_request.onreadystatechange = alertContents; // set callback
+                http_request.open('GET', url, true); // initialize
+                http_request.send(null); // run
+            }
 
-    <div id="nav">
-      <form>
-        <h3>Upper bound</h3>
+            function alertContents()
+            {
+                if(http_request.readyState == 4)
+                {
+                    if(http_request.status == 200)
+                    {                        
+                            var obj = JSON.parse(http_request.responseText);
+                            var tar = document.getElementById("target");
+                            for(var i = 0; i < obj.length; i++)
+                            {
+                                var itm = document.createElement('li');
+                                var lnk = document.createElement('a');
+                                var str = '\\(\\\\' + obj[i][1] + '\\)';
+                                var js = 'javascript:switchSub("\\' + str + '\\\\)");';
+                                lnk.innerHTML = str;
+                                lnk.href = js;
+                                itm.appendChild(lnk);
+                                tar.appendChild(itm);
+                            }
+                            MathJax.Hub.Typeset();
+                        
 
-        <ul class="select">
-          <li>\(\mathsf{ACA}_0\) <a id="uppersubsystem" class=
-          "selectsubsystem" href="#" name=
-          "uppersubsystem">[change]</a></li>
-        </ul>
+                        }
+                        else
+                        {
+                            alert('There was a problem ' + http_request.status);
+                        }
+                    }
+                }
 
-        <h3>Lower bound</h3>
+                function alertContents2()
+                {
+                    if(http_request.readyState == 4)
+                    {
+                        if(http_request.status == 200)
+                        {
+                            //alert('Hey');
+                        }
+                        else
+                        {
+                            alert('There was a problem ' + http_request.status);
+                        }
+                    }
+                }
 
-        <ul class="select">
-          <li>\(\mathsf{RCA}_0\) <a id="lowersubsystem" class=
-          "selectsubsystem" href="#" name=
-          "lowersubsystem">[change]</a></li>
-        </ul>
+                function updateGraph()
+                {
+                    var url = 'http://localhost/~ubuntu/cgi-bin/gendot.cgi';
+                    var http_request2 = new XMLHttpRequest();
+                    http_request2.onreadystatechange = alertContents2; // set callback
+                    http_request2.open('GET', url, true); // initialize
+                    http_request2.send(null); // run
+                    alert("GraphViz");
+                    document.getElementById('canviz').style.display = "";
+                    document.getElementById('target').style.display = "none";
+                }
+                function changeSub(end)
+                {
+                    side = end;
+                    document.getElementById('canviz').style.display = "none";
+                    document.getElementById('target').style.display = "";
+                    MathJax.Hub.Typeset();
+                }
+                function switchSub(latex, ascii)
+                {
+                    alert('l ' + latex);
+                    document.getElementById(side).innerHTML = latex;
+                    document.getElementById(side).label = ascii;
+                    document.getElementById('canviz').style.display = "";
+                    document.getElementById('target').style.display = "none";
+                    MathJax.Hub.Typeset();
+                }
 
-        <h3>Options</h3>
+                function kl(str)
+                {
+                    return function ()
+                    {
+                        alert(str);
+                    }
+                }
+        </script>
+    </head>
+    
+    <body>
+        <div id="container">
+            <div id="banner">
+                 <h1>Reverse Mathematics Zoo</h1>
 
-        <ul>
-          <li><input type="checkbox" id="open" value="open" /><label for=
-          "open">Indicate open results</label></li>
+                <div id="centeredmenu">
+                    <ul>
+                        <li>
+                            <a href="introduction.html">Introduction</a>
+                        </li>
+                        <li>
+                            <a href="explore.html" class="active">Explore</a>
+                        </li>
+                        <li>
+                            <a href="edit.html">Edit</a>
+                        </li>
+                        <li>
+                            <a href="bibliography.html">Bibliography</a>
+                        </li>
+                        <li>
+                            <a href="news.html">News</a>
+                        </li>
+                    </ul>
+                </div>
+                <p id="layoutdims">
+                    <a href="#">Log in</a>
+                </p>
+            </div>
+            <div id="nav">
+                <!--button style="" id="mybutton">Make a request</button>
+                <script>
+                    /*document.getElementById('mybutton').onclick = function ()
+                    {
+                        alert("print");
+                        makeRequest('http://localhost/~ubuntu/cgi-bin/listsubsystems.cgi');
+                    }
+                </script-->
+                <form>
+                     <h3>Upper bound</h3>
 
-          <li><input type="checkbox" id="omega" value=
-          "omega" /><label for="omega">Show results that hold in
-          \(\omega\)-models</label></li>
-        </ul>
+                    <ul class="select">
+                        <li id="uppersubsystem">None Selected</li>
+                        <li>
+                            <a class="selectsubsystem" href="#" name="uppersubsystem" onclick='changeSub("uppersubsystem");'>[change]</a>
+                        </li>
+                    </ul>
+                     <h3>Lower bound</h3>
 
-        <h3>Search</h3>
+                    <ul class="select">
+                        <li id="lowersubsystem">None Selected</li>
+                        <li>
+                            <a id="lowersubsystem" class="selectsubsystem" href="#" name="lowersubsystem" onclick='changeSub("lowersubsystem");'>[change]</a>
+                        </li>
+                    </ul>
+                    <!--<h3>Options</h3>
+            
+                    <ul>
+                      <li><input type="checkbox" id="open" value="open" /><label for=
+                      "open">Indicate open results</label></li>
+            
+                      <li><input type="checkbox" id="omega" value=
+                      "omega" /><label for="omega">Show results that hold in
+                      \(\omega\)-models</label></li>
+                    </ul>
+            
+                    <h3>Search</h3> -->
+                    <ul>
+                        <li>
+                            <input type="submit" value="Update graph" onclick="updateGraph()" />
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <div id="content">
+                <!-- <h2>Search results</h2> -->
+                <div id="graph">
+                    <div id="canviz" style="display:none"></div>
+                    <div id="target" style="display:none"></div>
+                </div>
+                <div id="info">Info</div>
+            </div>
+            <div id="debug_output" style="display:none"></div>
+            <!-- Always keep debug_output -->
+            <div id="push"></div>
+        </div>
+        <div id="footer">
+            <p>
+                <a href="about.html">About this site</a>&bull;
+                <a href="copyright.html">Copyright</a>&bull;
+                <a href="about.html">Contact us</a>
+            </p>
+        </div>
+    </body>
 
-        <ul>
-          <li><input type="submit" value="Update graph" /></li>
-        </ul>
-      </form>
-    </div>
-
-    <div id="content">
-      <!--            <h2>Search results</h2> -->
-
-      <div id="graph">
-        <div id="canviz"></div>
-      </div>
-
-      <div id="info">
-        Info
-      </div>
-	  
-	  
-    </div>
-	<div id="debug_output"></div> <!-- Always keep debug_output -->
-    <div id="push"></div>
-  </div>
-
-  <div id="footer">
-    <p><a href="about.html">About this site</a> &bull; <a href=
-    "copyright.html">Copyright</a> &bull; <a href="about.html">Contact
-    us</a></p>
-  </div>
-</body>
 </html>
