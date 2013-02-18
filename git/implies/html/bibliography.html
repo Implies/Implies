@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Bibliography - Reverse Mathematics Zoo</title>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
+  <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="centered.css" media="screen" />
+</head>
+
+<body onload="startup();"> 
+  <div id="container">
+    <div id="banner">
+      <h1>Reverse Mathematics Zoo</h1>
+
+      <div id="centeredmenu">
+        <ul>
+          <li><a href="introduction.html">Introduction</a></li>
+
+          <li><a href="explore.html">Explore</a></li>
+
+          <li><a href="edit.html">Edit</a></li>
+
+          <li><a href="bibliography.html" class=
+          "active">Bibliography</a></li>
+
+          <li><a href="news.html">News</a></li>
+        </ul>
+      </div>
+
+      <p id="layoutdims"><a href="#">Log in</a></p>
+    </div>
+
+    <div id="nav">
+      <h3>Bibliography</h3>
+
+      <ul class="menu">
+        <li class="active"><a href="#">View</a></li>
+
+<!--         <li><a href="#">Add a reference</a></li> -->
+
+      </ul>
+    </div>
+
+    <div class="content">
+      <form style="width: 3in; float: right;">
+      <input type=text id="search_param"></input>
+       <button id="mybutton" action="">Search references</button><br/>
+      </form>
+
+      <h2>Bibliography</h2>
+        <p id="bib_count">  </p>
+
+       <ul id="bib_target">  </ul>
+    </div>
+
+    <div id="push"></div>
+  </div>
+
+  <div id="footer">
+    <p><a href="about.html">About this site</a> &bull; <a href=
+    "copyright.html">Copyright</a> &bull; <a href="about.html">Contact us</a></p>
+  </div>
+</body>
+</html>
+
+
+
+<script type="text/javascript">
+
+var http_request = false;
+var t = 0;
+
+function makeRequest(url) {
+   http_request = new XMLHttpRequest();
+   http_request.onreadystatechange = alertContents;  // set callback
+   http_request.open('GET', url, true);  // initialize
+   http_request.send(null);  // run
+   t = 0;
+}
+
+
+function alertContents() {   // callback
+
+   if (http_request.readyState == 4) {  // javascript code
+       if ((t == 0) && (http_request.status == 200)) {  // http code
+         t++;
+        
+         var bibData = JSON.parse(http_request.responseText);
+         var count = bibData.count;
+         var r = 'references';
+         if ( bibData.count == 1 ) { r = 'reference';}
+         document.getElementById("bib_count").innerHTML = bibData.count + ' ' + r;
+
+         var searchTxt = document.getElementById("search_param").value;
+         if ( ! ( '' == searchTxt) ) { 
+           document.getElementById("bib_count").innerHTML += ' matching <em>' + searchTxt +'</em>';
+         }       
+
+         var refs = bibData.results;  // array of references
+         var bib_list = document.getElementById("bib_target");  // list they go in
+	 bib_list.innerHTML="";
+
+         for (var i = 0;  refs.length > i ; i++) {
+
+           var itm = document.createElement('li');
+           var lnk = document.createElement('a');
+           itm.appendChild(lnk);
+           lnk.className = 'bib_link';
+           lnk.innerHTML = '[' + refs[i][0] + ']'
+           lnk.href = 'http://www.ams.org/mathscinet-getitem?mr=' + refs[i][1];
+           lnk.target = '_blank';
+
+           var txt = document.createElement('span');
+           txt.innerHTML = ' ' + refs[i][2];
+           itm.appendChild(txt);
+
+           bib_list.appendChild(itm);
+         }
+       } else {
+           alert('There was a problem with the request: code ' + http_request.status );
+       }
+   }
+}
+
+
+document.getElementById('mybutton').onclick = function() {
+   var searchTxt = document.getElementById("search_param").value;
+   var myurl = 'http://reu.marshall.edu/~mummertc/cgi-bin/listCitations.cgi?search=' + encodeURI(searchTxt);
+   makeRequest(myurl);
+   return false;
+}
+
+function startup() { 
+//  document.getElementById("search_param").value = '';
+  makeRequest('http://reu.marshall.edu/~mummertc/cgi-bin/listCitations.cgi');
+}
+
+
+</script>
+
+
+
+

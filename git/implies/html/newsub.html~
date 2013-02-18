@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<html xmlns="http://www.w3.org/1999/xhtml">
+	<script type="text/javascript"> 
+
+
+var http_request = false; 
+
+ 
+function makeRequestnewsub(url) { 
+   http_request = new XMLHttpRequest();
+   http_request.onreadystatechange = alertContentsnewsub;  // set callback
+   http_request.open('GET', url, true);  // initialize
+   http_request.send(null);  // run
+} 
+
+
+function alertContentsnewsub() {   // callback
+
+   if (http_request.readyState == 4) {  // javascript code
+       if (http_request.status == 200) {  // http code
+		if(http_request.responseText == "Success\n"){
+			alert("The subsystem was created successfully");
+
+		}else if (http_request.responseText == "Duplicate\n"){
+			alert("That ASCII name has already been used");
+			}
+		else{alert(http_request.responseText);}
+ 
+       } else { 
+           alert('There was a problem with the request ' 
+                  + http_request.status ); 
+       } 
+   } 
+} 
+function inputnewsub (form){
+	var ASCIIName = form.ASCIIName.value;
+	var LaTexName = form.LaTexName.value;
+	var Reference = form.Reference.value;
+	var FreeText = form.FreeText.value;
+	var myURL = 'http://reu.marshall.edu/~mummertc/cgi-bin/newsub.cgi?';
+	myURL = myURL + 'ASCIIName=' + encodeURI(ASCIIName);
+	myURL = myURL + '&LaTexName=' + encodeURI(LaTexName);
+	myURL = myURL + '&Reference=' + encodeURI(Reference);
+	myURL = myURL + '&FreeText=' + encodeURI(FreeText);
+    	makeRequestnewsub(myURL);
+}
+ 
+
+ 
+</script>
+<head>
+  <title>Edit - Reverse Mathematics Zoo</title>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 25 March 2009), see www.w3.org" />
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700'
+  rel='stylesheet' type='text/css' />
+  <link rel="stylesheet" type="text/css" href="style.css" media=
+  "screen" />
+  <link rel="stylesheet" type="text/css" href="centered.css" media=
+  "screen" />
+  <script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+		tex2jax: {
+			inlineMath: [["$","$"],["\\(","\\)"]]
+			}
+		});
+  </script>
+  <script type="text/javascript"
+	  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+  </script>
+</head>
+
+<body>
+<script>
+  (function () {  
+    var QUEUE_newsub = MathJax.Hub.queue;
+    var math_newsub = null;               
+
+    QUEUE_newsub.Push(function () {
+      math = MathJax.Hub.getAllJax("MathOutput_newsub")[0];
+    });
+
+    window.UpdateMath = function (TeX) {
+      QUEUE_newsub.Push(["Text",math,"\\displaystyle{"+TeX+"}"]);
+    }
+  })();
+</script>
+<script>
+  (function () {  
+    var QUEUE2_newsub = MathJax.Hub.queue;      
+    var math2_newsub = null;       
+
+    QUEUE2_newsub.Push(function () {
+		math = MathJax.Hub.getAllJax("MathOutput2")[1];
+	});
+
+    window.UpdateMath2 = function (Tex){
+		QUEUE2_newsub.Push(["Text",math,"\\displaystyle{"+Tex+"}"]);
+	}
+  })();
+</script>
+  <div id="container">
+    <div id="banner">
+      <h1>Reverse Mathematics Zoo</h1>
+
+      <div id="centeredmenu">
+        <ul>
+          <li><a href="introduction.html">Introduction</a></li>
+
+          <li><a href="explore.html">Explore</a></li>
+
+          <li><a href="edit.html" class="active">Edit</a></li>
+
+          <li><a href="bibliography.html">Bibliography</a></li>
+
+          <li><a href="news.html">News</a></li>
+        </ul>
+      </div>
+
+      <p id="layoutdims"><a href="#">Log in</a></p>
+    </div>
+
+    <div id="nav">
+      <h3>Enter new data</h3>
+
+      <ul class="menu">
+        <li><a href="newresult.html">New result</a></li>
+
+        <li><a href="newsub.html">New subsystem</a></li>
+
+        <li><a href="newreference.html">New reference</a></li>
+      </ul>
+
+      <h3>Edit existing data</h3>
+
+      <ul class="menu">
+        <li><a href="#">Results</a></li>
+
+        <li><a href="#">Subsystem</a></li>
+
+        <li><a href="#">References</a></li>
+      </ul>
+    </div>
+
+    <div id="newsub">
+	<FORM NAME="myform_newsub" ACTION="" METHOD="GET">
+      <p>ASCII name: <input type="text" name="ASCIIName" value="">
+		<br><br>
+		LaTeX name:
+		<input type="text" name="LaTexName" id="MathInput" size="50" onkeyup="UpdateMath(this.value)" />
+		<br><br>
+		</p>
+		<p>
+		<div id="MathOutput_newsub">
+		${}$
+		</div>
+		</p>
+		<br>
+		<p>
+		Reference to subsystem (optional): <input type="text" name="Reference" value="">
+		<br><br>
+		Free text about subsystem (optional)
+		<input type="text" name="FreeText" id="MathInput2" size="50" onkeyup="UpdateMath2(this.value)" />
+		<br><br>
+		</p>
+		<div id="Mathoutput2_newsub">
+		${}$
+		</div>
+		<p>
+		<br>
+		</FORM>
+    </div>
+
+    <div id="push"></div>
+  </div>
+
+  <div id="footer">
+    <p><a href="about.html">About this site</a> &bull; <a href=
+    "copyright.html">Copyright</a> &bull; <a href="about.html">Contact
+    us</a></p>
+  </div>
+</body>
+</html>
