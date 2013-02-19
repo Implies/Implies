@@ -1,0 +1,45 @@
+digraph G {
+ node [shape=none, margin=0];
+ 
+"ACA" [id ="ACA" label="\\(mathsf{ACA}_0\\)"  href="javascript:void(click_node('ACA'))"];
+"ADS" [id ="ADS" label="\\(mathsf{ADS}\\)"  href="javascript:void(click_node('ADS'))"];
+"AMT" [id ="AMT" label="\\(mathsf{AMT}\\)"  href="javascript:void(click_node('AMT'))"];
+"ASRAM" [id ="ASRAM" label="\\(mathsf{ASRAM}\\)"  href="javascript:void(click_node('ASRAM'))"];
+"ASRT22" [id ="ASRT22" label="\\(mathsf{ASRT}^2_2\\)"  href="javascript:void(click_node('ASRT22'))"];
+"AST" [id ="AST" label="\\(mathsf{AST}\\)"  href="javascript:void(click_node('AST'))"];
+"BSig2" [id ="BSig2" label="\\(mathsf{B}Sigma^0_2\\)"  href="javascript:void(click_node('BSig2'))"];
+"CAC" [id ="CAC" label="\\(mathsf{CAC}\\)"  href="javascript:void(click_node('CAC'))"];
+"CADS" [id ="CADS" label="\\(mathsf{CADS}\\)"  href="javascript:void(click_node('CADS'))"];
+"CCAC" [id ="CCAC" label="\\(mathsf{CCAC}\\)"  href="javascript:void(click_node('CCAC'))"];
+"COH" [id ="COH" label="\\(mathsf{COH}\\)"  href="javascript:void(click_node('COH'))"];
+"CRT22" [id ="CRT22" label="\\(mathsf{CRT}^2_2\\)"  href="javascript:void(click_node('CRT22'))"];
+"D22" [id ="D22" label="\\(mathsf{D}^2_2\\)"  href="javascript:void(click_node('D22'))"];
+"DNR" [id ="DNR" label="\\(mathsf{DNR}\\)"  href="javascript:void(click_node('DNR'))"];
+"EM" [id ="EM" label="\\(mathsf{EM}\\)"  href="javascript:void(click_node('EM'))"];
+"FIP" [id ="FIP" label="\\(Fmathsf{IP}\\)"  href="javascript:void(click_node('FIP'))"];
+"IPT22" [id ="IPT22" label="\\(mathsf{IPT}^2_2\\)"  href="javascript:void(click_node('IPT22'))"];
+"ISig2" [id ="ISig2" label="\\(mathsf{I}Sigma^0_2\\)"  href="javascript:void(click_node('ISig2'))"];
+"nD2IP" [id ="nD2IP" label="\\(overline{D}mathsf{IP}\\)"  href="javascript:void(click_node('nD2IP'))"];
+"OPT" [id ="OPT" label="\\(mathsf{OPT}\\)"  href="javascript:void(click_node('OPT'))"];
+"PART" [id ="PART" label="\\(mathsf{PART}\\)"  href="javascript:void(click_node('PART'))"];
+"Pi01G" [id ="Pi01G" label="\\(Pi^0_1mathsf{G}\\)"  href="javascript:void(click_node('Pi01G'))"];
+"PT22" [id ="PT22" label="\\(mathsf{PT}^2_2\\)"  href="javascript:void(click_node('PT22'))"];
+"RCA" [id ="RCA" label="\\(mathsf{RCA}_0\\)"  href="javascript:void(click_node('RCA'))"];
+"RT12" [id ="RT12" label="\\(mathsf{RT}^1_2\\)"  href="javascript:void(click_node('RT12'))"];
+"RT22" [id ="RT22" label="\\(mathsf{RT}^2_2\\)"  href="javascript:void(click_node('RT22'))"];
+"SADS" [id ="SADS" label="\\(mathsf{SADS}\\)"  href="javascript:void(click_node('SADS'))"];
+"SCAC" [id ="SCAC" label="\\(mathsf{SCAC}\\)"  href="javascript:void(click_node('SCAC'))"];
+"SIPT22" [id ="SIPT22" label="\\(mathsf{SIPT}^2_2\\)"  href="javascript:void(click_node('SIPT22'))"];
+"SPT22" [id ="SPT22" label="\\(mathsf{SPT}^2_2\\)"  href="javascript:void(click_node('SPT22'))"];
+"SRAM" [id ="SRAM" label="\\(mathsf{SRAM}\\)"  href="javascript:void(click_node('SRAM'))"];
+"SRT22" [id ="SRT22" label="\\(mathsf{SRT}^2_2\\)"  href="javascript:void(click_node('SRT22'))"];
+"StCADS" [id ="StCADS" label="\\(mathsf{StCADS}\\)"  href="javascript:void(click_node('StCADS'))"];
+"StCOH" [id ="StCOH" label="\\(mathsf{StCOH}\\)"  href="javascript:void(click_node('StCOH'))"];
+"StCRT22" [id ="StCRT22" label="\\(mathsf{StCRT}^2_2\\)"  href="javascript:void(click_node('StCRT22'))"];
+"WKL" [id ="WKL" label="\\(mathsf{WKL}_0\\)"  href="javascript:void(click_node('WKL'))"];
+"WWKL" [id ="WWKL" label="\\(mathsf{WWKL}_0\\)"  href="javascript:void(click_node('WWKL'))"];
+"ACA" -> "WKL";
+"ACA" -> "WKL";
+"ACA" -> "WKL";
+"ACA" -> "WWKL";
+}

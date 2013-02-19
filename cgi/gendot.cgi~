@@ -9,7 +9,7 @@ use DBD::mysql;
 
 my $tmpdir = "dot/";
 #my $dotdir = "/home/implies/public_html/dot/";
-my $dotdir = "/home/ubuntu/public_html/html/dot/";
+my $dotdir = "/home/ubuntu/public_html/dot/";
 #my $url = "http://reu.marshall.edu/~implies/dot/";
 my $url = "/localhost/ubuntu/dot/";
 my $gvext = ".gv";
