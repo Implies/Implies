@@ -54,18 +54,20 @@
 
             }
 
-            getJSONP('http://localhost/~ubuntu/cgi-bin/listsubsystems.cgi');
+            getJSONP('http://reu.marshall/edu/~implies/cgi-bin/listsubsystems.cgi');
         </script>
         <script type="text/javascript">
             var http_request = false;
+            var http_request2 = false;
             var side;
             var upper;
             var lower;
+            var systems = new Array();
 
             document.observe('dom:loaded', function ()
             {
                 canviz = new Canviz('canviz', 'default.dot');
-                makeRequest('http://localhost/~ubuntu/cgi-bin/listsubsystems.cgi');
+                makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
 
             });
 
@@ -91,16 +93,19 @@
                     {                        
                             var obj = JSON.parse(http_request.responseText);
                             var tar = document.getElementById("target");
+			    var ul = document.createElement('ul');
+                            tar.appendChild(ul);
                             for(var i = 0; i < obj.length; i++)
                             {
+                                systems[obj[i][0]] = obj[i][1];
                                 var itm = document.createElement('li');
                                 var lnk = document.createElement('a');
                                 var str = '\\(\\\\' + obj[i][1] + '\\)';
-                                var js = 'javascript:switchSub("\\' + str + '\\\\)");';
+                                var js = 'javascript:switchSub("' + obj[i][0] + '");';
                                 lnk.innerHTML = str;
                                 lnk.href = js;
                                 itm.appendChild(lnk);
-                                tar.appendChild(itm);
+                                ul.appendChild(itm);
                             }
                             MathJax.Hub.Typeset();
                         
@@ -108,37 +113,46 @@
                         }
                         else
                         {
-                            alert('There was a problem ' + http_request.status);
+                            alert('There was a problem A ' + http_request.status);
                         }
                     }
                 }
 
                 function alertContents2()
                 {
-                    if(http_request.readyState == 4)
+                    if(http_request2.readyState == 4)
                     {
-                        if(http_request.status == 200)
+                        if(http_request2.status == 200)
                         {
-                            //alert('Hey');
+                            var response = JSON.parse(http_request2.responseText);
+
+        	            document.getElementById('canviz').style.display = "block";
+                	    document.getElementById('target').style.display = "none";
+			    
+                            canviz = new Canviz('canviz', response.dotfileurl);
+
+		  	    setTimeout(function() { MathJax.Hub.Typeset(); }, 1000); // HACK 
+
+   			    return false; 
+
                         }
                         else
                         {
-                            alert('There was a problem ' + http_request.status);
+                            alert('There was a problem B ' + http_request2.status);
                         }
                     }
                 }
 
                 function updateGraph()
                 {
-                    var url = 'http://localhost/~ubuntu/cgi-bin/gendot.cgi';
-                    var http_request2 = new XMLHttpRequest();
+                    var url = 'http://reu.marshall.edu/~implies/cgi-bin/gendot.cgi';
+                    http_request2 = new XMLHttpRequest();
                     http_request2.onreadystatechange = alertContents2; // set callback
                     http_request2.open('GET', url, true); // initialize
                     http_request2.send(null); // run
-                    alert("GraphViz");
-                    document.getElementById('canviz').style.display = "";
-                    document.getElementById('target').style.display = "none";
+		    return false;
                 }
+
                 function changeSub(end)
                 {
                     side = end;
@@ -146,10 +160,9 @@
                     document.getElementById('target').style.display = "";
                     MathJax.Hub.Typeset();
                 }
-                function switchSub(latex, ascii)
+                function switchSub(ascii)
                 {
-                    alert('l ' + latex);
-                    document.getElementById(side).innerHTML = latex;
+                    document.getElementById(side).innerHTML = '\\(' + systems[ascii] + '\\)';
                     document.getElementById(side).label = ascii;
                     document.getElementById('canviz').style.display = "";
                     document.getElementById('target').style.display = "none";
@@ -200,7 +213,7 @@
                     /*document.getElementById('mybutton').onclick = function ()
                     {
                         alert("print");
-                        makeRequest('http://localhost/~ubuntu/cgi-bin/listsubsystems.cgi');
+                        makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
                     }
                 </script-->
                 <form>
@@ -241,11 +254,11 @@
             </div>
             <div id="content">
                 <!-- <h2>Search results</h2> -->
-                <div id="graph">
-                    <div id="canviz" style="display:none"></div>
+                <div id="graph" class="content">
+                    <div id="canviz"  style="display:none"></div>
                     <div id="target" style="display:none"></div>
                 </div>
-                <div id="info">Info</div>
+               <div class="content" id="info">Info</div>
             </div>
             <div id="debug_output" style="display:none"></div>
             <!-- Always keep debug_output -->

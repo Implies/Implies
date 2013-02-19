@@ -3,33 +3,36 @@
 use strict; 
 use DBI; 
 use CGI;
+use JSON;
 use DBD::mysql;
 
 
-my $length = @ARGV;
+my $tmpdir = "/tmp/";
+my $dotdir = "/home/implies/public_html/dot/";
+my $url = "http://reu.marshall.edu/~implies/dot/";
+my $gvext = ".gv";
+my $dotext = ".dot";
+
 
 my $cgi = CGI->new();
 
-#print "$length";
-
 print "content-type: text/html\n\n";
 
-#my $x = $cgi->param('a') || $ARGV[0];
 
-my $filename = "default.gv";
-open (OUTFILE, ">", $filename);
+my $filename = "$$";
+open (OUTFILE, ">", $tmpdir . $filename . $gvext);   # FIXME
 my $count = 0;
 my $dbh = DBI->connect('DBI:mysql:Zoo', 'root', 'implies') or
 die "Couldn't open database: + $DBI::errstr; stopped";
 # my $sth = $dbh->prepare(<<End_SQL) or die "Couldn't prepare statement: + $DBI::errstr; stopped";
 
 
-my $sub0 = $ARGV[0];
-my $sub1 = $ARGV[1];
+my $sub0 = $cgi->param('upper') || $ARGV[0] || 'ACA';
+my $sub1 = $cgi->param('lower') || $ARGV[1] || 'WKL';
 
-print $sub0;
-print $sub1;
-
+my $response = {};
+$response->{'upper'} = $sub0;
+$response->{'lower'} = $sub1;
 
 # define queries
 my $query0 = "SELECT Subsystems.sub_Ascii, Subsystems.sub_Latex FROM Subsystems;";
@@ -56,7 +59,9 @@ $sth->execute() or die "Couldn't execute statement: $DBI::errstr; stopped";
 # Pull from Subsystem Table
 while ( my ($field1, $field2,) = $sth->fetchrow_array() )
 {
-     print OUTFILE "\"$field1\" [id =\"$field1\" label=\"\$\\\\mathsf{$field1}_0\$\" href=\"javascript:void(click_node(\'\$\\\\mathsf{$field2}_0\$\'))\"];\n";    
+  $field2 =~ s!\\!\\\\!g;
+     print OUTFILE "\"$field1\" [id =\"$field1\" label=\"\\\\($field2\\\\\)\" " 
+                 . " href=\"javascript:void(click_node(\'$field1\'))\"];\n";    
      #$count++;
 }
 
@@ -77,8 +82,13 @@ while ( my ($field3, $field4,) = $sth->fetchrow_array() )
 print OUTFILE "}";
 
 # Compile
-system("dot -Txdot default.gv -o /home/ubuntu/public_html/demo/default.dot");
+system("dot", "-Txdot", $tmpdir . $filename . $gvext, "-o", $dotdir . $filename . $dotext);
 
 
 # Disconnect from the database
 $dbh->disconnect();
+
+$response->{'dotfileurl'} = $url . $filename . $dotext;
+
+
+print to_json($response, {pretty => 1}); 
