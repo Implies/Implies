@@ -19,7 +19,7 @@ open MYFILE, '>>', "/tmp/log.txt" or die $!;
 print MYFILE "$date $Key\t $MRNumber\t $FreeText\n";
 close MYFILE;
 
-my $dbh=DBI->connect('dbi:mysql:Zoo','root','implies');
+my $dbh=DBI->connect("DBI:mysql:database=Zoo;mysql_read_default_file=/home/mummertc/.my.cnf", "", "", {'AutoCommit'=>0});
 
 my $sql = "select * from Citations where ref_Citation = ?"; #ref_Citation is the primary key
 my $sh = $dbh->prepare($sql);
