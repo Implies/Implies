@@ -138,31 +138,21 @@ function inputnewresult (form){
   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
 </script>
 <script> //MathJax Rendering for new subsystem
-  (function () {  
-    var QUEUE_newsub = MathJax.Hub.queue;
-    var math_newsub = null;               
-
-    QUEUE_newsub.Push(function () {
-      math = MathJax.Hub.getAllJax("MathOutput_newsub")[0];
-    });
-
+    (function () {  
     window.UpdateMath_newsub = function (TeX) {
-      QUEUE_newsub.Push(["Text",math,"\\displaystyle{"+TeX+"}"]);
-    }
+    ns = document.getElementById('MathOutput_newsub');
+    ns.innerHTML = TeX;
+    MathJax.Hub.Typeset(ns);
+        }
   })();
 </script>
 <script> //MathJax for new subsystem pt 2
-  (function () {  
-    var QUEUE2_newsub = MathJax.Hub.queue;      
-    var math2_newsub = null;       
-
-    QUEUE2_newsub.Push(function () {
-		math = MathJax.Hub.getAllJax("MathOutput2")[1];
-	});
-
-    window.UpdateMath2_newsub = function (Tex){
-		QUEUE2_newsub.Push(["Text",math,"\\displaystyle{"+Tex+"}"]);
-	}
+    (function () {  
+    window.UpdateMath2_newsub = function (TeX) {
+    ns2 = document.getElementById('MathOutput2_newsub');
+    ns2.innerHTML = TeX;
+    MathJax.Hub.Typeset(ns2);
+        }
   })();
 </script>
 <script>
@@ -310,12 +300,11 @@ Reference details:<br/>
 <p>ASCII name: <input type="text" name="ASCIIName" value="">
 	<br><br>
 	LaTeX name:
-	<input type="text" name="LaTexName" id="MathInput" size="50" onkeyup="UpdateMath_newsub(this.value)" />
+	<textarea name="LaTexName" id="MathInput" size="50" onkeyup="UpdateMath_newsub(this.value)"></textarea> 
 	<br><br>
 	</p>
 	<p>
-	<div id="MathOutput_newsub">
-	${}$
+	<div id="MathOutput_newsub" class="tex_render">
 	</div>
 	</p>
 	<br>
@@ -323,11 +312,10 @@ Reference details:<br/>
 	Reference to subsystem (optional): <input type="text" name="Reference" value="">
 	<br><br>
 	Free text about subsystem (optional)
-	<input type="text" name="FreeText" id="MathInput2" size="50" onkeyup="UpdateMath2_newsub(this.value)" />
+	<textarea name="FreeText" id="MathInput2" size="50" onkeyup="UpdateMath2_newsub(this.value)"></textarea>
 	<br><br>
 	</p>
-	<div id="Mathoutput2_newsub">
-	${}$
+	<div id="MathOutput2_newsub" class="tex_render">
 	</div>
 	<br>
 	<input type="button" id="mybutton_newsub" name="mybutton_newsub" value="Submit" onClick="inputnewsub(this.form)">
