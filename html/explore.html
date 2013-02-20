@@ -54,8 +54,8 @@
 
             }
 
-            //            getJSONP('http://reu.marshall/edu/~implies/cgi-bin/listsubsystems.cgi');
-            getJSONP('http://localhost/~ubuntu/cgi/listsubsystems.cgi');
+                        getJSONP('http://reu.marshall/edu/~implies/cgi-bin/listsubsystems.cgi');
+        //    getJSONP('http://localhost/~ubuntu/cgi/listsubsystems.cgi');
         </script>
         <script type="text/javascript">
             var http_request = false;
@@ -68,8 +68,8 @@
             document.observe('dom:loaded', function ()
             {
                 canviz = new Canviz('canviz', 'default.dot');
-                //                makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
-                makeRequest('http://localhost/~ubuntu/cgi/listsubsystems.cgi');
+                                makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
+               // makeRequest('http://localhost/~ubuntu/cgi/listsubsystems.cgi');
 
             });
 
@@ -131,8 +131,8 @@
                         document.getElementById('target').style.display = "none";
                         document.getElementById('select').style.display = "none";
 
-                        canviz = new Canviz('canviz', response.dotfileurl);
-//                        alert(dotfileurl);
+			alert('http://reu.marshall.edu/~implies/' + response.dotfileurl);
+                        canviz = new Canviz('canviz', 'http://reu.marshall.edu/~implies/' + response.dotfileurl);
 
                         setTimeout(function ()
                         {
@@ -170,8 +170,8 @@
                 //upper = document.getElementById("uppersubsystem");
                 //lower = document.getElementById("lowersubsystem");
             
-                //var url = 'http://reu.marshall.edu/~implies/cgi-bin/gendot.cgi?';
-                var url = 'http://localhost/~ubuntu/cgi/gendot.cgi?';
+                var url = 'http://reu.marshall.edu/~implies/cgi-bin/gendot.cgi?';
+                //var url = 'http://localhost/~ubuntu/cgi/gendot.cgi?';
                 
                 upper = document.getElementById("uppersubsystem").label;
                 lower = document.getElementById("lowersubsystem").label;
@@ -219,8 +219,9 @@
                 document.getElementById('canviz').style.display = "";
                 document.getElementById('info').style.display = "";
                 document.getElementById('target').style.display = "none";
-                document.getElementById('setting').style.display = "none";
-                MathJax.Hub.Typeset();
+		document.getElementById('select').style.display = "none";
+
+                MathJax.Hub.Typeset(side);
             }
 
             function kl(str)
@@ -230,6 +231,7 @@
                     alert(str);
                 }
             }
+
         </script>
     </head>
     
