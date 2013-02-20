@@ -1,3 +1,5 @@
+#!/usr/bin/perl
+
 use CGI;
 use DBI;
 
@@ -8,7 +10,7 @@ $Right = $q->param('Right');
 $Relate = $q->param('Relate');
 $Citation = $q->param('Citation');
 
-$dbh=DBI->connect('dbi:mysql:Zoo','root','implies');
+my $dbh=DBI->connect("DBI:mysql:database=Zoo;mysql_read_default_file=/home/mummertc/.my.cnf", "", "", {'AutoCommit'=>0});
 
 sub populate{
 	$sql = "SELECT sub_Ascii FROM Subsystems; ";
