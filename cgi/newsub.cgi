@@ -19,7 +19,7 @@ open MYFILE, '>>', "/tmp/log.txt" or die $!;
 print MYFILE "$date $ASCIIName\t $LaTexName\t $Reference\t $FreeText\n";
 close MYFILE;
 
-$dbh=DBI->connect('dbi:mysql:Zoo','root','implies');
+my $dbh=DBI->connect("DBI:mysql:database=Zoo;mysql_read_default_file=/home/mummertc/.my.cnf", "", "", {'AutoCommit'=>0});
 
 $sql = "select * from Subsystems where sub_Ascii = ?";  # because sub_Ascii is a unique key
 $sh = $dbh->prepare($sql);
