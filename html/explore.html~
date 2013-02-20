@@ -308,7 +308,7 @@
             </div>
             <div id="content">
                 <!-- <h2>Search results</h2> -->
-                <div id="select" class="content"></div>
+                <div id="select" class="content">Setting</div>
                 <div id="graph" class="content">
                     <div id="canviz" style="display:none"></div>
                     <div id="target" style="display:none"></div>

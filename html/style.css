@@ -293,3 +293,7 @@ div.announce h3 {
   width: 4in;
   height: 1in;
 }
+
+
+#target ul { list-style-type: none;  margin: 0; padding; 0; }
+#target ul li { border: 1px solid black; display: inline-block; margin: 2px; padding: 2px; margin-right: 1em; }
