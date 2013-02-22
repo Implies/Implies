@@ -177,31 +177,70 @@ function inputnewresult (form){
 
 <script>
 function shownewresult() { 
-  document.getElementById('main').style.display='none'; 
-  document.getElementById('newref').style.display='none'; 
-  document.getElementById('newsub').style.display='none'; 
-  document.getElementById('newresult').style.display='block'; 
+  document.getElementById('main').className='hidden'; 
+  document.getElementById('newresult').className='content'; 
+  document.getElementById('newref').className='hidden'; 
+  document.getElementById('newsub').className='hidden'; 
+  document.getElementById('editsub').className='hidden';
+  document.getElementById('editref').className='hidden';
+  document.getElementById('editresult').className="hidden";  
 }
 
 function shownewref() { 
-  document.getElementById('main').style.display='none'; 
-  document.getElementById('newresult').style.display='none'; 
-  document.getElementById('newref').style.display='block'; 
-  document.getElementById('newsub').style.display='none'; 
+  document.getElementById('main').className='hidden'; 
+  document.getElementById('newresult').className='hidden'; 
+  document.getElementById('newref').className='content'; 
+  document.getElementById('newsub').className='hidden'; 
+  document.getElementById('editsub').className='hidden';
+  document.getElementById('editref').className='hidden';
+  document.getElementById('editresult').className="hidden"; ;  
 }
 function shownewsub() { 
-  document.getElementById('main').style.display='none'; 
-  document.getElementById('newresult').style.display='none'; 
-  document.getElementById('newref').style.display='none'; 
-  document.getElementById('newsub').style.display='block'; 
+  document.getElementById('main').className='hidden'; 
+  document.getElementById('newresult').className='hidden'; 
+  document.getElementById('newref').className='hidden'; 
+  document.getElementById('newsub').className='content'; 
+  document.getElementById('editsub').className='hidden';
+  document.getElementById('editref').className='hidden';
+  document.getElementById('editresult').className="hidden";  
 }
 function showmain() { 
-  document.getElementById('main').style.display='block'; 
-  document.getElementById('newresult').style.display='none'; 
-  document.getElementById('newref').style.display='none'; 
-  document.getElementById('newsub').style.display='none'; 
+  document.getElementById('main').className='content'; 
+  document.getElementById('newresult').className='hidden'; 
+  document.getElementById('newref').className='hidden'; 
+  document.getElementById('newsub').className='hidden'; 
+  document.getElementById('editsub').className='hidden';
+  document.getElementById('editref').className='hidden';
+  document.getElementById('editresult').className="hidden";  
 }
 
+function showeditsub() { 
+  document.getElementById('main').className='hidden'; 
+  document.getElementById('newresult').className='hidden'; 
+  document.getElementById('newref').className='hidden'; 
+  document.getElementById('newsub').className='hidden'; 
+  document.getElementById('editsub').className='content';
+  document.getElementById('editref').className='hidden';
+  document.getElementById('editresult').className="hidden"; 
+}
+function showeditref() { 
+  document.getElementById('main').className='hidden'; 
+  document.getElementById('newresult').className='hidden'; 
+  document.getElementById('newref').className='hidden'; 
+  document.getElementById('newsub').className='hidden'; 
+  document.getElementById('editsub').className='hidden';
+  document.getElementById('editref').className='content';
+  document.getElementById('editresult').className="hidden"; 
+}
+function showeditresult() { 
+  document.getElementById('main').className='hidden'; 
+  document.getElementById('newresult').className='hidden'; 
+  document.getElementById('newref').className='hidden'; 
+  document.getElementById('newsub').className='hidden'; 
+  document.getElementById('editsub').className='hidden';
+  document.getElementById('editref').className='hidden';
+  document.getElementById('editresult').className="content";  
+}
 </script>
 
 
@@ -217,7 +256,7 @@ function showmain() {
   "screen" />
 </head>
 
-<body onload="shownewresult()">
+<body onload="showmain()">
   <div id="container">
     <div id="banner">
       <h1>Reverse Mathematics Zoo</h1>
@@ -253,31 +292,31 @@ function showmain() {
       <h3>Edit existing data</h3>
 
       <ul class="menu">
-        <li><a href="#">Results</a></li>
+        <li><a href="#" onclick="showeditresult()">Results</a></li>
 
-        <li><a href="#">Subsystem</a></li>
+        <li><a href="#" onclick="showeditsub()">Subsystem</a></li>
 
-        <li><a href="#">References</a></li>
+        <li><a href="#" onclick="showeditref()">References</a></li>
       </ul>
     </div>
 
 
-    <div class="content" id="main">
-      <h2>Log in</h2>
+<div class="hidden" id="main">
+  <h2>Log in</h2>
 
-      <p>Test</p>
+  <p>Test</p>
 
-      <p>Test</p>
+  <p>Test</p>
 
-      <p>Test</p>
+  <p>Test</p>
 
-      <p>Test</p>
+  <p>Test</p>
 
-      <p>Test</p>
-    </div>
+  <p>Test</p>
+</div>
 
 <!-- div for new reference-->
-<div class="content" id="newref">
+<div class="hidden" id="newref">
 	<FORM NAME="form" ACTION="" METHOD="GET">
      <p>Key: <input type="text" name="KeyName" value=""><br><br>
 	 Math Reviews number: <input type="text" name="MRNumber" value=""> (optional)<br><br>
@@ -295,7 +334,7 @@ Reference details:<br/>
 </div>
 
 <!-- div for new subsystem-->
-<div class="content" id="newsub">
+<div class="hidden" id="newsub">
 <FORM NAME="myform_newsub" ACTION="" METHOD="GET">
 <p>ASCII name: <input type="text" name="ASCIIName" value="">
 	<br><br>
@@ -323,7 +362,7 @@ Reference details:<br/>
 </div>
 
 <!--div for newresult-->
-<div class="content" id="newresult">
+<div class="hidden" id="newresult">
 	<FORM NAME="myform_newresult" ACTION="" MEHTOD="GET">
 	<p>
 	First Theorem: &nbsp;&nbsp;
@@ -353,15 +392,93 @@ Reference details:<br/>
 	</FORM>
 	</p>
 </div>
+<!-- div for edit reference-->
+<div class="hidden" id="editref">
+	<FORM NAME="myform_editref" ACTION="" METHOD="GET">
+     <p>Key: <input type="text" name="KeyName" value=""><br><br>
+	 Math Reviews number: <input type="text" name="MRNumber" value=""> (optional)<br><br>
+Reference details:<br/>
+	<textarea name="FreeText" id="MathInput_ref" 
+       size="50" onkeyup="UpdateMath_editref(this.value)" >  </textarea>
+	<br><br>
+	</p>
+	<div id="MathOutput_editref" class="tex_render"> </div>
+	<br><br>
+	<p>
+	<input type="button" id="mybutton_editref" name="mybutton_editref" value="Submit" onClick="inputeditref(this.form)">
+	</FORM>
+	</p>
+</div>
 
-    <div id="push"></div>
-  </div>
+<!-- div for edit subsystem-->
+<div class="hidden" id="editsub">
+	<FORM NAME="myform_editsub" ACTION="" METHOD="GET">
+		<p>ASCII name: <input type="text" name="ASCIIName" value="">
+			<br><br>
+			LaTeX name:
+			<textarea name="LaTexName" id="MathInput" size="50" onkeyup="UpdateMath_editsub(this.value)"></textarea> 
+			<br><br>
+		</p>
+		<p>
+			<div id="MathOutput_editsub" class="tex_render">
+			</div>
+		</p>
+		<br>
+		<p>
+			Reference to subsystem (optional): <input type="text" name="Reference" value="">
+			<br><br>
+			Free text about subsystem (optional)
+			<textarea name="FreeText" id="MathInput2" size="50" onkeyup="UpdateMath2_editsub(this.value)"></textarea>
+			<br><br>
+		</p>
+		<div id="MathOutput2_editsub" class="tex_render">
+		</div>
+		<br>
+		<input type="button" id="mybutton_editsub" name="mybutton_editsub" value="Submit" onClick="inputeditsub(this.form)">
+	</FORM>
+</div>
 
-  <div id="footer">
+
+<!--div for newresult-->
+<div class="hidden" id="editresult">
+	<FORM NAME="myform_editresult" ACTION="" MEHTOD="GET">
+	<p>
+	First Theorem: &nbsp;&nbsp;
+	<select name="Theorem1">
+	  <option value="Theorem1">Theorem 1</option>
+	  <option value="Theorem2">Theorem 2</option>
+	  <option value="Theorem3">Theorem 3</option>
+	  <option value="Theorem4">Theorem 4</option>
+	</select>
+	&nbsp;&nbsp;&nbsp;Relationship:&nbsp;&nbsp;&nbsp;
+	<select name="Relate">
+	  <option value="Imply">Implies</option>
+	  <option value="DNImply">Does not imply</option>
+	</select>
+	&nbsp;&nbsp;&nbsp;
+	Second Theorem: &nbsp;&nbsp;
+	<select name="Theorem2">
+	  <option value="Theorem1">Theorem 1</option>
+	  <option value="Theorem2">Theorem 2</option>
+	  <option value="Theorem3">Theorem 3</option>
+	  <option value="Theorem4">Theorem 4</option>
+	</select>
+	<br><br><br><br><br><br>
+	Reference:
+	<input type="text" name="Reference" value=""><br><br>
+	<input type="button" name="button" value="Submit" onClick="inputeditresult(this.form)">
+	</FORM>
+	</p>
+</div>
+
+<div id="push"></div>
+</div>
+
+<div id="footer">
     <p><a href="about.html">About this site</a> &bull; <a href=
     "copyright.html">Copyright</a> &bull; <a href="about.html">Contact
     us</a></p>
-  </div>
+</div>
 </body>
 </html>
 
