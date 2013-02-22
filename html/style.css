@@ -295,5 +295,36 @@ div.announce h3 {
 }
 
 
-#target ul { list-style-type: none;  margin: 0; padding; 0; }
-#target ul li { border: 1px solid black; display: inline-block; margin: 2px; padding: 2px; margin-right: 1em; }
+#target { 
+ border: none !important;
+}
+
+#target ul { 
+  list-style-type: none;  
+  margin: 0; 
+  padding: 0;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+#target ul li {   
+  border: 1px solid #ccc;  
+  background-color: #eee;
+  display: inline-block; 
+  margin: 2px; 
+  padding: 2px; 
+  margin-right: 1em; 
+  margin-bottom: 1em;
+}
+
+
+#target ul li a { 
+  font-color: black;
+}
+
+#select { 
+  margin-left: 1em;
+  margin-bottom: 1em;
+  font-size: 120%;
+  font-weight: bold;
+}
