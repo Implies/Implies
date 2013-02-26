@@ -232,27 +232,9 @@
 	  document.getElementById('editresult').className="content";  
 	}
 	</script>
+	
 	<script type="text/javascript">
-
-		function getJSONP(url, success){
-
-			var ud = '_' + +new Date,
-				script = document.createElement('script'),
-				head = document.getElementsByTagName('head')[0] || document.documentElement;
-
-			window[ud] = function (data)
-			{
-				head.removeChild(script);
-				success && success(data);
-			};
-
-			script.src = url.replace('callback=?', 'callback=' + ud);
-			head.appendChild(script);
-
-		}
-
-		 getJSONP('http://localhost/cgi/listsubsystems.cgi');
-		 
+		//Script for new result div
 		var http_request = false;
 		var http_request2 = false;
 		var side;
@@ -265,21 +247,15 @@
 			$('info').update(node);
 			MathJax.Hub.Typeset();
 		}
-
-		function makeRequest(url)
-		{
-			http_request = new XMLHttpRequest();
-			http_request.onreadystatechange = alertContents; // set callback
-			http_request.open('GET', url, true); // initialize
-			http_request.send(null); // run
-		}
-
+		
 		function alertContents()
 		{
 			if(http_request.readyState == 4)
 			{
 				if(http_request.status == 200)
 				{
+					alert("running");
+
 					var obj = JSON.parse(http_request.responseText);
 					var tar = document.getElementById("target");
 					var ul = document.createElement('ul');
@@ -309,14 +285,13 @@
 		function populateResult()
 		{
 		
-			var url = 'http://reu.marshall.edu/~implies/cgi-bin/gendot.cgi?';
-			//var url = 'http://localhost/~ubuntu/cgi/gendot.cgi?';
-			
+			var url = 'http://reu.marshall.edu/~implies/cgi-bin/gendot.cgi?';			
 			upper = document.getElementById("uppersubsystem").label;
 			lower = document.getElementById("lowersubsystem").label;
-			
+			relation = document.getElementById("relation").label;
 			url = url + 'upper=' + encodeURI(upper);
-			url = url + '&lower=' + encodeURI(lower);                
+			url = url + '&lower=' + encodeURI(lower); 
+			url = url + "&relation=" + encodeURI(relation);               
 			
 			http_request2 = new XMLHttpRequest();
 			http_request2.onreadystatechange = alertContents2; // set callback
@@ -343,6 +318,8 @@
 			}
 			document.getElementById('select').innerHTML = "Choose " + str + " Subsystem";
 			MathJax.Hub.Typeset();
+			alert(end);
+
 		}
 		
 		function changeRelate(){
@@ -365,15 +342,7 @@
 			MathJax.Hub.Typeset(side);
 		}
 
-		function kl(str)
-		{
-			return function ()
-			{
-				alert(str);
-			}
-		}
-
-        </script>
+    </script>
 
 	<head>
 	  <title>Edit - Reverse Mathematics Zoo</title>
@@ -493,11 +462,11 @@
 	<!--div for newresult-->
 	<div class="hidden" id="newresult">
 		<FORM NAME="myform_newresult" ACTION="" MEHTOD="GET">
-			<h3>Right Subsystem</h3>
+			<h3>Subsystem</h3>
 			<ul class="select">
 				<li id="uppersubsystem">None Selected</li>
 				<li>
-				<a class="selectsubsystem" href="#" name="uppersubsystem" onclick='changeSub("uppersubsystem");'>[change]</a>
+				<a class="selectsubsystem" href="#" name="uppersubsystem" onclick="changeSub('uppersubsystem');">[change]</a>
 				</li>
 			</ul>
 			<h3>Relate</h3>
@@ -507,18 +476,17 @@
 				<a class="selectrelate" href="#" name="relate" onclick='changeRelate();'>[change]</a>
 				</li>
 			</ul>
-			<h3>Left Subsystem</h3>
+			<h3>Subsystem</h3>
 			<ul class="select">
 				<li id="lowersubsystem">None Selected</li>
 				<li>
 				<a id="lowersubsystem" class="selectsubsystem" href="#" name="lowerubsystem" onclick='changeSub("lowersubsystem");'>[change]</a>
 				</li>
 			</ul>
-	<div id="content">
+	
 		<div id="select" class="content"></div>
-		<div id="target" style="display:none"></div>
-	</div>
-	<div class="content" id="info"></div>
+		<div id="target" style="Float:right">Right here.</div>
+	
     <div id="debug_output" style="display:none"></div>
             <!-- Always keep debug_output -->
 		Reference:

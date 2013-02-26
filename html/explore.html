@@ -67,8 +67,8 @@
 
             document.observe('dom:loaded', function ()
             {
-                canviz = new Canviz('canviz', 'default.dot');
-                                makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
+               canviz = new Canviz('canviz', 'default.dot');
+                  makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
                // makeRequest('http://localhost/~ubuntu/cgi/listsubsystems.cgi');
 
             });
@@ -130,6 +130,17 @@
                         document.getElementById('canviz').style.display = "block";
                         document.getElementById('target').style.display = "none";
                         document.getElementById('select').style.display = "none";
+
+			var graph = document.getElementById("graph");
+			
+                        graph.removeChild(document.getElementById("canviz"));
+			var newCanviz = document.createElement("div");
+			newCanviz.setAttribute("id", "canviz");
+			graph.appendChild(newCanviz);
+
+
+//			element = document.getElementById("canviz");
+//			element.parentNode.removeChild(element);
 
 			alert('http://reu.marshall.edu/~implies/' + response.dotfileurl);
                         canviz = new Canviz('canviz', 'http://reu.marshall.edu/~implies/' + response.dotfileurl);
@@ -310,8 +321,8 @@
             </div>
             <div id="content">
                 <!-- <h2>Search results</h2> -->
-                <div id="select" class="content"></div>
                 <div id="graph" class="content">
+                    <div id="select" ></div>
                     <div id="canviz" style="display:none"></div>
                     <div id="target" style="display:none"></div>
                 </div>
