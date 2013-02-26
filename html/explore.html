@@ -32,34 +32,12 @@
                 }
             });
         </script>
-        <script type="text/javascript">
-            
-        </script>
-        <script type="text/javascript">
-            function getJSONP(url, success)
-            {
 
-                var ud = '_' + +new Date,
-                    script = document.createElement('script'),
-                    head = document.getElementsByTagName('head')[0] || document.documentElement;
-
-                window[ud] = function (data)
-                {
-                    head.removeChild(script);
-                    success && success(data);
-                };
-
-                script.src = url.replace('callback=?', 'callback=' + ud);
-                head.appendChild(script);
-
-            }
-
-                        getJSONP('http://reu.marshall/edu/~implies/cgi-bin/listsubsystems.cgi');
-        //    getJSONP('http://localhost/~ubuntu/cgi/listsubsystems.cgi');
-        </script>
         <script type="text/javascript">
             var http_request = false;
             var http_request2 = false;
+            //var hostname = "http://localhost/~ubuntu/";
+            var hostname = "http://reu.marshall.edu/~implies/";
             var side;
             var upper;
             var lower = document.getElementById("lowersubsystem");
@@ -67,9 +45,16 @@
 
             document.observe('dom:loaded', function ()
             {
+<<<<<<< HEAD
                canviz = new Canviz('canviz', 'default.dot');
                   makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
                // makeRequest('http://localhost/~ubuntu/cgi/listsubsystems.cgi');
+=======
+                canviz = new Canviz('canviz', 'default.dot');
+                makeRequest(hostname + 'cgi-bin/listsubsystems.cgi');
+                                //makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
+               // makeRequest('http://localhost/~ubuntu/cgi-bin/listsubsystems.cgi');
+>>>>>>> 1016f421769c4d88163a7af0cfa6268810b5c279
 
             });
 
@@ -143,7 +128,7 @@
 //			element.parentNode.removeChild(element);
 
 			alert('http://reu.marshall.edu/~implies/' + response.dotfileurl);
-                        canviz = new Canviz('canviz', 'http://reu.marshall.edu/~implies/' + response.dotfileurl);
+                        canviz = new Canviz('canviz', hostname + response.dotfileurl);
 
                         setTimeout(function ()
                         {
@@ -160,29 +145,9 @@
                 }
             }
 
-            /*function inputnewsub(form)
-            {
-                var upperbound = upper.label;
-                var lowerbound = lower.label;
-                var ASCIIName = form.ASCIIName.value;
-                var LaTexName = form.LaTexName.value;
-                var Reference = form.Reference.value;
-                var FreeText = form.FreeText.value;
-//                var myURL = 'http://reu.marshall.edu/~mummertc/cgi-bin/newsub.cgi?';
-                myURL = myURL + 'ASCIIName=' + encodeURI(ASCIIName);
-                myURL = myURL + '&LaTexName=' + encodeURI(LaTexName);
-                myURL = myURL + '&Reference=' + encodeURI(Reference);
-                myURL = myURL + '&FreeText=' + encodeURI(FreeText);
-                makeRequestnewsub(myURL);
-            }*/
-
             function updateGraph()
             {
-                //upper = document.getElementById("uppersubsystem");
-                //lower = document.getElementById("lowersubsystem");
-            
                 var url = 'http://reu.marshall.edu/~implies/cgi-bin/gendot.cgi?';
-                //var url = 'http://localhost/~ubuntu/cgi/gendot.cgi?';
                 
                 upper = document.getElementById("uppersubsystem").label;
                 lower = document.getElementById("lowersubsystem").label;
@@ -195,10 +160,6 @@
                 http_request2.open('GET', url, true); // initialize
                 http_request2.send(null); // run
                 
-                //alert(upper);
-                //alert(lower);
-//                alert(url);
-                
                 return false;
             }
 
@@ -210,7 +171,7 @@
                 document.getElementById('info').style.display = "none";
                 document.getElementById('target').style.display = "";
                 document.getElementById('select').style.display = "";
-                //alert("here");
+
                 if(side.localeCompare('uppersubsystem'))
                 {
                    var str = "Lower"
@@ -275,14 +236,7 @@
                 </p>
             </div>
             <div id="nav">
-                <!--button style="" id="mybutton">Make a request</button>
-                <script>
-                    /*document.getElementById('mybutton').onclick = function ()
-                    {
-                        alert("print");
-                        makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
-                    }
-                </script-->
+
                 <form>
                      <h3>Upper bound</h3>
 
@@ -300,18 +254,7 @@
                             <a id="lowersubsystem" class="selectsubsystem" href="#" name="lowersubsystem" onclick='changeSub("lowersubsystem");'>[change]</a>
                         </li>
                     </ul>
-                    <!--<h3>Options</h3>
-            
-                    <ul>
-                      <li><input type="checkbox" id="open" value="open" /><label for=
-                      "open">Indicate open results</label></li>
-            
-                      <li><input type="checkbox" id="omega" value=
-                      "omega" /><label for="omega">Show results that hold in
-                      \(\omega\)-models</label></li>
-                    </ul>
-            
-                    <h3>Search</h3> -->
+
                     <ul>
                         <li>
                             <input type="submit" value="Update graph" onclick="updateGraph()" />
@@ -320,7 +263,11 @@
                 </form>
             </div>
             <div id="content">
+<<<<<<< HEAD
                 <!-- <h2>Search results</h2> -->
+=======
+                <div id="select" class="content"></div>
+>>>>>>> 1016f421769c4d88163a7af0cfa6268810b5c279
                 <div id="graph" class="content">
                     <div id="select" ></div>
                     <div id="canviz" style="display:none"></div>

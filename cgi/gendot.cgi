@@ -15,7 +15,7 @@ my $url = "http://reu.marshall.edu/~implies/dot/";
 my $gvext = ".gv";
 my $dotext = ".dot";
 
-
+my %data = ();
 my $cgi = CGI->new();
 
 print "content-type: text/html\n\n";
@@ -71,14 +71,17 @@ my $sth = $dbh->prepare($query0);
 
 # Execute the query
 $sth->execute() or die "Couldn't execute statement: $DBI::errstr; stopped";
+#$sth->execute($upper, $upper, $lower, $lower) or die "Couldn't execute statement: $DBI::errstr; stopped";
 
 # Pull from Subsystem Table
 while ( my ($field1, $field2,) = $sth->fetchrow_array() )
 {
   $field2 =~ s!\\!\\\\!g;
+   $data{$field1} = $field2;
+  # print $data{$field1};   
 
-     print OUTFILE "\"$field1\" [id =\"$field1\" label=\"\\\\($field2\\\\\)\" " 
-                 . " href=\"javascript:void(click_node(\'$field1\'))\"];\n";    
+    # print OUTFILE "\"$field1\" [id =\"$field1\" label=\"\\\\($field2\\\\\)\" " 
+    #             . " href=\"javascript:void(click_node(\'$field1\'))\"];\n";    
      #$count++;
 }
 
@@ -92,7 +95,13 @@ $sth->execute($upper, $upper, $lower, $lower) or die "Couldn't execute statement
 my ($left, $right, $relate);
 while ( my ($left,$right, $relate,) = $sth->fetchrow_array() )
 {    
-  if ( $relate eq 'imply' ) { 
+  if ( $relate eq 'imply' )
+  { 
+     print OUTFILE "\"$left\" [id =\"$left\" label=\"\\\\($data{$left}\\\\)\" " 
+                . " href=\"javascript:void(click_node(\'$data{$left}\'))\"];\n";
+     #print OUTFILE "\"$left\"" . "[id=\"$left\" . "label = \"
+     print OUTFILE "\"$right\" [id =\"$right\" label=\"\\\\($data{$right}\\\\)\" "
+                . " href=\"javascript:void(click_node(\'$data{$right}\'))\"];\n";
      print OUTFILE "\"$left\" -> \"$right\";\n";
      $count++;
   }
