@@ -2,28 +2,32 @@
 
 use CGI;
 use DBI;
+use strict;
+use warnings;
 
-$q=new CGI;
+print "content-type: text/html\n\n";
 
-$Left = $q->param('Left');
-$Right = $q->param('Right');
-$Relate = $q->param('Relate');
-$Citation = $q->param('Citation');
+my $q=new CGI;
+my $upper = $q->param('upper') || $ARGV[0];
+my $lower = $q->param('lower') || $ARGV[1];
+my $relation = $q->param('relation') || $ARGV[2];
+##$Citation = $q->param('Citation');
+
+if($relation eq "Implies"){
+		$relation = "imply";
+	}
+else{
+		$relation = "notimply";
+	}
 
 my $dbh=DBI->connect("DBI:mysql:database=Zoo;mysql_read_default_file=/home/mummertc/.my.cnf", "", "", {'AutoCommit'=>0});
 
-sub populate{
-	$sql = "SELECT sub_Ascii FROM Subsystems; ";
-		
-	$sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
-	$sth->execute();
+my $sql = "INSERT INTO Theorems(?, ?, ?) ON DUPLICATE KEY UPDATE;";
+my $sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
+$sth->execute($upper, $lower, $relation);
+
+if ($sth)
+{
+	print "Success";
 }
-sub result{
-	$sql = "IF EXISTS(SELECT * FROM References WHERE ref_Citation=?) BEGIN
-	INSERT INTO Theorems(the_Left, the_Right, the_Relate, the_Citation)
-	VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE
-	END;";
-	$sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
-	$sth->execute($Citation, $Left, $Right, $Relate, $Citation);
-}
-print "content-type: text/html\n\n";
+
