@@ -141,7 +141,7 @@
 		(function () {  
 		window.UpdateMath_newsub = function (TeX) {
 		ns = document.getElementById('MathOutput_newsub');
-		ns.innerHTML = TeX;
+		ns.innerHTML = '\\(' + TeX + '\\)';
 		MathJax.Hub.Typeset(ns);
 			}
 	  })();
@@ -439,18 +439,18 @@
 			<p>ASCII name: <input type="text" name="ASCIIName" value="">
 				<br><br>
 				LaTeX name:<br/>
-				<textarea name="LaTexName" id="MathInput" size="50" onkeyup="UpdateMath_newsub(this.value)"></textarea> 
+				<textarea name="LaTexName" id="MathInput" onkeyup="UpdateMath_newsub(this.value)"></textarea> 
 				<br><br>
 			</p>
 			<p>
-				<div id="MathOutput_newsub" class="tex_render"></div>
+				<div id="MathOutput_newsub"></div>
 			</p>
 			<br>
 			<p>
 				Reference to subsystem (optional): <input type="text" name="Reference" value="">
 				<br><br>
 				Free text about subsystem (optional) <br/>
-				<textarea name="FreeText" id="MathInput2" size="50" onkeyup="UpdateMath2_newsub(this.value)"></textarea>
+				<textarea name="FreeText" id="MathInput2"  onkeyup="UpdateMath2_newsub(this.value)"></textarea>
 				<br><br>
 			</p>
 				<div id="MathOutput2_newsub" class="tex_render"></div>
@@ -461,35 +461,27 @@
 
 	<!--div for newresult-->
 	<div class="hidden" id="newresult">
-		<FORM NAME="myform_newresult" ACTION="" MEHTOD="GET">
-			<h3>Subsystem</h3>
-			<ul class="select">
-				<li id="uppersubsystem">None Selected</li>
-				<li>
-				<a class="selectsubsystem" href="#" name="uppersubsystem" onclick="changeSub('uppersubsystem');">[change]</a>
-				</li>
-			</ul>
-			<h3>Relate</h3>
-				<ul class="select">
-				<li id="relation">Implies</li>
-				<li>
-				<a class="selectrelate" href="#" name="relate" onclick='changeRelate();'>[change]</a>
-				</li>
-			</ul>
-			<h3>Subsystem</h3>
-			<ul class="select">
-				<li id="lowersubsystem">None Selected</li>
-				<li>
-				<a id="lowersubsystem" class="selectsubsystem" href="#" name="lowerubsystem" onclick='changeSub("lowersubsystem");'>[change]</a>
-				</li>
-			</ul>
 	
 		<div id="select" class="content"></div>
-		<div id="target" style="Float:right">Right here.</div>
+		<div id="target" style="Float:right"></div>
 	
     <div id="debug_output" style="display:none"></div>
             <!-- Always keep debug_output -->
-		Reference:
+		<FORM NAME="myform_newresult" ACTION="" MEHTOD="GET">
+			<div class="formlabel">First Subsystem</div>
+			<div class="indent" id="uppersubsystem">\(\mathsf{ACA}_0\) 
+				<a class="selectsubsystem" href="#" name="uppersubsystem" onclick="changeSub('uppersubsystem');">[change]</a>
+				</div>
+			<div class="formlabel">Relationship</div>
+				<div class="indent">Implies
+				<a class="selectrelate" href="#" name="relate" onclick='changeRelate();'>[change]</a>
+				</div>
+			</ul>
+			<div class="formlabel">Second subsystem</div>
+			<div class="indent" id="uppersubsystem">\(\mathsf{RCA}_0\) 
+				<a class="selectsubsystem" href="#" name="uppersubsystem" onclick="changeSub('uppersubsystem');">[change]</a>
+				</div>
+		<div class="formlabel">Reference:</div>
 		<input type="text" name="Reference" value=""><br><br>
 		<input type="button" name="button" value="Submit" onClick="inputnewresult(this.form)">
 		</FORM>
@@ -525,8 +517,7 @@
 				<br><br>
 			</p>
 			<p>
-				<div id="MathOutput_editsub" class="tex_render">
-				</div>
+				<div id="MathOutput_editsub">zdasd</div>
 			</p>
 			<br>
 			<p>
