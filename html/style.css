@@ -290,6 +290,15 @@ div.announce h3 {
   font-size: 90%;
 }
 
+
+div.formlabel { font-weight: bold; }
+div.indent { margin-left: 2em; }
+
+#MathInput { border: 1px solid black; width: 4in; height: 0.25in;}
+#MathInput2 { border: 1px solid black; width: 4in; height: 1in;}
+
+#MathOutput_newsub { border: 1px solid black; width: 4in; height: 0.25in;}
+
 .tex_render { border: 1px solid black; width: 4in; height: 1in;}
 
 #MathInput_ref { 
