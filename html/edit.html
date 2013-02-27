@@ -583,7 +583,8 @@
         
         document.observe('dom:loaded', function ()
         {
-            makeRequestnewresult('http://localhost/~ubuntu/cgi-bin/listsubsystems.cgi');
+//            makeRequestnewresult('http://localhost/~ubuntu/cgi-bin/listsubsystems.cgi');
+	    makeRequestnewresult('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
 
         });       
         
@@ -652,8 +653,8 @@
 
         function populateResult()
         {
-            var url = 'http://localhost/~ubuntu/cgi-bin/gendot.cgi?';
-//            var url = 'http://reu.marshall.edu/~implies/cgi-bin/gendot.cgi?';
+//            var url = 'http://localhost/~ubuntu/cgi-bin/gendot.cgi?';
+            var url = 'http://reu.marshall.edu/~implies/cgi-bin/gendot.cgi?';
             upper = document.getElementById("uppersubsystem").label;
             lower = document.getElementById("lowersubsystem").label;
             relation = document.getElementById("relation").label;
