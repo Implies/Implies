@@ -41,16 +41,18 @@
             var side;
             var upper;
             var lower = document.getElementById("lowersubsystem");
+	    var obj;
             var systems = new Array();
+	    var freetext = new Array();
 
             document.observe('dom:loaded', function ()
             {
 
-               canviz = new Canviz('canviz', 'default.dot');
-                  makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
+              // canviz = new Canviz('canviz', 'default.dot');
+                 // makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
                // makeRequest('http://localhost/~ubuntu/cgi/listsubsystems.cgi');
 
-                canviz = new Canviz('canviz', 'default.dot');
+                //canviz = new Canviz('canviz', 'default.dot');
                 makeRequest(hostname + 'cgi-bin/listsubsystems.cgi');
                                 //makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
                // makeRequest('http://localhost/~ubuntu/cgi-bin/listsubsystems.cgi');
@@ -58,9 +60,10 @@
 
             });
 
-            function click_node(node)
+            function click_node(ascii)
             {
-                $('info').update(node);
+                $('info').update(freetext[ascii]);
+		//alert(freetext[ascii]);
                 MathJax.Hub.Typeset();
             }
 
@@ -78,13 +81,14 @@
                 {
                     if(http_request.status == 200)
                     {
-                        var obj = JSON.parse(http_request.responseText);
+                        obj = JSON.parse(http_request.responseText);
                         var tar = document.getElementById("target");
                         var ul = document.createElement('ul');
                         tar.appendChild(ul);
                         for(var i = 0; i < obj.length; i++)
                         {
                             systems[obj[i][0]] = obj[i][1];
+			    freetext[obj[i][0]] = obj[i][2];
                             var itm = document.createElement('li');
                             var lnk = document.createElement('a');
                             var str = '\\(\\\\' + obj[i][1] + '\\)';
@@ -127,7 +131,7 @@
 //			element = document.getElementById("canviz");
 //			element.parentNode.removeChild(element);
 
-			alert('http://reu.marshall.edu/~implies/' + response.dotfileurl);
+			//alert('http://reu.marshall.edu/~implies/' + response.dotfileurl);
                         canviz = new Canviz('canviz', hostname + response.dotfileurl);
 
                         setTimeout(function ()
@@ -188,6 +192,7 @@
             {
                 document.getElementById(side).innerHTML = '\\(' + systems[ascii] + '\\)';
                 document.getElementById(side).label = ascii;
+		//alert(ascii);
                 document.getElementById('canviz').style.display = "";
                 document.getElementById('info').style.display = "";
                 document.getElementById('target').style.display = "none";

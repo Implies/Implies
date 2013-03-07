@@ -98,10 +98,10 @@ while ( my ($left,$right, $relate,) = $sth->fetchrow_array() )
   if ( $relate eq 'imply' )
   { 
      print OUTFILE "\"$left\" [id =\"$left\" label=\"\\\\($data{$left}\\\\)\" " 
-                . " href=\"javascript:void(click_node(\'$left\'))\"];\n";
+                . " href=\"javascript:void(click_node(\'$data{$left}\'))\"];\n";
      #print OUTFILE "\"$left\"" . "[id=\"$left\" . "label = \"
      print OUTFILE "\"$right\" [id =\"$right\" label=\"\\\\($data{$right}\\\\)\" "
-                . " href=\"javascript:void(click_node(\'$right\'))\"];\n";
+                . " href=\"javascript:void(click_node(\'$data{$right}\'))\"];\n";
      print OUTFILE "\"$left\" -> \"$right\";\n";
      $count++;
   }
