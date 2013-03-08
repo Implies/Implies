@@ -40,7 +40,7 @@
             var hostname = "http://reu.marshall.edu/~implies/";
             var side;
             var upper;
-            var lower = document.getElementById("lowersubsystem");
+            var lower; // = document.getElementById("lowersubsystem");
 	    var obj;
             var systems = new Array();
 	    var freetext = new Array();
@@ -60,9 +60,10 @@
 
             });
 
-            function click_node(ascii)
+            function click_node(left, relate, right)
             {
-                $('info').update(freetext[ascii]);
+                //$('info').update(freetext[left][relate][right]);
+		$('info').update(obj[2]);
 		//alert(freetext[ascii]);
                 MathJax.Hub.Typeset();
             }
@@ -85,10 +86,11 @@
                         var tar = document.getElementById("target");
                         var ul = document.createElement('ul');
                         tar.appendChild(ul);
-                        for(var i = 0; i < obj.length; i++)
+                        for(var i = 0; i < obj.length; i++) //> 
                         {
                             systems[obj[i][0]] = obj[i][1];
-			    freetext[obj[i][0]] = obj[i][2];
+			    //freetext[obj[i][0][1][2]] = obj[i][3];
+			    //alert(freetext[[i][0][1][1]];
                             var itm = document.createElement('li');
                             var lnk = document.createElement('a');
                             var str = '\\(\\\\' + obj[i][1] + '\\)';
@@ -115,7 +117,9 @@
                     if(http_request2.status == 200)
                     {
                         var response = JSON.parse(http_request2.responseText);
-
+			
+				
+			
                         document.getElementById('canviz').style.display = "block";
                         document.getElementById('target').style.display = "none";
                         document.getElementById('select').style.display = "none";
@@ -127,12 +131,8 @@
 			newCanviz.setAttribute("id", "canviz");
 			graph.appendChild(newCanviz);
 
-
-//			element = document.getElementById("canviz");
-//			element.parentNode.removeChild(element);
-
-			//alert('http://reu.marshall.edu/~implies/' + response.dotfileurl);
-                        canviz = new Canviz('canviz', hostname + response.dotfileurl);
+			var filename = upper + "_" + lower;
+                        canviz = new Canviz('canviz', hostname + '/dot/' + filename);
 
                         setTimeout(function ()
                         {

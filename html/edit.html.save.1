@@ -879,14 +879,15 @@
                 </div>
                 <!--div for newresult-->
                 <div class="hidden" id="newresult">
-                    <div style="Float:left">
-                        <!-- text on this side-->
+                    <div style="Float:left">                        <!-- text on this side-->
                         <FORM NAME="myform_newresult" ACTION="" MEHTOD="GET">
                             	<h3>Subsystem</h3>
 
                             <ul class="select">
                                 <li id="uppersubsystem">None Selected</li>
-                                <a class="selectsubsystem" href="#" name="uppersubsystem" onclick="changeSub('uppersubsystem');">[change]</a>
+                                <li>Fchange
+                                    <a class="selectsubsystem" href="#" name="uppersubsystem" onclick="changeSub('uppersubsystem');">[change]</a>
+                                </li>
                             </ul>
                             	<h3>Relate</h3>
 
@@ -900,7 +901,9 @@
 
                             <ul class="select">
                                 <li id="lowersubsystem">None Selected</li>
-                                <a id="lowersubsystem" class="selectsubsystem" href="#" name="lowerubsystem" onclick='changeSub("lowersubsystem");'>[change]</a>
+                                <li>
+                                    <a id="lowersubsystem" class="selectsubsystem" href="#" name="lowerubsystem" onclick='changeSub("lowersubsystem");'>[change]</a>
+                                </li>
                             </ul>
                             <div id="select" class="content"></div>
                             <div id="debug_output" style="display:none"></div>
@@ -945,7 +948,7 @@
                         <p>ASCII name:
                             <input type="text" name="ASCIIName" value="">
                             <br>
-                            <br>LaTeX name: <br>
+                            <br>LaTeX name:
                             <textarea name="LaTexName" id="MathInput" size="50" onkeyup="UpdateMath_editsub(this.value)"></textarea>
                             <br>
                             <br>
@@ -957,7 +960,7 @@
                         <p>Reference to subsystem (optional):
                             <input type="text" name="Reference" value="">
                             <br>
-                            <br>Free text about subsystem (optional)<br>
+                            <br>Free text about subsystem (optional)
                             <textarea name="FreeText" id="MathInput2" size="50" onkeyup="UpdateMath2_editsub(this.value)"></textarea>
                             <br>
                             <br>

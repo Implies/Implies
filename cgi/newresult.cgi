@@ -21,7 +21,7 @@ my $citation = $q->param('citation') || $ARGV[3];
 #	}
 
 print "$upper $lower $relation $citation \n";
-my $dbh=DBI->connect("DBI:mysql:database=Zoo;mysql_read_default_file=/home/mummertc/.my.cnf", "", "", {'AutoCommit'=>0});
+my $dbh=DBI->connect("DBI:mysql:database=Zoo;mysql_read_default_file=/home/implies/.my.cnf", "", "", {'AutoCommit'=>0});
 
 my $sql = 'INSERT INTO Theorems VALUES(?, ?, ?, ?)';
 
