@@ -91,7 +91,7 @@ $sth = $dbh->prepare($query1);
 $sth->execute($upper, $upper, $lower, $lower) or die "Couldn't execute statement: $DBI::errstr; stopped";
 
 # Pull from Theorem Table
-my ($left, $right, $relate);
+my ($left, $right, $relate, $reason);
 while ( my ($left,$right, $relate, $reason) = $sth->fetchrow_array() )
 {    
   if ( $relate eq 'imply' )
@@ -102,7 +102,8 @@ while ( my ($left,$right, $relate, $reason) = $sth->fetchrow_array() )
      print OUTFILE "\"$right\" [id =\"$right\" label=\"\\\\($tex{$right}\\\\)\" "
                 . " href=\"javascript:void(click_node(\'$right\'))\"];\n";
      print OUTFILE "\"$left\" -> \"$right\";\n";
-     $data{$left}{$relate}{$right} =  $reason;
+     #$data{$left}{$relate}{$right} =  $reason;
+     #print $reason;
   }
   if ( $relate eq 'notimply')
   {
@@ -112,7 +113,8 @@ while ( my ($left,$right, $relate, $reason) = $sth->fetchrow_array() )
      print OUTFILE "\"$right\" [id =\"$right\" label=\"\\\\($tex{$right}\\\\)\" "
                 . " href=\"javascript:void(click_node(\'$right\'))\"];\n";
      print OUTFILE "\"$left\" -> \"$right\" [color = \"red\"];\n";
-     print $data{$left}{$relate}{$right};
+     #$data{$left}{$relate}{$right} =  $reason;
+     #print $reason;
   }
 
 }
@@ -127,4 +129,4 @@ system("dot", "-Txdot", $dotdir . $filename . $gvext, "-o", $dotdir . $filename 
 $dbh->disconnect();
 
 $response->{'dotfileurl'} = $tmpdir . $filename . $dotext;
-print to_json($response, {pretty => 1}); 
+print to_json(%data, {pretty => 1}); 

@@ -53,8 +53,6 @@
             function click_node(ascii)
             {
                 //$('info').update(freetext[left][relate][right]);
-		//$('info').update('\\(\\\\' + systems[ascii] + '\\)');
-		$('info').update(freetext[ascii]);
 		//alert(freetext[ascii]);
                 MathJax.Hub.Typeset();
             }
@@ -74,14 +72,13 @@
                     if(http_request.status == 200)
                     {
                         obj = JSON.parse(http_request.responseText);
-			//alert(obj);
+			alert(obj);
                         var tar = document.getElementById("target");
                         var ul = document.createElement('ul');
                         tar.appendChild(ul);
                         for(var i = 0; i < obj.length; i++) //> keep this comment for nano editing on reu
                         {
                             systems[obj[i][0]] = obj[i][1];
-			    freetext[obj[i][0]] = obj[i][2];
                             var itm = document.createElement('li');
                             var lnk = document.createElement('a');
                             var str = '\\(\\\\' + obj[i][1] + '\\)';
@@ -107,7 +104,7 @@
                 {
                     if(http_request2.status == 200)
                     {
-                        //var response = JSON.parse(http_request2.responseText);
+                        var response = JSON.parse(http_request2.responseText);
 						
                         document.getElementById('canviz').style.display = "block";
                         document.getElementById('target').style.display = "none";
