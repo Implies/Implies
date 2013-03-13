@@ -10,19 +10,50 @@ my $cgi = CGI->new();
 
 print "content-type: text/html\n\n";
 
-#my $x = $cgi->param('a') || $ARGV[0];
+my $x = $cgi->param('a') || $ARGV[0];
+my $y = $cgi->param('b') || $ARGV[1];
 
 my $dbh = DBI->connect('DBI:mysql:Zoo', 'root', 'implies') or
 die "Couldn't open database: + $DBI::errstr; stopped";
 # my $sth = $dbh->prepare(<<End_SQL) or die "Couldn't prepare statement: + $DBI::errstr; stopped";
 
-my $query0 = "SELECT Subsystems.sub_Ascii, Subsystems.sub_Latex, Subsystems.sub_FreeText FROM Subsystems";
+my $query;
+if($x)
+{
+   if($y)
+   {
+      $query = "SELECT t2.sub_Ascii, t2.sub_Latex, t2.sub_FreeText FROM Subsystems AS t0 
+                JOIN Theorems AS t1 ON t1.the_Left = t0.sub_Ascii 
+                JOIN Subsystems AS t2 ON t1.the_Right = t2.sub_Ascii WHERE t0.sub_Ascii = ?";
+   }
+   else
+   {
+      $query = "SELECT Subsystems.sub_Ascii, Subsystems.sub_Latex, Subsystems.sub_FreeText FROM Subsystems
+                WHERE Subsystems.sub_Ascii = ?";
+   }
+   
+
+   #$query = "SELECT Subsystems.sub_Ascii, Subsystems.sub_Latex, Subsystems.sub_FreeText FROM 
+   #	     WHERE Subsystems.sub_Ascii = ?";
+}
+else
+{
+   $query = "SELECT Subsystems.sub_Ascii, Subsystems.sub_Latex, Subsystems.sub_FreeText FROM Subsystems";
+}
+
 
 # prepare first query
-my $sth = $dbh->prepare($query0);
+my $sth = $dbh->prepare($query);
 
 # Execute the query
-$sth->execute() or die "Couldn't execute statement: $DBI::errstr; stopped";
+if($x)
+{ 
+   $sth->execute(@ARGV[0]) or die "Couldn't execute statement: $DBI::errstr; stopped";
+}
+else
+{
+   $sth->execute() or die "Couldn't execute statement: $DBI::errstr; stopped";
+}
 
 my $names = {};   # hash reference
 my $tex = {};

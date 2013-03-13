@@ -8,10 +8,10 @@ print "content-type: text/plain\n\n";
 $q=new CGI;
 
 $ASCIIName = $q->param('ASCIIName') || $ARGV[0];
-$LaTexName = $q->param('LaTexName') || $ARGV[1];
-$Reference = $q->param('Reference') || $ARGV[2];
-$FreeText = $q->param('FreeText')   || $ARGV[3];
-$Overwrite = $q->param('Overwrite') || $ARGV[4] || 0;
+$Overwrite = $q->param('Overwrite') || $ARGV[1] || 0;
+$LaTexName = $q->param('LaTexName') || $ARGV[2];
+$Reference = $q->param('Reference') || $ARGV[3];
+$FreeText  = $q->param('FreeText')  || $ARGV[4];
 
 my $date = `/bin/date`;
 chomp $date;
