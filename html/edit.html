@@ -20,7 +20,7 @@
             var right;
             var ul;
             var ul2;
-            var left = document.getElementById("leftsubsystem");
+            var left;// = document.getElementById("leftsubsystem");
             var systems = new Array();
             var tar = document.getElementById("target");
             //var tar2 = document.getElementById("target2");  
@@ -133,6 +133,8 @@
                 myURL = myURL + '&Reference=' + encodeURI(Reference);
                 myURL = myURL + '&FreeText=' + encodeURI(FreeText);
                 makeRequestnewsub(myURL);
+                document.getElementById('target').style.display = "none";
+                makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
             }
             
             function deletesub(form)
@@ -150,6 +152,24 @@
                 myURL = myURL + '&Overwrite=' + encodeURI(Overwrite);
                 alert(myURL);
                 makeRequestnewsub(myURL);
+                document.getElementById('target').style.display = "none";
+                makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
+            }
+            
+            function deleteresult(form)
+            {
+                var Left = document.getElementById("uppersubsystem").label;
+                var Right = document.getElementById("lowersubsystem").label;
+                var Relate = document.getElementById("relation").label;
+                var Citation = form.Reference.value;
+                var Overwrite = 2;
+                var myURL = 'http://reu.marshall.edu/~mummertc/cgi-bin/newresult.cgi?';
+                myURL = myURL + 'Left=' + encodeURI(Left);
+                myURL = myURL + '&Right=' + encodeURI(Right);
+                myURL = myURL + '&Relate=' + encodeURI(Relate);
+                myURL = myURL + '&Citation=' + encodeURI(Citation);
+                myURL = myURL + '&Overwrite=' + encodeURI(Overwrite);
+                makeRequestnewresult(myURL);
             }
 
             //End new subsystem functions
@@ -158,7 +178,7 @@
             function makeRequestnewresult(url)
             {
                 http_request = new XMLHttpRequest();
-                http_request.onreadystatechange = alertContentsnewresult; // set callback
+                //http_request.onreadystatechange = alertContentsnewresult; // set callback
                 http_request.open('GET', url, true); // initialize
                 http_request.send(null); // run
             }
@@ -167,11 +187,13 @@
 
             function inputnewresult(form)
             {
-                var Left = form.KeyName.value;
-                var Right = form.MRNumber.value;
-                var Relate = form.Relate.value;
-                var Citation = form.FreeText.value;
-                var myURL = 'http://reu.marshall.edu/~mummertc/cgi-bin/newresult.cgi?';
+				
+                var Left = document.getElementById("uppersubsystem").label;
+                var Right = document.getElementById("lowersubsystem").label;
+                var Relate = document.getElementById("relation").label;
+                var Citation = form.Reference.value;
+                alert(Left + " " + Right);
+                var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/newresult.cgi?';
                 myURL = myURL + 'Left=' + encodeURI(Left);
                 myURL = myURL + '&Right=' + encodeURI(Right);
                 myURL = myURL + '&Relate=' + encodeURI(Relate);
@@ -217,6 +239,7 @@
                 document.getElementById('newresult').className = 'content';
                 document.getElementById('newref').className = 'hidden';
                 document.getElementById('newsub').className = 'hidden';
+                document.getElementById('target').style.display = "none";
             }
 
             function shownewref()
@@ -233,6 +256,7 @@
                 document.getElementById('newresult').className = 'hidden';
                 document.getElementById('newref').className = 'hidden';
                 document.getElementById('newsub').className = 'content';
+                document.getElementById('target').style.display = "none";
             }
 
             function showmain()
@@ -246,7 +270,7 @@
             }
             function showeditref()
             {
-				document.getElementById('target').style.display = "none";
+				//document.getElementById('target').style.display = "none";
 				while (document.getElementById('target').hasChildNodes()) 
 				{
 				   document.getElementById('target').removeChild(document.getElementById('target').lastChild);
@@ -266,8 +290,9 @@
 				}
 				
 				document.getElementById('target').appendChild(ul2);
-                document.getElementById('target').style.display = "";				
+                //document.getElementById('target').style.display = "";				
 				shownewsub();
+				document.getElementById('target').style.display = "";	
 				MathJax.Hub.Typeset();
 			}
 
@@ -332,13 +357,15 @@
 
             function changeRelate()
             {
-                if(document.getElementById('relation').innerHTML == "Implies")
+                if(document.getElementById('relation').label == "imply")
                 {
                     document.getElementById('relation').innerHTML = "Does not Imply";
+                    document.getElementById('relation').label = "notimply";
                 }
                 else
                 {
                     document.getElementById('relation').innerHTML = "Implies";
+                    document.getElementById('relation').label = "imply";
                 }
 
             }
@@ -425,7 +452,7 @@
                 //document.getElementById('info').style.display = "none";
                 document.getElementById('target').style.display = "";
                 //document.getElementById('select').style.display = "";
-                if(side.localeCompare('uppersubsystem'))
+                if(end.localeCompare('uppersubsystem'))
                 {
                     str = "Left"
                 }
@@ -435,7 +462,16 @@
                 }
 
                 document.getElementById("select").innerHTML = "Choose " + str + " Subsystem";
-                MathJax.Hub.Typeset();
+                
+                while (document.getElementById('target').hasChildNodes()) 
+				{
+				   document.getElementById('target').removeChild(document.getElementById('target').lastChild);
+				}
+				
+				document.getElementById('target').appendChild(ul);
+                document.getElementById('target').style.display = "";				
+				//shownewsub();
+				MathJax.Hub.Typeset();
                 //alert(end);
 
             }
@@ -447,7 +483,7 @@
                 document.getElementById(side).innerHTML = '\\(' + systems[ascii] + '\\)';
                 document.getElementById(side).label = ascii;
                 //document.getElementById('info').style.display = "";
-                document.getElementById('target').style.display += "none";
+                document.getElementById('target').style.display = "none";
                 //document.getElementById('select').style.display = "none";
                 MathJax.Hub.Typeset(side);
             }
@@ -600,7 +636,7 @@
                             	<h3>Relate</h3>
 
                             <ul class="select">
-                                <li id="relation">Implies</li>
+                                <li label = "imply" id="relation">None Selected</li>
                                 <a class="selectrelate" href="#" name="relate" onclick='changeRelate();'>[change]</a>
                             </ul>
                             	<h3>Subsystem</h3>
@@ -612,8 +648,10 @@
 							Reference:
                             <input type="text" name="Reference" value=""></input>
                             <br/>
+                            <p id="select"></p>
                             <br/>
                             <input type="button" name="button" value="Submit" onClick="inputnewresult(this.form)"></input>
+                            <input type="button" id="mybutton_deleteresult" name="mybutton_deleteresult" value="Delete" onClick="deleteresult(this.form)"></input>
                         </FORM>
                     </div>
                 <!-- list of subsystems-->
