@@ -7,11 +7,11 @@ print "content-type: text/plain\n\n";
 
 $q=new CGI;
 
-$ASCIIName = $q->param('ASCIIName') || $ARGV[0] || undef;
+$ASCIIName = $q->param('ASCIIName') || $ARGV[0];
 $Overwrite = $q->param('Overwrite') || $ARGV[1] || 0;
-$LaTexName = $q->param('LaTexName') || $ARGV[2] || undef;
-$Reference = $q->param('Reference') || $ARGV[3] || undef;
-$FreeText  = $q->param('FreeText')  || $ARGV[4] || undef;
+$LaTexName = $q->param('LaTexName') || $ARGV[2];
+$Reference = $q->param('Reference') || $ARGV[3];
+$FreeText  = $q->param('FreeText')  || $ARGV[4];
 
 my $date = `/bin/date`;
 chomp $date;
@@ -34,14 +34,14 @@ if ( $c == 0) {
   $sth->execute($ASCIIName, $LaTexName, $Reference, $FreeText) or die "Connection Error: $dbh->errstr";
 
   print "Success\n";
-} else
+} elsif( $Overwrite > 0 )
 {
     #Delete the row
     $sql = "DELETE FROM Subsystems WHERE sub_Ascii = ?";
     $sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
     $sth->execute($ASCIIName) or die "Connection Error: $dbh->errstr";
 
-  if ( 1 == $Overwrite )
+  if ( $Overwrite == 1 )
   {
     # readd to update the row
     #$sql = "DELETE FROM Subsystems WHERE sub_Ascii = ?";

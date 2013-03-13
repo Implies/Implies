@@ -141,7 +141,7 @@
                 var LaTexName = form.LaTexName.value;
                 var Reference = form.Reference.value;
                 var FreeText = form.FreeText.value;
-                var Overwrite = 1;
+                var Overwrite = 2;
                 var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/newsub.cgi?';
                 myURL = myURL + 'ASCIIName=' + encodeURI(ASCIIName);
                 myURL = myURL + '&LaTexName=' + encodeURI(LaTexName);
@@ -246,9 +246,10 @@
             }
             function showeditref()
             {
+				document.getElementById('target').style.display = "none";
 				while (document.getElementById('target').hasChildNodes()) 
 				{
-				   document.getElementById('target').removeChild(node.lastChild);
+				   document.getElementById('target').removeChild(document.getElementById('target').lastChild);
 				}
 				
 				document.getElementById('target').appendChild(ul);
@@ -261,7 +262,7 @@
             {
 				while (document.getElementById('target').hasChildNodes()) 
 				{
-				   document.getElementById('target').removeChild(node.lastChild);
+				   document.getElementById('target').removeChild(document.getElementById('target').lastChild);
 				}
 				
 				document.getElementById('target').appendChild(ul2);
