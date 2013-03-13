@@ -32,7 +32,6 @@
                 }
             });
         </script>
-
         <script type="text/javascript">
             var http_request = false;
             var http_request2 = false;
@@ -40,10 +39,10 @@
             var hostname = "http://reu.marshall.edu/~implies/";
             var side;
             var upper;
-            var lower; // = document.getElementById("lowersubsystem");
-	    var obj;
+            var lower;
+            var obj;
             var systems = new Array();
-	    var freetext = new Array();
+            var freetext = new Array();
 
             document.observe('dom:loaded', function ()
             {
@@ -52,10 +51,7 @@
 
             function click_node(ascii)
             {
-                //$('info').update(freetext[left][relate][right]);
-		//$('info').update('\\(\\\\' + systems[ascii] + '\\)');
-		$('info').update(freetext[ascii]);
-		//alert(freetext[ascii]);
+                $('info').update(freetext[ascii]);
                 MathJax.Hub.Typeset();
             }
 
@@ -74,14 +70,13 @@
                     if(http_request.status == 200)
                     {
                         obj = JSON.parse(http_request.responseText);
-			//alert(obj);
                         var tar = document.getElementById("target");
                         var ul = document.createElement('ul');
                         tar.appendChild(ul);
                         for(var i = 0; i < obj.length; i++) //> keep this comment for nano editing on reu
                         {
                             systems[obj[i][0]] = obj[i][1];
-			    freetext[obj[i][0]] = obj[i][2];
+                            freetext[obj[i][0]] = obj[i][2];
                             var itm = document.createElement('li');
                             var lnk = document.createElement('a');
                             var str = '\\(\\\\' + obj[i][1] + '\\)';
@@ -108,19 +103,19 @@
                     if(http_request2.status == 200)
                     {
                         //var response = JSON.parse(http_request2.responseText);
-						
+
                         document.getElementById('canviz').style.display = "block";
                         document.getElementById('target').style.display = "none";
                         document.getElementById('select').style.display = "none";
 
-			var graph = document.getElementById("graph");
-			
-                        graph.removeChild(document.getElementById("canviz"));
-			var newCanviz = document.createElement("div");
-			newCanviz.setAttribute("id", "canviz");
-			graph.appendChild(newCanviz);
+                        var graph = document.getElementById("graph");
 
-			var filename = upper + "_" + lower;
+                        graph.removeChild(document.getElementById("canviz"));
+                        var newCanviz = document.createElement("div");
+                        newCanviz.setAttribute("id", "canviz");
+                        graph.appendChild(newCanviz);
+
+                        var filename = upper + "_" + lower;
                         canviz = new Canviz('canviz', hostname + '/dot/' + filename);
 
                         setTimeout(function ()
@@ -141,18 +136,18 @@
             function updateGraph()
             {
                 var url = 'http://reu.marshall.edu/~implies/cgi-bin/gendot.cgi?';
-                
+
                 upper = document.getElementById("uppersubsystem").label;
                 lower = document.getElementById("lowersubsystem").label;
-                
+
                 url = url + 'upper=' + encodeURI(upper);
-                url = url + '&lower=' + encodeURI(lower);                
-                
+                url = url + '&lower=' + encodeURI(lower);
+
                 http_request2 = new XMLHttpRequest();
                 http_request2.onreadystatechange = alertContents2; // set callback
                 http_request2.open('GET', url, true); // initialize
                 http_request2.send(null); // run
-                
+
                 return false;
             }
 
@@ -167,11 +162,11 @@
 
                 if(side.localeCompare('uppersubsystem'))
                 {
-                   var str = "Lower"
+                    var str = "Lower"
                 }
                 else
                 {
-                  str = "Upper"
+                    str = "Upper"
                 }
                 document.getElementById('select').innerHTML = "Choose " + str + " Subsystem";
                 MathJax.Hub.Typeset();
@@ -181,23 +176,13 @@
             {
                 document.getElementById(side).innerHTML = '\\(' + systems[ascii] + '\\)';
                 document.getElementById(side).label = ascii;
-		//alert(ascii);
                 document.getElementById('canviz').style.display = "";
                 document.getElementById('info').style.display = "";
                 document.getElementById('target').style.display = "none";
-		document.getElementById('select').style.display = "none";
+                document.getElementById('select').style.display = "none";
 
                 MathJax.Hub.Typeset(side);
             }
-
-            function kl(str)
-            {
-                return function ()
-                {
-                    alert(str);
-                }
-            }
-
         </script>
     </head>
     
@@ -230,7 +215,6 @@
                 </p>
             </div>
             <div id="nav">
-
                 <form>
                      <h3>Upper bound</h3>
 
@@ -248,7 +232,6 @@
                             <a id="lowersubsystem" class="selectsubsystem" href="#" name="lowersubsystem" onclick='changeSub("lowersubsystem");'>[change]</a>
                         </li>
                     </ul>
-
                     <ul>
                         <li>
                             <input type="submit" value="Update graph" onclick="updateGraph()" />
@@ -257,12 +240,9 @@
                 </form>
             </div>
             <div id="content">
-
-                <!-- <h2>Search results</h2> -->
-
                 <div id="select" class="content"></div>
                 <div id="graph" class="content">
-                    <div id="select" ></div>
+                    <div id="select"></div>
                     <div id="canviz" style="display:none"></div>
                     <div id="target" style="display:none"></div>
                 </div>

@@ -14,6 +14,22 @@
         <script type="text/javascript">
 			
             var http_request = false;
+                        //var http_request = false;
+            var http_request2 = false;
+            var side;
+            var right;
+            var ul;
+            var ul2;
+            var left = document.getElementById("leftsubsystem");
+            var systems = new Array();
+            var tar = document.getElementById("target");
+            //var tar2 = document.getElementById("target2");  
+            var http_request = false;
+            var http_request2 = false;
+            var side;
+            var right;
+            var left; // = document.getElementById("leftsubsystem");
+            var freetext = new Array();
 
             //New Reference functions
 
@@ -96,7 +112,6 @@
                         {
                             alert(http_request.responseText);
                         }
-
                     }
                     else
                     {
@@ -111,11 +126,29 @@
                 var LaTexName = form.LaTexName.value;
                 var Reference = form.Reference.value;
                 var FreeText = form.FreeText.value;
-                var myURL = 'http://reu.marshall.edu/~mummertc/cgi-bin/newsub.cgi?';
+                var Overwrite;
+                var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/newsub.cgi?';
                 myURL = myURL + 'ASCIIName=' + encodeURI(ASCIIName);
                 myURL = myURL + '&LaTexName=' + encodeURI(LaTexName);
                 myURL = myURL + '&Reference=' + encodeURI(Reference);
                 myURL = myURL + '&FreeText=' + encodeURI(FreeText);
+                makeRequestnewsub(myURL);
+            }
+            
+            function deletesub(form)
+            {
+                var ASCIIName = form.ASCIIName.value;
+                var LaTexName = form.LaTexName.value;
+                var Reference = form.Reference.value;
+                var FreeText = form.FreeText.value;
+                var Overwrite = 1;
+                var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/newsub.cgi?';
+                myURL = myURL + 'ASCIIName=' + encodeURI(ASCIIName);
+                myURL = myURL + '&LaTexName=' + encodeURI(LaTexName);
+                myURL = myURL + '&Reference=' + encodeURI(Reference);
+                myURL = myURL + '&FreeText=' + encodeURI(FreeText);
+                myURL = myURL + '&Overwrite=' + encodeURI(Overwrite);
+                alert(myURL);
                 makeRequestnewsub(myURL);
             }
 
@@ -208,26 +241,42 @@
                 document.getElementById('newresult').className = 'hidden';
                 document.getElementById('newref').className = 'hidden';
                 document.getElementById('newsub').className = 'hidden';
+                document.getElementById('target').style.display = "none";
+                //document.getElementById('target2').style.display = "none";
             }
             function showeditref()
             {
+				while (document.getElementById('target').hasChildNodes()) 
+				{
+				   document.getElementById('target').removeChild(node.lastChild);
+				}
+				
+				document.getElementById('target').appendChild(ul);
+                document.getElementById('target').style.display = "";				
 				shownewref();
-				document.getElementById('target').style.display += "";
+				MathJax.Hub.Typeset();
+
 			}
-			 function showeditsub()
+			function showeditsub()
             {
+				while (document.getElementById('target').hasChildNodes()) 
+				{
+				   document.getElementById('target').removeChild(node.lastChild);
+				}
+				
+				document.getElementById('target').appendChild(ul2);
+                document.getElementById('target').style.display = "";				
 				shownewsub();
-				document.getElementById('target').style.display += "";
+				MathJax.Hub.Typeset();
 			}
 
-  
-            var http_request = false;
-            var http_request2 = false;
-            var side;
-            var right;
-            var left = document.getElementById("leftsubsystem");
-            var systems = new Array();
-
+			function makeRequest(url)
+            {
+                http_request = new XMLHttpRequest();
+                http_request.onreadystatechange = alertContents; // set callback
+                http_request.open('GET', url, true); // initialize
+                http_request.send(null); // run
+            }
 
 
             function alertContents()
@@ -236,15 +285,17 @@
                 {
                     if(http_request.status == 200)
                     {
-                        alert("running");
+                        //alert("running");
 
-                        var obj = JSON.parse(http_request.responseText);
-                        var tar = document.getElementById("target");
-                        var ul = document.createElement('ul');
-                        tar.appendChild(ul);
+                        var obj = JSON.parse(http_request.responseText);                      
+                        ul = document.createElement('ul');
+                        ul2 = document.createElement('ul');
+                        //tar.appendChild(ul);
+                        //tar2.appendChild(ul2);
                         for(var i = 0; i < obj.length; i++) //> keep for command line editing
                         {
                             systems[obj[i][0]] = obj[i][1];
+                            freetext[obj[i][0]] = obj[i][2];
                             var itm = document.createElement('li');
                             var lnk = document.createElement('a');
                             var str = '\\(\\\\' + obj[i][1] + '\\)';
@@ -254,8 +305,21 @@
                             itm.appendChild(lnk);
                             ul.appendChild(itm);
                         }
+                        for(var i = 0; i < obj.length; i++) //> keep for command line editing
+                        {
+                            systems[obj[i][0]] = obj[i][1];
+                            freetext[obj[i][0]] = obj[i][2];
+                            var itm = document.createElement('li');
+                            var lnk = document.createElement('a');
+                            var str = '\\(\\\\' + obj[i][1] + '\\)';
+                            var js = 'javascript:populateSub("' + obj[i][0] + '");';
+                            //alert("here");
+                            lnk.innerHTML = str;
+                            lnk.href = js;
+                            itm.appendChild(lnk);
+                            ul2.appendChild(itm);
+                        }
                         MathJax.Hub.Typeset();
-
                     }
                     else
                     {
@@ -263,26 +327,6 @@
                     }
                 }
             }
-
-            function populateResult()
-            {
-
-                var url = 'http://reu.marshall.edu/~implies/cgi-bin/gendot.cgi?';
-                upper = document.getElementById("uppersubsystem").label;
-                lower = document.getElementById("lowersubsystem").label;
-                relation = document.getElementById("relation").label;
-                url = url + 'upper=' + encodeURI(upper);
-                url = url + '&lower=' + encodeURI(lower);
-                url = url + "&relation=" + encodeURI(relation);
-
-                http_request2 = new XMLHttpRequest();
-                http_request2.onreadystatechange = alertContents2; // set callback
-                http_request2.open('GET', url, true); // initialize
-                http_request2.send(null); // run
-
-                return false;
-            }
-
 
 
             function changeRelate()
@@ -331,28 +375,13 @@
             })();
 
             //Script for new result div
-            var http_request = false;
-            var http_request2 = false;
-            var side;
-            var right;
-            var left = document.getElementById("leftsubsystem");
-            var systems = new Array();
+
 
             document.observe('dom:loaded', function ()
             {
                 //            makeRequestnewresult('http://localhost/~ubuntu/cgi-bin/listsubsystems.cgi');
-                makeRequestnewresult('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
-
+                makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
             });
-
-
-            function click_node(node)
-            {
-                $('info').update(node);
-                MathJax.Hub.Typeset();
-            }
-
-
 
 
             function alertContentsnewresult()
@@ -364,8 +393,8 @@
                         //alert("running");
 
                         var obj = JSON.parse(http_request.responseText);
-                        var tar = document.getElementById("target");
-                        var ul = document.createElement('ul');
+                        //var tar = document.getElementById("target");
+                        //var ul = document.createElement('ul');
                         tar.appendChild(ul);
                         for(var i = 0; i < obj.length; i++) //> keep for nano editing
                         {
@@ -388,25 +417,23 @@
                     }
                 }
             }
-
-
-
             function changeSub(end)
             {
                 var str;
                 side = end;
                 //document.getElementById('info').style.display = "none";
                 document.getElementById('target').style.display = "";
-                document.getElementById('select').style.display = "";
+                //document.getElementById('select').style.display = "";
                 if(side.localeCompare('uppersubsystem'))
                 {
-                    var str = "Left"
+                    str = "Left"
                 }
-                else
+                else 
                 {
                     str = "Right"
                 }
-                document.getElementById('select').innerHTML = "Choose " + str + " Subsystem";
+
+                document.getElementById("select").innerHTML = "Choose " + str + " Subsystem";
                 MathJax.Hub.Typeset();
                 //alert(end);
 
@@ -423,6 +450,17 @@
                 //document.getElementById('select').style.display = "none";
                 MathJax.Hub.Typeset(side);
             }
+            function populateSub(ascii)
+            {
+				document.getElementById("subtex").innerHTML = '\\(' + systems[ascii] + '\\)';
+				document.getElementById("subfreetext").innerHTML = freetext[ascii];
+                document.getElementById("subascii").value = ascii;
+                //document.getElementById('info').style.display = "";
+                document.getElementById('target').style.display = "none";
+                //document.getElementById('select').style.display = "none";
+                MathJax.Hub.Typeset(side);
+			}
+			
         </script>
         </head>
         
@@ -517,11 +555,11 @@
 					<div style="Float:left">
 						<FORM NAME="myform_newsub" ACTION="" METHOD="get">
 							<p>ASCII name:
-								<input type="text" name="ASCIIName" value=""></input>
+								<input id="subascii" type="text" name="ASCIIName" value=""></input>
 								<br/>
 								<br/>LaTeX name:
 								<br/>
-								<textarea name="LaTexName" id="MathInput" size="50" onkeyup="UpdateMath_newsub(this.value)"></textarea>
+								<textarea id="subtex" name="LaTexName" id="MathInput" size="50" onkeyup="UpdateMath_newsub(this.value)"></textarea>
 								<br/>
 								<br/>
 							</p>
@@ -534,13 +572,15 @@
 								<br/>
 								<br/>Free text about subsystem (optional)
 								<br/>
-								<textarea name="FreeText" id="MathInput2" size="50" onkeyup="UpdateMath2_newsub(this.value)"></textarea>
+								<textarea id = "subfreetext" name="FreeText" id="MathInput2" size="50" onkeyup="UpdateMath2_newsub(this.value)"></textarea>
 								<br/>
 								<br/>
 							</p>
 							<div id="MathOutput2_newsub" class="tex_render"></div>
 							<br/>
 							<input type="button" id="mybutton_newsub" name="mybutton_newsub" value="Submit" onClick="inputnewsub(this.form)"></input>
+							<input type="button" id="mybutton_editsub" name="mybutton_editsub" value="Edit existing" onClick="showeditsub()"></input>
+							<input type="button" id="mybutton_deletesub" name="mybutton_editsub" value="Delete" onClick="deletesub(this.form)"></input>
 						</FORM>
                     </div> 
                 </div>
@@ -578,7 +618,7 @@
                 <!-- list of subsystems-->
                
              </div>
-              <div class="content" id="target" style="Float:right"></div> 
+              <div class="content" id="target" style="Float:right"></div>               
              </div>
 
                 <div id="push"></div>
