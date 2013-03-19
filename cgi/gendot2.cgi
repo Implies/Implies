@@ -1,0 +1,130 @@
+#!/usr/bin/perl
+use Data::Dumper;
+
+use strict; 
+use DBI; 
+use CGI;
+use JSON;
+use DBD::mysql;
+
+
+my $tmpdir = "dot/";
+my $dotdir = "/home/implies/public_html/dot/";
+#my $dotdir = "/home/ubuntu/public_html/html/dot/";
+my $url = "http://reu.marshall.edu/~implies/dot/";
+#my $url = "/localhost/ubuntu/dot/";
+my $gvext = ".gv";
+my $dotext = ".dot";
+
+my %tex = [];
+my %data;# = {};
+my $cgi = CGI->new();
+
+print "content-type: text/html\n\n";
+
+my $upper = $cgi->param('upper') || $ARGV[0] || 'ACA';
+my $lower = $cgi->param('lower') || $ARGV[1] || 'WKL';
+my $filename = $upper. "_". $lower;
+
+
+#my $filename = "$$";
+my $count = 0;
+my $dbh = DBI->connect('DBI:mysql:Zoo', 'root', 'implies') or
+die "Couldn't open database: + $DBI::errstr; stopped";
+# my $sth = $dbh->prepare(<<End_SQL) or die "Couldn't prepare statement: + $DBI::errstr; stopped";
+
+
+my $response = {};
+$response->{'upper'} = $upper;
+$response->{'lower'} = $lower;
+
+# define queries
+my $query0 = "SELECT Subsystems.sub_Ascii, Subsystems.sub_Latex FROM Subsystems;";
+
+my $query1 = "select t0.exp_Left, t0.exp_Right, t0.exp_Relate, t0.exp_Reason
+  from Expandedtheorems as t0
+  join Expandedtheorems as ul
+    on ul.exp_Left = ?
+       and ul.exp_Right = t0.exp_Left
+       and ul.exp_Relate = 'imply'
+  join Expandedtheorems as ur
+    on ur.exp_Left = ?
+       and ur.exp_Right = t0.exp_Right
+       and ur.exp_Relate = 'imply'
+  join Expandedtheorems as ll
+    on ll.exp_Right = ?
+       and ll.exp_Left = t0.exp_Left
+       and ll.exp_Relate = 'imply'
+  join Expandedtheorems as lr
+    on lr.exp_Right = ?
+       and lr.exp_Left = t0.exp_Right
+       and lr.exp_Relate = 'imply'
+  where t0.exp_Left != t0.exp_Right ";
+
+# prepare next query
+my $sth = $dbh->prepare($query1);
+
+# execute query
+$sth->execute($upper, $upper, $lower, $lower) or die "Couldn't execute statement: $DBI::errstr; stopped";
+
+my $database = {};
+
+# Pull from Theorem Table
+my ($left, $right, $relate, $reason);
+while ( my ($left,$right, $relate, $reason) = $sth->fetchrow_array() )
+{    
+  print "$left $right $relate \n";
+
+  if ( $relate eq 'imply' ) { 
+
+    my $sys = get_system($database, $left);
+    $sys->{'children'}->{$right} = 1;
+    
+    $sys = get_system($database, $right);
+    $sys->{'parents'}->{$left} = 1;
+  }
+
+} 
+
+
+my ($node, $parent, $child);
+
+foreach $node ( keys %$database ) { 
+  foreach $parent ( keys %{$database->{$node}->{'parents'}} ) { 
+    foreach $child ( keys %{$database->{$parent}->{'children'}} ) { 
+
+        print "N: $node P: $parent C: $child\n";
+   
+       if ( exists $database->{$child}->{'children'}->{$node} ) { 
+print ".. delete\n";
+
+           delete $database->{$parent}->{'children'}->{$node};
+           delete $database->{$node}->{'parents'}->{$parent};
+       }
+
+    }
+  }
+}
+
+
+print Dumper($database);
+
+sub get_system { 
+  my $database = shift;
+  my $system = shift;
+
+  if ( ! ( exists $database->{$system} ) ) { 
+    $database->{$system} = {};
+    $database->{$system}->{'name'} = $system;
+    $database->{$system}->{'latexname'} = $system;  # will be replaced with real name 
+    $database->{$system}->{'parents'} = {};
+    $database->{$system}->{'children'} = {};
+  }
+
+  return $database->{$system};
+}
+
+
+for $node ( values $database ) { 
+  print "N " . $node->{'name'} . " L " . $node->{'latexname'} . "\n";
+}

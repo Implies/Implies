@@ -19,14 +19,24 @@ open MYFILE, '>>', "/tmp/log.txt" or die $!;
 print MYFILE "$date $ASCIIName\t $LaTexName\t $Reference\t $FreeText\n";
 close MYFILE;
 
-#my $dbh=DBI->connect("DBI:mysql:database=Zoo;mysql_read_default_file=/home/implies/.my.cnf", "", "", {'AutoCommit'=>0})
-#or die "Can't connect: $!\n";
-my $dbh = DBI->connect('DBI:mysql:Zoo', 'root', 'implies') or
-die "Couldn't open database: + $DBI::errstr; stopped";
+my $dbh=DBI->connect("DBI:mysql:database=Zoo;" 
+             . "mysql_read_default_file=/home/implies/.my.cnf", 
+               "", "", {'AutoCommit'=>0}),
+   or die "Can't connect: $!\n";
 
-$sql = "select * from Subsystems where sub_Ascii = ?"; # because sub_Ascii is a unique key
+#my $dbh = DBI->connect('DBI:mysql:Zoo', 'root', 'implies') or
+#die "Couldn't open database: + $DBI::errstr; stopped";
+
+$sql = "select * from Subsystems where sub_Ascii = ?"; 
+                         # because sub_Ascii is a unique key
 $sh = $dbh->prepare($sql);
+
 $c = $sh->execute($ASCIIName);
+
+print "Rows: $c\n";
+
+exit;
+
 $sh->finish();
 
 if ( $c == 0) {
