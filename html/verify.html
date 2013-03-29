@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 25 March 2009), see www.w3.org" />
+
+  <title>Welcome - Reverse Mathematics Zoo</title>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700'
+  rel='stylesheet' type='text/css' />
+  <link rel="stylesheet" type="text/css" href="style.css" media=
+  "screen" />
+  <link rel="stylesheet" type="text/css" href="centered.css" media=
+  "screen" />
+  
+  <script type="text/javascript">
+	function makeRequestnewref(url)
+            {
+                http_request = new XMLHttpRequest();
+                http_request.onreadystatechange = alertContents; // set callback
+                http_request.open('GET', url, true); // initialize
+                http_request.send(null); // run
+            }
+     function alertContents()
+            { // callback
+
+                if(http_request.readyState == 4)
+                { // javascript code
+                    if(http_request.status == 200)
+                    { // http code
+                        if(http_request.responseText == "Success")
+                        {
+                            alert("Successfully authenticated");
+                        }
+                        else if(http_request.responseText == "Incorrect")
+                        {
+                            alert("Username or authorization password is incorrect");
+                        }
+
+                    }
+                    else
+                    {
+                        alert('There was a problem with the request ' + http_request.status);
+                    }
+                }
+               }
+       
+            function inputlogin(form)
+            {
+				
+                var username = form.Username.value;
+                var authkey = form.Authkey.value;
+                var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/authenticate.cgi?';
+                myURL = myURL + 'username=' + encodeURI(username);
+                myURL = myURL + '&authkey=' + encodeURI(authkey);
+                makeRequestnewref(myURL);
+            }
+  </script>
+</head>
+
+<body>
+  <div id="container">
+    <div id="banner">
+      <h1>Reverse Mathematics Zoo</h1>
+
+      <div id="centeredmenu">
+        <ul>
+          <li><a href="introduction.html" class=
+          "active">Introduction</a></li>
+
+          <li><a href="explore.html">Explore</a></li>
+
+          <li><a href="edit.html">Edit</a></li>
+
+          <li><a href="bibliography.html">Bibliography</a></li>
+
+          <li><a href="news.html">News</a></li>
+        </ul>
+      </div>
+
+      <p id="layoutdims"><a href="#">Log in</a></p>
+    </div>
+
+    <div id="nav">
+      <h3>Options</h3>
+
+      <ul class="menu">
+        <li class="active"><a href="login.html">Log in or create new account</a></li>
+
+        <li><a href="#">Verify account</a></li>
+
+      </ul>
+    </div>
+
+    <div class="content">
+      <h2>Please enter username and key</h2><br/>
+      <FORM NAME="form" ACTION="" METHOD="get">
+			<p>User name:
+				<input type="text" name="Username" value=""></input>
+				<br/>
+				<br/>Key:
+				<input type="text" name="Authkey" value=""></input>
+				<br/>
+			</p>
+			<br/>
+			<br/>
+			<p>
+				<input type="button" id="mybutton_login" name="mybutton_login" value="Submit" onClick="inputlogin(this.form)"></input>
+			</p>
+		</FORM>
+    </div>
+
+    <div id="push"></div>
+  </div>
+
+  <div id="footer">
+    <p><a href="about.html">About this site</a> &bull; <a href=
+    "copyright.html">Copyright</a> &bull; <a href="about.html">Contact
+    us</a></p>
+  </div>
+</body>
+</html>
+
