@@ -10,7 +10,7 @@ $q=new CGI;
 $ASCIIName = $q->param('ASCIIName') || $ARGV[0];
 $LaTexName = $q->param('LaTexName') || $ARGV[2];
 $Reference = $q->param('Reference') || $ARGV[3];
-$FreeText  = $q->param('FreeText')  || $ARGV[4];
+$FreeText = $q->param('FreeText')   || $ARGV[4];
 $Overwrite = $q->param('Overwrite') || $ARGV[1] || 0;
 
 my $date = `/bin/date`;
@@ -19,37 +19,24 @@ open MYFILE, '>>', "/tmp/log.txt" or die $!;
 print MYFILE "$date $ASCIIName\t $LaTexName\t $Reference\t $FreeText\n";
 close MYFILE;
 
-my $dbh=DBI->connect("DBI:mysql:database=Zoo;" 
-             . "mysql_read_default_file=/home/implies/.my.cnf", 
-               "", "", {'AutoCommit'=>0}),
-   or die "Can't connect: $!\n";
+$dbh=DBI->connect('dbi:mysql:Zoo','root','implies');
 
-#my $dbh = DBI->connect('DBI:mysql:Zoo', 'root', 'implies') or
-#die "Couldn't open database: + $DBI::errstr; stopped";
-
-$sql = "select * from Subsystems where sub_Ascii = ?"; 
-                         # because sub_Ascii is a unique key
+$sql = "select * from Subsystems where sub_Ascii = ?";  # because sub_Ascii is a unique key
 $sh = $dbh->prepare($sql);
-
 $c = $sh->execute($ASCIIName);
-
-print "Rows: $c\n";
-
-exit;
-
 $sh->finish();
 
 if ( $c == 0) {
- # insert
+  # insert
   $sql = "INSERT INTO Subsystems VALUES(?, ?, ?, ?)";
-  $sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
-  $sth->execute($ASCIIName, $LaTexName, $Reference, $FreeText) or die "Connection Error: $dbh->errstr";
 
-  print "Success\n";
+  $sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
+  my $c = $sth->execute($ASCIIName, $LaTexName, $Reference, $FreeText);
+  print "Added\n";
 } 
 elsif( $Overwrite > 0 )
 {
-	#print "Deleting \n";
+		#print "Deleting \n";
 	#print $Overwrite;
 	#print $ASCIIName;
     #Delete the row
@@ -57,22 +44,25 @@ elsif( $Overwrite > 0 )
     $sh = $dbh->prepare($sql);
     $cn = $sh->execute($ASCIIName);
     $sh->finish();
-	
-  if ( $Overwrite == 1 )
+    print ("Deleted\n");
+    
+  if ($Overwrite == 1) 
   {
-    # read to update the row
+	      # read to update the row
 
-	print "Adding\n";
+	
     $sql = "INSERT INTO Subsystems VALUES(?, ?, ?, ?)";
     $sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
     $sth->execute($ASCIIName, $LaTexName, $Reference, $FreeText) or die "Connection Error: $dbh->errstr";
 
-    print "Success\n";
-   }
-   
-   if ($cn > 0){
-	   print "Deleted";
-   }
+    print "Updated\n";
+
+  }
 }
+else
+{
+	print "Duplicate\n"
+}
+
 
 $dbh->disconnect();

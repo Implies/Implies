@@ -54,6 +54,10 @@
                         {
                             alert("Reference already exists");
                         }
+                        
+                        
+							alert(http_request.responseText);
+						
 
                     }
                     else
@@ -73,6 +77,7 @@
                 myURL = myURL + '&MRNumber=' + encodeURI(MRNumber);
                 myURL = myURL + '&FreeText=' + encodeURI(FreeText);
                 makeRequestnewref(myURL);
+				alert(myURL);
 
             }
 
@@ -83,13 +88,14 @@
 				var KeyName = form.KeyName.value;
                 var MRNumber = form.MRNumber.value;
                 var FreeText = form.FreeText.value;
+                var Overwrite = 2;
                 var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/newreference.cgi?';
                 myURL = myURL + 'KeyName=' + encodeURI(KeyName);
-                myURL = myURL + '&MRNumber=' + encodeURI(MRNumber);
-                myURL = myURL + '&FreeText=' + encodeURI(FreeText);
-                myURL = myURL + '&Edit=1';
+                //myURL = myURL + '&MRNumber=' + encodeURI(MRNumber);
+                //myURL = myURL + '&FreeText=' + encodeURI(FreeText);
+                myURL = myURL + '&Edit=' + encodeURI(Overwrite);
                 makeRequestnewref(myURL);
-                alert(myURL);
+                //alert(myURL);
 			 }
              
              
