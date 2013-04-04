@@ -2,7 +2,7 @@
 
 use CGI;
 use DBI;
-##use JSON;
+use JSON;
 use strict;
 use Data::Dumper;
 
@@ -19,22 +19,22 @@ if ( 0 <  length $search  ) {
   $sql .= " where ref_FreeText like ?";
 }
 
-my $dbh=DBI->connect("DBI:mysql:database=Zoo;mysql_read_default_file=/home/mummertc/.my.cnf", "", "", {'AutoCommit'=>0});
+my $dbh=DBI->connect('dbi:mysql:Zoo','root','implies');
 
 my $sh = $dbh->prepare($sql);
 
 
 my $count;
-if ( 0 < length $search ) { 
+if ( 0 < length $search ) {
   $count = $sh->execute('%' . $search . '%');
-} else { 
+} else {
   $count = $sh->execute();
 }
 
 
 my $data = {};
 
-if ( $count eq '0E0' ) { 
+if ( $count eq '0E0' ) {
   $count = 0;
 }
 $data->{'count'} = $count;

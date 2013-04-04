@@ -14,7 +14,6 @@
         <script type="text/javascript">
 			
             var http_request = false;
-                        //var http_request = false;
             var http_request2 = false;
             var side;
             var right;
@@ -23,7 +22,6 @@
             var left;// = document.getElementById("leftsubsystem");
             var systems = new Array();
             var tar = document.getElementById("target");
-            //var tar2 = document.getElementById("target2");  
             var http_request = false;
             var http_request2 = false;
             var side;
@@ -33,14 +31,7 @@
 
             //New Reference functions
 
-            function makeRequestnewref(url)
-            {
-                http_request = new XMLHttpRequest();
-                http_request.onreadystatechange = alertContentsnewref; // set callback
-                http_request.open('GET', url, true); // initialize
-                http_request.send(null); // run
-            }
-
+            
 
             function alertContentsnewref()
             { // callback
@@ -118,43 +109,30 @@
                     }
                 }
             }
-
-            function inputnewsub(form)
+			
+			function editsub(form, Overwrite)
             {
                 var ASCIIName = form.ASCIIName.value;
+                if(ASCIIName == "")
+					return;
                 var LaTexName = form.LaTexName.value;
                 var Reference = form.Reference.value;
                 var FreeText = form.FreeText.value;
-                var Overwrite;
-                var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/newsub.cgi?';
-                myURL = myURL + 'ASCIIName=' + encodeURI(ASCIIName);
-                myURL = myURL + '&LaTexName=' + encodeURI(LaTexName);
-                myURL = myURL + '&Reference=' + encodeURI(Reference);
-                myURL = myURL + '&FreeText=' + encodeURI(FreeText);
-                makeRequestnewsub(myURL);
-                document.getElementById('target').style.display = "none";
-                makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
-            }
-            
-            function deletesub(form)
-            {
-                var ASCIIName = form.ASCIIName.value;
-                var LaTexName = form.LaTexName.value;
-                var Reference = form.Reference.value;
-                var FreeText = form.FreeText.value;
-                var Overwrite = 2;
                 var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/newsub.cgi?';
                 myURL = myURL + 'ASCIIName=' + encodeURI(ASCIIName);
                 myURL = myURL + '&LaTexName=' + encodeURI(LaTexName);
                 myURL = myURL + '&Reference=' + encodeURI(Reference);
                 myURL = myURL + '&FreeText=' + encodeURI(FreeText);
                 myURL = myURL + '&Overwrite=' + encodeURI(Overwrite);
-                //alert(myURL);
                 makeRequestnewsub(myURL);
-                document.getElementById('target').style.display = "none";
+                document.getElementById('target').style.display = "none";                
+                form.ASCIIName.value = "";
+                form.LaTexName.value = "";
+                form.Reference.value = "";
+                form.FreeText.value  = "";
                 makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
             }
-            
+                        
             function deleteresult(form)
             {
                 var Left = document.getElementById("uppersubsystem").label;
@@ -182,11 +160,8 @@
                 http_request.send(null); // run
             }
 
-
-
             function inputnewresult(form)
-            {
-				
+            {				
                 var Left = document.getElementById("uppersubsystem").label;
                 var Right = document.getElementById("lowersubsystem").label;
                 var Relate = document.getElementById("relation").label;
@@ -279,9 +254,7 @@
                 document.getElementById('target').style.display = "";				
 				shownewref();
 				MathJax.Hub.Typeset();
-
-			}
-			
+			}			
 			
 			function showeditsub()
             {
@@ -474,10 +447,7 @@
 				//shownewsub();
 				MathJax.Hub.Typeset();
                 //alert(end);
-
             }
-
-
 
             function switchSub(ascii)
             {
@@ -616,9 +586,9 @@
 							</p>
 							<div id="MathOutput2_newsub" class="tex_render"></div>
 							<br/>
-							<input type="button" id="mybutton_newsub" name="mybutton_newsub" value="Submit" onClick="inputnewsub(this.form)"></input>
-							<input type="button" id="mybutton_editsub" name="mybutton_editsub" value="Edit existing" onClick="showeditsub()"></input>
-							<input type="button" id="mybutton_deletesub" name="mybutton_editsub" value="Delete" onClick="deletesub(this.form)"></input>
+							<input type="button" id="mybutton_newsub" name="mybutton_newsub" value="Submit" onClick="editsub(this.form, 1)"></input>
+							<input type="button" id="mybutton_editsub" name="mybutton_editsub" value="Edit existing" onClick="showeditsub();"></input>
+							<input type="button" id="mybutton_deletesub" name="mybutton_editsub" value="Delete" onClick="editsub(this.form, 2)"></input>
 						</FORM>
                     </div> 
                 </div>

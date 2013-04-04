@@ -1,6 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    
+<html xmlns="http://www.w3.org/1999/xhtml">    
     <head>
         <title>Bibliography - Reverse Mathematics Zoo</title>
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' />
@@ -11,24 +10,17 @@
         <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/javascript">
             var http_request = false;
-             //var http_request = false;
-            var http_request2 = false;
-            var side;
-            var right;
-            var ul;
-            var ul2;
-            var left; // = document.getElementById("leftsubsystem");
             var systems = new Array();
-            var tar = document.getElementById("target");
-             //var tar2 = document.getElementById("target2");  
-            var http_request = false;
-            var http_request2 = false;
-            var side;
-            var right;
-            var left; // = document.getElementById("leftsubsystem");
             var freetext = new Array();
+            var t = 0;
+            var refs = new Array();
+            var edit;
 
-             //New Reference functions
+            function startup()
+            {
+                makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listCitations.cgi');
+                showbib();
+            }
 
             function makeRequestnewref(url)
             {
@@ -38,27 +30,13 @@
                 http_request.send(null); // run
             }
 
-
             function alertContentsnewref()
             { // callback
 
                 if(http_request.readyState == 4)
                 { // javascript code
                     if(http_request.status == 200)
-                    { // http code
-                        if(http_request.responseText == "Success\n")
-                        {
-                            alert("Reference successfully added");
-                        }
-                        else if(http_request.responseText == "Duplicate\n")
-                        {
-                            alert("Reference already exists");
-                        }
-                        
-                        
-							alert(http_request.responseText);
-						
-
+                    { // http code                        
                     }
                     else
                     {
@@ -67,8 +45,91 @@
                 }
             }
 
-            function inputnewref(form)
+            function makeRequest(url)
             {
+                http_request = new XMLHttpRequest();
+                http_request.onreadystatechange = alertContents; // set callback
+                http_request.open('GET', url, true); // initialize
+                http_request.send(null); // run
+                t = 0;
+            }
+
+            function alertContents()
+            { // callback
+
+                if(http_request.readyState == 4)
+                { // javascript code
+                    if((t == 0) && (http_request.status == 200))
+                    { // http code
+                        t++;
+
+                        var bibData = JSON.parse(http_request.responseText);
+                        var count = bibData.count;
+                        var r = 'references';
+                        if(bibData.count == 1)
+                        {
+                            r = 'reference';
+                        }
+                        document.getElementById("bib_count").innerHTML = bibData.count + ' ' + r;
+
+                        var searchTxt = document.getElementById("search_param").value;
+                        if(!('' == searchTxt))
+                        {
+                            document.getElementById("bib_count").innerHTML += ' matching <em>' + searchTxt + '</em>';
+                        }
+
+                        refs = bibData.results; // array of references
+                        var bib_list = document.getElementById("bib_target"); // list they go in
+                        
+                        bib_list.innerHTML = "";
+
+                        for(var i = 0; refs.length > i; i++)
+                        {
+
+                            var itm = document.createElement('li');
+                            var lnk = document.createElement('a');
+                            itm.appendChild(lnk);
+                            lnk.className = 'bib_link';
+                            lnk.innerHTML = '[' + refs[i][0] + ']'
+                            lnk.href = 'http://www.ams.org/mathscinet-getitem?mr=' + refs[i][1];
+                            lnk.target = '_blank';
+
+                            var txt = document.createElement('span');
+                            txt.innerHTML = ' ' + refs[i][2];
+                            itm.appendChild(txt);
+
+                            var editlnk = document.createElement('a');
+                            var js = 'javascript:populateRef("' + refs[i][0] + '","' + refs[i][1] + '","' + refs[i][2] + '");'; //HACK
+                            editlnk.innerHTML = " [Edit]";
+                            editlnk.href = js;
+                            itm.appendChild(editlnk);
+                            bib_list.appendChild(itm);
+                        }
+                    }
+                    else
+                    {
+                        alert('There was a problem with the request: code ' + http_request.status);
+                    }
+                }
+            }
+            
+            function delref(form)
+            {
+				edit = 2;
+				editref(form);
+			}
+			
+			function addref(form)
+            {
+				editref(form,0);
+			}
+
+            function editref(form)
+            {
+				if(edit == 1)
+				{
+					Overwrite = 1;
+				}
                 var KeyName = form.KeyName.value;
                 var MRNumber = form.MRNumber.value;
                 var FreeText = form.FreeText.value;
@@ -76,29 +137,44 @@
                 myURL = myURL + 'KeyName=' + encodeURI(KeyName);
                 myURL = myURL + '&MRNumber=' + encodeURI(MRNumber);
                 myURL = myURL + '&FreeText=' + encodeURI(FreeText);
+                myURL = myURL + '&Overwrite=' + encodeURI(edit);
                 makeRequestnewref(myURL);
-				alert(myURL);
-
+                makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listCitations.cgi');
+                showbib();
+                edit = 0;
+            }
+            
+            function populateRef(a, b, c) //HACK
+            {
+				edit = 1;
+                document.getElementById("MathInput_KeyName").value = a;
+                document.getElementById("MathInput_KeyName").readOnly = "readonly";
+                document.getElementById("MathInput_MRNumber").value = b;
+                document.getElementById("MathInput_Freetext").value = c;
+                document.getElementById('bib').className = 'hidden';
+                document.getElementById('newref').className = 'content';
+            }
+            
+            function showbib()
+            {
+                document.getElementById("MathInput_KeyName").value = "";
+                document.getElementById("MathInput_MRNumber").value = "";
+                document.getElementById("MathInput_Freetext").value = "";
+                document.getElementById('search').className = 'content';
+                document.getElementById('bib').className = 'content';
+                document.getElementById('newref').className = 'hidden';
             }
 
-             //End New Ref functions
-             
-             function delref(form)
-             {
-				var KeyName = form.KeyName.value;
-                var MRNumber = form.MRNumber.value;
-                var FreeText = form.FreeText.value;
-                var Overwrite = 2;
-                var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/newreference.cgi?';
-                myURL = myURL + 'KeyName=' + encodeURI(KeyName);
-                //myURL = myURL + '&MRNumber=' + encodeURI(MRNumber);
-                //myURL = myURL + '&FreeText=' + encodeURI(FreeText);
-                myURL = myURL + '&Edit=' + encodeURI(Overwrite);
-                makeRequestnewref(myURL);
-                //alert(myURL);
-			 }
-             
-             
+            function shownewref()
+            {
+				document.getElementById("MathInput_KeyName").value = "";
+                document.getElementById("MathInput_MRNumber").value = "";
+                document.getElementById("MathInput_Freetext").value = "";
+                document.getElementById("MathInput_KeyName").readOnly = "";
+                document.getElementById('search').className = 'hidden';
+                document.getElementById('newref').className = 'content';
+            }
+
             (function ()
             {
                 window.UpdateMath_newsub = function (TeX)
@@ -129,18 +205,6 @@
                     MathJax.Hub.Typeset(mo);
                 }
             })();
-
-            function showbib()
-            {
-                document.getElementById('bib').className = 'content';
-                document.getElementById('newref').className = 'hidden';
-            }
-
-            function shownewref()
-            {
-                document.getElementById('bib').className = 'hidden';
-                document.getElementById('newref').className = 'content';
-            }
 
              //MathJax Rendering for new subsystem
             (function ()
@@ -173,8 +237,14 @@
                     MathJax.Hub.Typeset(mo);
                 }
             })();
-
-             //Script for new result div
+            
+            document.getElementById('mybutton').onclick = function ()
+            {
+                var searchTxt = document.getElementById("search_param").value;
+                var myurl = 'http://reu.marshall.edu/~implies/cgi-bin/listCitations.cgi?search=' + encodeURI(searchTxt);
+                makeRequest(myurl);
+                return false;
+            }
         </script>
     </head>
     
@@ -182,60 +252,52 @@
         <div id="container">
             <div id="banner">
                  <h1>Reverse Mathematics Zoo</h1>
-
                 <div id="centeredmenu">
                     <ul>
-                        <li>
-                            <a href="introduction.html">Introduction</a>
+                        <li> <a href="introduction.html">Introduction</a>
                         </li>
-                        <li>
-                            <a href="explore.html">Explore</a>
+                        <li> <a href="explore.html">Explore</a>
                         </li>
-                        <li>
-                            <a href="edit.html">Edit</a>
+                        <li> <a href="edit.html">Edit</a>
                         </li>
-                        <li>
-                            <a href="bibliography.html" class="active">Bibliography</a>
+                        <li> <a href="bibliography.html" class="active">Bibliography</a>
                         </li>
-                        <li>
-                            <a href="news.html">News</a>
+                        <li> <a href="news.html">News</a>
                         </li>
                     </ul>
                 </div>
-                <p id="layoutdims">
-                    <a href="#">Log in</a>
+                <p id="layoutdims"> <a href="#">Log in</a>
                 </p>
             </div>
             <div id="nav">
                  <h3>Bibliography</h3>
-
                 <ul class="menu">
-                    <li class="active">
-                        <a href="#" onclick="showbib()">View</a>
+                    <li class="active"> <a href="#" onclick="showbib()">View</a>
                     </li>
-                    <li>
-                        <a href="#" onclick="shownewref()">Add a reference</a>
+                    <li> <a href="#" onclick="shownewref()">Add a reference</a>
                     </li>
                 </ul>
             </div>
             <div class="content">
+				<div id="search">
                 <form style="width: 3in; float: right;">
                     <input type=text id="search_param"></input>
                     <button id="mybutton" action="">Search references</button>
                     <br/>
                 </form>
+                </div>
                 <!-- div for new reference-->
-                <div id="newref" class="hidden">
+                <div class="hidden" id="newref">
                     <FORM NAME="form" ACTION="" METHOD="get">
                         <p>Key:
-                            <input type="text" name="KeyName" value=""></input>
+                            <input type="text" name="KeyName" id="MathInput_KeyName" value=""></input>
                             <br/>
                             <br/>Math Reviews number:
-                            <input type="text" name="MRNumber" value=""></input>(optional)
+                            <input type="text" name="MRNumber" id="MathInput_MRNumber" value=""></input>(optional)
                             <br/>
                             <br/>Reference details:
                             <br/>
-                            <textarea name="FreeText" id="MathInput_ref" size="50" onkeyup="UpdateMath_newref(this.value)"></textarea>
+                            <textarea name="FreeText" id="MathInput_Freetext" size="50" onkeyup="UpdateMath_newref(this.value)"></textarea>
                             <br/>
                             <br/>
                         </p>
@@ -243,8 +305,8 @@
                         <br/>
                         <br/>
                         <p>
-                            <input type="button" id="mybutton_newref" name="mybutton_newref" value="Submit" onClick="inputnewref(this.form)"></input>
-                            <input type="button" id="mybutton_delref" name="mybutton_newref" value="Delete" onClick="delref(this.form)"></input>
+                            <input type="button" id="mybutton_newref" name="mybutton_newref" value="Submit" onClick="addref(this.form)"></input>
+                            <input type="button" id="mybutton_newref" name="mybutton_delref" value="Delete" onClick="delref(this.form)"></input>
                         </p>
                     </FORM>
                 </div>
@@ -258,94 +320,8 @@
             <div id="push"></div>
         </div>
         <div id="footer">
-            <p>
-                <a href="about.html">About this site</a>&bull;
-                <a href="copyright.html">Copyright</a>&bull;
-                <a href="about.html">Contact us</a>
+            <p> <a href="about.html">About this site</a>&bull; <a href="copyright.html">Copyright</a>&bull; <a href="about.html">Contact us</a>
             </p>
         </div>
     </body>
-
 </html>
-<script type="text/javascript">
-    var http_request = false;
-    var t = 0;
-
-    function makeRequest(url)
-    {
-        http_request = new XMLHttpRequest();
-        http_request.onreadystatechange = alertContents; // set callback
-        http_request.open('GET', url, true); // initialize
-        http_request.send(null); // run
-        t = 0;
-    }
-
-
-    function alertContents()
-    { // callback
-
-        if(http_request.readyState == 4)
-        { // javascript code
-            if((t == 0) && (http_request.status == 200))
-            { // http code
-                t++;
-
-                var bibData = JSON.parse(http_request.responseText);
-                var count = bibData.count;
-                var r = 'references';
-                if(bibData.count == 1)
-                {
-                    r = 'reference';
-                }
-                document.getElementById("bib_count").innerHTML = bibData.count + ' ' + r;
-
-                var searchTxt = document.getElementById("search_param").value;
-                if(!('' == searchTxt))
-                {
-                    document.getElementById("bib_count").innerHTML += ' matching <em>' + searchTxt + '</em>';
-                }
-
-                var refs = bibData.results; // array of references
-                var bib_list = document.getElementById("bib_target"); // list they go in
-                bib_list.innerHTML = "";
-
-                for(var i = 0; refs.length > i; i++)
-                {
-
-                    var itm = document.createElement('li');
-                    var lnk = document.createElement('a');
-                    itm.appendChild(lnk);
-                    lnk.className = 'bib_link';
-                    lnk.innerHTML = '[' + refs[i][0] + ']'
-                    lnk.href = 'http://www.ams.org/mathscinet-getitem?mr=' + refs[i][1];
-                    lnk.target = '_blank';
-
-                    var txt = document.createElement('span');
-                    txt.innerHTML = ' ' + refs[i][2];
-                    itm.appendChild(txt);
-
-                    bib_list.appendChild(itm);
-                }
-            }
-            else
-            {
-                alert('There was a problem with the request: code ' + http_request.status);
-            }
-        }
-    }
-
-
-    document.getElementById('mybutton').onclick = function ()
-    {
-        var searchTxt = document.getElementById("search_param").value;
-        var myurl = 'http://reu.marshall.edu/~mummertc/cgi-bin/listCitations.cgi?search=' + encodeURI(searchTxt);
-        makeRequest(myurl);
-        return false;
-    }
-
-    function startup()
-    {
-        //  document.getElementById("search_param").value = '';
-        makeRequest('http://reu.marshall.edu/~mummertc/cgi-bin/listCitations.cgi');
-    }
-</script>

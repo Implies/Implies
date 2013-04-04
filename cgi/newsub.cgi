@@ -2,16 +2,17 @@
 
 use CGI;
 use DBI;
+use strict;
 
 print "content-type: text/plain\n\n";
 
-$q=new CGI;
+my $q=new CGI;
 
-$ASCIIName = $q->param('ASCIIName') || $ARGV[0];
-$LaTexName = $q->param('LaTexName') || $ARGV[2];
-$Reference = $q->param('Reference') || $ARGV[3];
-$FreeText = $q->param('FreeText')   || $ARGV[4];
-$Overwrite = $q->param('Overwrite') || $ARGV[1] || 0;
+my $ASCIIName = $q->param('ASCIIName') || $ARGV[0];
+my $LaTexName = $q->param('LaTexName') || $ARGV[2] || 0;
+my $Reference = $q->param('Reference') || $ARGV[3] || 0;
+my $FreeText = $q->param('FreeText')   || $ARGV[4] || 0;
+my $Overwrite = $q->param('Overwrite') || $ARGV[1] || 0;
 
 my $date = `/bin/date`;
 chomp $date;
@@ -19,42 +20,34 @@ open MYFILE, '>>', "/tmp/log.txt" or die $!;
 print MYFILE "$date $ASCIIName\t $LaTexName\t $Reference\t $FreeText\n";
 close MYFILE;
 
-$dbh=DBI->connect('dbi:mysql:Zoo','root','implies');
+my $dbh=DBI->connect('dbi:mysql:Zoo','root','implies');
 
-$sql = "select * from Subsystems where sub_Ascii = ?";  # because sub_Ascii is a unique key
-$sh = $dbh->prepare($sql);
-$c = $sh->execute($ASCIIName);
+my $sql = "select * from Subsystems where sub_Ascii = ?";  # because sub_Ascii is a unique key
+my $sh = $dbh->prepare($sql);
+my $c = $sh->execute($ASCIIName);
 $sh->finish();
 
 if ( $c == 0) {
   # insert
   $sql = "INSERT INTO Subsystems VALUES(?, ?, ?, ?)";
 
-  $sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
-  my $c = $sth->execute($ASCIIName, $LaTexName, $Reference, $FreeText);
+  $sh = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
+  $sh->execute($ASCIIName, $LaTexName, $Reference, $FreeText);
   print "Added\n";
 } 
 elsif( $Overwrite > 0 )
 {
-		#print "Deleting \n";
-	#print $Overwrite;
-	#print $ASCIIName;
-    #Delete the row
     $sql = "delete from Subsystems where sub_Ascii = ?";
     $sh = $dbh->prepare($sql);
-    $cn = $sh->execute($ASCIIName);
+    $sh->execute($ASCIIName);
     $sh->finish();
     print ("Deleted\n");
     
   if ($Overwrite == 1) 
   {
-	      # read to update the row
-
-	
     $sql = "INSERT INTO Subsystems VALUES(?, ?, ?, ?)";
-    $sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
-    $sth->execute($ASCIIName, $LaTexName, $Reference, $FreeText) or die "Connection Error: $dbh->errstr";
-
+    $sh = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
+    $sh->execute($ASCIIName, $LaTexName, $Reference, $FreeText) or die "Connection Error: $dbh->errstr";
     print "Updated\n";
 
   }
