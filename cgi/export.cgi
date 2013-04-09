@@ -38,7 +38,7 @@ die "Couldn't open database: + $DBI::errstr; stopped";
 #$response->{'lower'} = $lower;
 
 # define queries
-my $query0 = "SELECT Subsystems.sub_Ascii, Subsystems.sub_Latex FROM Subsystems;";
+my $query0 = "SELECT cd ..Subsystems.sub_Ascii, Subsystems.sub_Latex FROM Subsystems;";
 
 # prepare first query
 my $sth = $dbh->prepare($query0);
