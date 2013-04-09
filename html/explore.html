@@ -43,6 +43,8 @@
             var obj;
             var systems = new Array();
             var freetext = new Array();
+            var canvas_count = 0;
+            var canvas_name = 'canviz_canvas_' + canvas_count.toString();
 
             document.observe('dom:loaded', function ()
             {
@@ -147,6 +149,9 @@
                 http_request2.onreadystatechange = alertContents2; // set callback
                 http_request2.open('GET', url, true); // initialize
                 http_request2.send(null); // run
+                
+                canvas_count++;
+                canvas_name = 'canviz_canvas_' + canvas_count.toString();
 
                 return false;
             }
@@ -180,10 +185,33 @@
                 document.getElementById('info').style.display = "";
                 document.getElementById('target').style.display = "none";
                 document.getElementById('select').style.display = "none";
-
                 MathJax.Hub.Typeset(side);
             }
+            
+            function savegraph()
+            {
+				canvas_name = 'canviz_canvas_' + canvas_count.toString();
+				alert(canvas_name);				
+			}
+			
+			
+			function savegraph() 
+			{
+				alert(canvas_name);
+				var canvas = document.getElementById(canvas_name);
+				var url = canvas.toDataURL();
+ 
+				var newImg = document.createElement("img");
+				newImg.src = url;
+				document.body.appendChild(newImg);
+			}
+			
         </script>
+    
+       
+    <!--<script src="https://raw.github.com/gist/839879/12ac5cc115a0c1d65645bde038404d9a02957fee/gistfile1.js"></script>
+    <!--<canvas id="canvas" width='800' height='400'></canvas>-->
+    
     </head>
     
     <body>
@@ -211,7 +239,7 @@
                     </ul>
                 </div>
                 <p id="layoutdims">
-                    <a href="#">Log in</a>
+                    <a href="login.html">Log in</a>
                 </p>
             </div>
             <div id="nav">
@@ -238,6 +266,15 @@
                         </li>
                     </ul>
                 </form>
+                
+                <br />
+                <br />
+                <br />
+                <br />            
+                
+                <!--<a class="savegraph" href="#" name="savegraph" onclick='savegraph();'>Save Graph as SVG</a>-->
+                
+                
             </div>
             <div id="content">
                 <div id="select" class="content"></div>

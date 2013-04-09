@@ -1,6 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    
+<html xmlns="http://www.w3.org/1999/xhtml">    
     <head>
 		<title></title>
         <meta name="generator" content="HTML Tidy for Linux/x86 (vers 25 March 2009), see www.w3.org" />
@@ -9,10 +8,8 @@
         <link rel="stylesheet" type="text/css" href="centered.css" media="screen" />
         <script type="text/javascript" src="prototype.js"></script>
         <script type="text/javascript" src="path.js"></script>
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-		
-        <script type="text/javascript">
-			
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>		
+        <script type="text/javascript">			
             var http_request = false;
             var http_request2 = false;
             var side;
@@ -22,56 +19,7 @@
             var left;// = document.getElementById("leftsubsystem");
             var systems = new Array();
             var tar = document.getElementById("target");
-            var http_request = false;
-            var http_request2 = false;
-            var side;
-            var right;
-            var left; // = document.getElementById("leftsubsystem");
             var freetext = new Array();
-
-            //New Reference functions
-
-            
-
-            function alertContentsnewref()
-            { // callback
-
-                if(http_request.readyState == 4)
-                { // javascript code
-                    if(http_request.status == 200)
-                    { // http code
-                        if(http_request.responseText == "Success\n")
-                        {
-                            alert("Reference successfully added");
-                        }
-                        else if(http_request.responseText == "Duplicate\n")
-                        {
-                            alert("Reference already exists");
-                        }
-                    }
-                    else
-                    {
-                        alert('There was a problem with the request ' + http_request.status);
-                    }
-                }
-            }
-
-            function inputnewref(form)
-            {
-                var KeyName = form.KeyName.value;
-                var MRNumber = form.MRNumber.value;
-                var FreeText = form.FreeText.value;
-                var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/newreference.cgi?';
-                myURL = myURL + 'KeyName=' + encodeURI(KeyName);
-                myURL = myURL + '&MRNumber=' + encodeURI(MRNumber);
-                myURL = myURL + '&FreeText=' + encodeURI(FreeText);
-                makeRequestnewref(myURL);
-
-            }
-
-            //End New Ref functions
-
-
             //New Sub functions
             function makeRequestnewsub(url)
             {
@@ -81,10 +29,8 @@
                 http_request.send(null); // run
             }
 
-
             function alertContentsnewsub()
             { // callback
-
                 if(http_request.readyState == 4)
                 { // javascript code
                     if(http_request.status == 200)
@@ -92,7 +38,6 @@
                         if(http_request.responseText == "Success\n")
                         {
                             alert("The subsystem was created successfully");
-
                         }
                         else if(http_request.responseText == "Duplicate\n")
                         {
@@ -109,7 +54,11 @@
                     }
                 }
             }
-			
+			function deletesub()
+			{
+				document.getElementById('mybutton_deletesub').disabled =true;
+				document.getElementById('mybutton_confirmdeletesub').disabled =false;
+			}
 			function editsub(form, Overwrite)
             {
                 var ASCIIName = form.ASCIIName.value;
@@ -131,6 +80,8 @@
                 form.Reference.value = "";
                 form.FreeText.value  = "";
                 makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
+                document.getElementById('mybutton_deletesub').disabled = false;
+				document.getElementById('mybutton_confirmdeletesub').disabled = true;
             }
                         
             function deleteresult(form)
@@ -149,13 +100,9 @@
                 makeRequestnewresult(myURL);
             }
 
-            //End new subsystem functions
-
-            //New result functions
             function makeRequestnewresult(url)
             {
                 http_request = new XMLHttpRequest();
-                //http_request.onreadystatechange = alertContentsnewresult; // set callback
                 http_request.open('GET', url, true); // initialize
                 http_request.send(null); // run
             }
@@ -211,24 +158,14 @@
             {
                 document.getElementById('main').className = 'hidden';
                 document.getElementById('newresult').className = 'content';
-                document.getElementById('newref').className = 'hidden';
                 document.getElementById('newsub').className = 'hidden';
                 document.getElementById('target').style.display = "none";
-            }
-
-            function shownewref()
-            {
-                document.getElementById('main').className = 'hidden';
-                document.getElementById('newresult').className = 'hidden';
-                document.getElementById('newref').className = 'content';
-                document.getElementById('newsub').className = 'hidden';
             }
 
             function shownewsub()
             {
                 document.getElementById('main').className = 'hidden';
                 document.getElementById('newresult').className = 'hidden';
-                document.getElementById('newref').className = 'hidden';
                 document.getElementById('newsub').className = 'content';
                 document.getElementById('target').style.display = "none";
             }
@@ -237,24 +174,9 @@
             {
                 document.getElementById('main').className = 'content';
                 document.getElementById('newresult').className = 'hidden';
-                document.getElementById('newref').className = 'hidden';
                 document.getElementById('newsub').className = 'hidden';
                 document.getElementById('target').style.display = "none";
-                //document.getElementById('target2').style.display = "none";
             }
-            function showeditref()
-            {
-				//document.getElementById('target').style.display = "none";
-				while (document.getElementById('target').hasChildNodes()) 
-				{
-				   document.getElementById('target').removeChild(document.getElementById('target').lastChild);
-				}
-				
-				document.getElementById('target').appendChild(ul);
-                document.getElementById('target').style.display = "";				
-				shownewref();
-				MathJax.Hub.Typeset();
-			}			
 			
 			function showeditsub()
             {
@@ -264,7 +186,6 @@
 				}
 				
 				document.getElementById('target').appendChild(ul2);
-                //document.getElementById('target').style.display = "";				
 				shownewsub();
 				document.getElementById('target').style.display = "";	
 				MathJax.Hub.Typeset();
@@ -278,20 +199,15 @@
                 http_request.send(null); // run
             }
 
-
             function alertContents()
             {
                 if(http_request.readyState == 4)
                 {
                     if(http_request.status == 200)
                     {
-                        //alert("running");
-
                         var obj = JSON.parse(http_request.responseText);                      
                         ul = document.createElement('ul');
                         ul2 = document.createElement('ul');
-                        //tar.appendChild(ul);
-                        //tar2.appendChild(ul2);
                         for(var i = 0; i < obj.length; i++) //> keep for command line editing
                         {
                             systems[obj[i][0]] = obj[i][1];
@@ -313,7 +229,6 @@
                             var lnk = document.createElement('a');
                             var str = '\\(\\\\' + obj[i][1] + '\\)';
                             var js = 'javascript:populateSub("' + obj[i][0] + '");';
-                            //alert("here");
                             lnk.innerHTML = str;
                             lnk.href = js;
                             itm.appendChild(lnk);
@@ -328,7 +243,6 @@
                 }
             }
 
-
             function changeRelate()
             {
                 if(document.getElementById('relation').label == "imply")
@@ -342,6 +256,32 @@
                     document.getElementById('relation').label = "imply";
                 }
 
+            }
+            
+            function changeSub(end)
+            {
+                var str;
+                side = end;
+                document.getElementById('target').style.display = "";
+                if(end.localeCompare('uppersubsystem'))
+                {
+                    str = "Right"
+                }
+                else 
+                {
+                    str = "Left"
+                }
+
+                document.getElementById("select").innerHTML = "Choose " + str + " Subsystem";
+                
+                while (document.getElementById('target').hasChildNodes()) 
+				{
+				   document.getElementById('target').removeChild(document.getElementById('target').lastChild);
+				}
+				
+				document.getElementById('target').appendChild(ul);
+                document.getElementById('target').style.display = "";
+				MathJax.Hub.Typeset();
             }
 
             //MathJax Rendering for new subsystem
@@ -376,15 +316,11 @@
                 }
             })();
 
-            //Script for new result div
-
-
             document.observe('dom:loaded', function ()
             {
                 //            makeRequestnewresult('http://localhost/~ubuntu/cgi-bin/listsubsystems.cgi');
                 makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listsubsystems.cgi');
             });
-
 
             function alertContentsnewresult()
             {
@@ -392,11 +328,7 @@
                 {
                     if(http_request.status == 200)
                     {
-                        //alert("running");
-
                         var obj = JSON.parse(http_request.responseText);
-                        //var tar = document.getElementById("target");
-                        //var ul = document.createElement('ul');
                         tar.appendChild(ul);
                         for(var i = 0; i < obj.length; i++) //> keep for nano editing
                         {
@@ -411,7 +343,6 @@
                             ul.appendChild(itm);
                         }
                         MathJax.Hub.Typeset();
-
                     }
                     else
                     {
@@ -419,43 +350,14 @@
                     }
                 }
             }
-            function changeSub(end)
-            {
-                var str;
-                side = end;
-                //document.getElementById('info').style.display = "none";
-                document.getElementById('target').style.display = "";
-                //document.getElementById('select').style.display = "";
-                if(end.localeCompare('uppersubsystem'))
-                {
-                    str = "Left"
-                }
-                else 
-                {
-                    str = "Right"
-                }
-
-                document.getElementById("select").innerHTML = "Choose " + str + " Subsystem";
-                
-                while (document.getElementById('target').hasChildNodes()) 
-				{
-				   document.getElementById('target').removeChild(document.getElementById('target').lastChild);
-				}
-				
-				document.getElementById('target').appendChild(ul);
-                document.getElementById('target').style.display = "";				
-				//shownewsub();
-				MathJax.Hub.Typeset();
-                //alert(end);
-            }
+            
 
             function switchSub(ascii)
             {
                 document.getElementById(side).innerHTML = '\\(' + systems[ascii] + '\\)';
                 document.getElementById(side).label = ascii;
-                //document.getElementById('info').style.display = "";
                 document.getElementById('target').style.display = "none";
-                //document.getElementById('select').style.display = "none";
+                document.getElementById("select").innerHTML = "";
                 MathJax.Hub.Typeset(side);
             }
             function populateSub(ascii)
@@ -463,12 +365,9 @@
 				document.getElementById("subtex").innerHTML = '\\(' + systems[ascii] + '\\)';
 				document.getElementById("subfreetext").innerHTML = freetext[ascii];
                 document.getElementById("subascii").value = ascii;
-                //document.getElementById('info').style.display = "";
                 document.getElementById('target').style.display = "none";
-                //document.getElementById('select').style.display = "none";
                 MathJax.Hub.Typeset(side);
-			}
-			
+			}			
         </script>
         </head>
         
@@ -476,89 +375,30 @@
             <div id="container">
                 <div id="banner">
                      <h1>Reverse Mathematics Zoo</h1>
-
                     <div id="centeredmenu">
                         <ul>
-                            <li>
-                                <a href="introduction.html">Introduction</a>
-                            </li>
-                            <li>
-                                <a href="explore.html">Explore</a>
-                            </li>
-                            <li>
-                                <a href="edit.html" class="active">Edit</a>
-                            </li>
-                            <li>
-                                <a href="bibliography.html">Bibliography</a>
-                            </li>
-                            <li>
-                                <a href="news.html">News</a>
-                            </li>
+                            <li><a href="introduction.html">Introduction</a></li>
+                            <li><a href="explore.html">Explore</a></li>
+                            <li><a href="edit.html" class="active">Edit</a></li>
+                            <li><a href="bibliography.html">Bibliography</a></li>
+                            <li><a href="news.html">News</a></li>
                         </ul>
                     </div>
                     <p id="layoutdims">
-                        <a href="#">Log in</a>
+                        <a href="login.html">Log in</a>
                     </p>
                 </div>
                 <div id="nav">
                      <h3>Enter new data</h3>
-
                     <ul class="menu">
-                        <li>
-                            <a href="#" onclick="shownewresult()">Results</a>
-                        </li>
-                        <li>
-                            <a href="#" onclick="shownewsub()">Subsystem</a>
-                        </li>
-                        <li>
-                            <a href="#" onclick="shownewref()">References</a>
-                        </li>
-                    </ul>
-                     <h3>Edit existing data</h3>
-
-                    <ul class="menu">
-                        <li>
-                            <a href="#" onclick="shownewresult()">Results</a>
-                        </li>
-                        <li>
-                            <a href="#" onclick="showeditsub()">Subsystem</a>
-                        </li>
-                        <li>
-                            <a href="#" onclick="showeditref()">References</a>
-                        </li>
-                    </ul>
-                </div>
-                
+                        <li><a href="#" onclick="shownewresult()">Results</a></li>
+                        <li><a href="#" onclick="shownewsub()">Subsystem</a></li>
+                    </ul>                     
+                </div>                
                 <div class="hidden" id="main">
                      <h2>Log in</h2>
                     <p>Test</p>
-                </div>
-                
-                <!-- div for new reference-->
-                <div class="hidden" id="newref">
-                    <FORM NAME="form" ACTION="" METHOD="get">
-                        <p>Key:
-                            <input type="text" name="KeyName" value=""></input>
-                            <br/>
-                            <br/>Math Reviews number:
-                            <input type="text" name="MRNumber" value=""></input>(optional)
-                            <br/>
-                            <br/>Reference details:
-                            <br/>
-                            <textarea name="FreeText" id="MathInput_ref" size="50" onkeyup="UpdateMath_newref(this.value)"></textarea>
-                            <br/>
-                            <br/>
-                        </p>
-                        <div id="MathOutput_newref" class="tex_render"></div>
-                        <br/>
-                        <br/>
-                        <p>
-							<input type="button" id="mybutton_newref" name="mybutton_newref" value="Submit" onClick="inputnewref(this.form)"></input>
-						</p>
-                    </FORM>
-                </div>
-                
-                <!-- div for new subsystem-->
+                </div>                
                 <div class="hidden" id="newsub">
 					<div style="Float:left">
 						<FORM NAME="myform_newsub" ACTION="" METHOD="get">
@@ -588,30 +428,27 @@
 							<br/>
 							<input type="button" id="mybutton_newsub" name="mybutton_newsub" value="Submit" onClick="editsub(this.form, 1)"></input>
 							<input type="button" id="mybutton_editsub" name="mybutton_editsub" value="Edit existing" onClick="showeditsub();"></input>
-							<input type="button" id="mybutton_deletesub" name="mybutton_editsub" value="Delete" onClick="editsub(this.form, 2)"></input>
+							<input type="button" id="mybutton_deletesub" name="mybutton_editsub" value="Delete" onClick="deletesub()"></input>
+							<input type="button" id="mybutton_confirmdeletesub" name="mybutton_confirmdeletesub" value="Confirm Delete?" onClick="editsub(this.form, 2)" disabled></input>
 						</FORM>
                     </div> 
-                </div>
-                
+                </div>                
                 <!--div for newresult-->
                 <div class="hidden" id="newresult">
                     <div style="Float:left">
                         <!-- text on this side-->
                         <FORM NAME="myform_newresult" ACTION="" MEHTOD="GET">
                             	<h3>Subsystem</h3>
-
                             <ul class="select">
                                 <li id="uppersubsystem">None Selected</li>
                                 <a class="selectsubsystem" href="#" name="uppersubsystem" onclick="changeSub('uppersubsystem');">[change]</a>
                             </ul>
                             	<h3>Relate</h3>
-
                             <ul class="select">
                                 <li label = "imply" id="relation">None Selected</li>
                                 <a class="selectrelate" href="#" name="relate" onclick='changeRelate();'>[change]</a>
                             </ul>
                             	<h3>Subsystem</h3>
-
                             <ul class="select">
                                 <li id="lowersubsystem">None Selected</li>
                                 <a id="lowersubsystem" class="selectsubsystem" href="#" name="lowersubsystem" onclick='changeSub("lowersubsystem");'>[change]</a>
@@ -622,25 +459,20 @@
                             <p id="select"></p>
                             <br/>
                             <input type="button" name="button" value="Submit" onClick="inputnewresult(this.form)"></input>
-                            <input type="button" id="mybutton_deleteresult" name="mybutton_deleteresult" value="Delete" onClick="deleteresult(this.form)"></input>
+                            <input type="button" id="mybutton_deleteresult" name="mybutton_deleteresult" value="Delete" onClick="askdelete()"></input>                            
                         </FORM>
                     </div>
-                <!-- list of subsystems-->
-               
+                <!-- list of subsystems-->               
              </div>
               <div class="content" id="target" style="Float:right"></div>               
              </div>
-
-                <div id="push"></div>
-            
+                <div id="push"></div>            
 				<div id="footer">
 					<p>
 						<a href="about.html">About this site</a>&bull;
 						<a href="copyright.html">Copyright</a>&bull;
 						<a href="about.html">Contact us</a>
 					</p>
-				</div>
-            
+				</div>            
         </body>
-
 </html>

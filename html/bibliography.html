@@ -115,6 +115,7 @@
             
             function delref(form)
             {
+				
 				edit = 2;
 				editref(form);
 			}
@@ -138,9 +139,11 @@
                 myURL = myURL + '&MRNumber=' + encodeURI(MRNumber);
                 myURL = myURL + '&FreeText=' + encodeURI(FreeText);
                 myURL = myURL + '&Overwrite=' + encodeURI(edit);
-                makeRequestnewref(myURL);
                 makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listCitations.cgi');
+                makeRequestnewref(myURL);
+                //makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listCitations.cgi');
                 showbib();
+                makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listCitations.cgi');
                 edit = 0;
             }
             
@@ -172,6 +175,7 @@
                 document.getElementById("MathInput_Freetext").value = "";
                 document.getElementById("MathInput_KeyName").readOnly = "";
                 document.getElementById('search').className = 'hidden';
+                document.getElementById('bib').className = 'hidden';
                 document.getElementById('newref').className = 'content';
             }
 
@@ -266,7 +270,7 @@
                         </li>
                     </ul>
                 </div>
-                <p id="layoutdims"> <a href="#">Log in</a>
+                <p id="layoutdims"> <a href="login.html">Log in</a>
                 </p>
             </div>
             <div id="nav">
