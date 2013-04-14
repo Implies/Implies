@@ -113,25 +113,38 @@
                 }
             }
             
+            function showdelref(form)
+            {				
+				document.getElementById('mybutton_delref').disabled =true;
+				document.getElementById('mybutton_confirmdelref').disabled =false;
+			}
+			           
+            
             function delref(form)
-            {
-				
+            {				
 				edit = 2;
 				editref(form);
 			}
 			
 			function addref(form)
             {
-				editref(form,0);
+				edit = 0;
+				editref(form);
 			}
 
             function editref(form)
             {
+				document.getElementById('mybutton_delref').disabled = false;
+				document.getElementById('mybutton_confirmdelref').disabled = true;
 				if(edit == 1)
 				{
 					Overwrite = 1;
 				}
                 var KeyName = form.KeyName.value;
+                if(KeyName == "")
+                {
+					return;
+				}
                 var MRNumber = form.MRNumber.value;
                 var FreeText = form.FreeText.value;
                 var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/newreference.cgi?';
@@ -144,7 +157,6 @@
                 //makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listCitations.cgi');
                 showbib();
                 makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listCitations.cgi');
-                edit = 0;
             }
             
             function populateRef(a, b, c) //HACK
@@ -280,6 +292,9 @@
                     </li>
                     <li> <a href="#" onclick="shownewref()">Add a reference</a>
                     </li>
+		    <li>
+		      <a href="Zoo.xml">Export XML</a>
+		    </li>
                 </ul>
             </div>
             <div class="content">
@@ -310,7 +325,8 @@
                         <br/>
                         <p>
                             <input type="button" id="mybutton_newref" name="mybutton_newref" value="Submit" onClick="addref(this.form)"></input>
-                            <input type="button" id="mybutton_newref" name="mybutton_delref" value="Delete" onClick="delref(this.form)"></input>
+                            <input type="button" id="mybutton_delref" name="mybutton_delref" value="Delete" onClick="showdelref()"></input>
+                            <input type="button" id="mybutton_confirmdelref" name="mybutton_confirmdelref" value="Confirm Delete" onClick="delref(this.form)" disabled></input>
                         </p>
                     </FORM>
                 </div>

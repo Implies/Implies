@@ -4,24 +4,36 @@ use DBI;
 use strict;
 use warnings;
 use Digest::SHA qw(sha1);
+use Email::MIME;
+use Email::Sender::Simple qw(sendmail);
 
 print "content-type: text/html\n\n";
 
 sub sendEmail
  {
- 	my ($to, $from, $subject, $message) = @_;
- 	my $sendmail = '/usr/lib/sendmail';
- 	open(MAIL, "|$sendmail -oi -t");
- 		print MAIL "From: $from\n";
- 		print MAIL "To: $to\n";
- 		print MAIL "Subject: $subject\n\n";
- 		print MAIL "$message\n";
- 	close(MAIL);
+	my ($to, $from, $subject, $message) = @_;
+	$message = Email::MIME->create(
+	header_str => [
+		From    => $from,
+		To      => $to,
+		Subject => $subject,
+	  ],
+	  attributes => {
+		encoding => 'quoted-printable',
+		charset  => 'ISO-8859-1',
+	  },
+	  body_str => $message,
+	);
+
+	# send the message
+	use Email::Sender::Simple qw(sendmail);
+	sendmail($message);
  } 
  
 my $cgi = CGI->new;
-my $username = $cgi->param("username") || $ARGV[0];
-my $password = $cgi->param("password") || $ARGV[1];
+my $email = $cgi->param("email") || $ARGV[0];
+my $username = $cgi->param("username") || $ARGV[1];
+my $password = $cgi->param("password") || $ARGV[2];
 my $digest = sha1($password);
 
 my $dbh=DBI->connect('dbi:mysql:Zoo','root','implies');
@@ -40,13 +52,13 @@ if ($c == 0)
 		while($len--){ $authkey .= $chars[rand @chars] };
 		
 		my $sth;
-		$sql = "INSERT INTO Users VALUES (?, ?, ?, ?)";
+		$sql = "INSERT INTO Users VALUES (?, ?, ?, ?, ?)";
 		
 		$sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
-		$c = $sth->execute( $username, $digest, "", $authkey);
+		$c = $sth->execute( $username, $digest, "", $authkey, $email);
 		print "Success New";
-		 sendEmail("$username", "implies\@reu.marshall.edu", 
-			"Email authentication for IMPLIES", "$authkey");
+		# sendEmail("$username", "implies\@reu.marshall.edu", 
+		#	"Email authentication for IMPLIES", "Your authentication code for IMPLIES:"."$authkey");
 	}
 	
 ## Username has already been taken

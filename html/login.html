@@ -15,28 +15,32 @@
   "screen" />
   
   <script type="text/javascript">
-	 function setCookie(c_name,value,exdays)
-			{
-			var exdate=new Date();
-			exdate.setDate(exdate.getDate() + exdays);
-			var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
-			document.cookie=c_name + "=" + c_value;
-			}
-	function getCookie(c_name)
-		{
-		var i,x,y,ARRcookies=document.cookie.split(";");
-		for (i=0;i<ARRcookies.length;i++)
-		{
-		  x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
-		  y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
-		  x=x.replace(/^\s+|\s+$/g,"");
-		  if (x==c_name)
-			{
-			return unescape(y);
-			}
-		  }
-		}
+	 var isLoggedIn;
+	 var sessionID;
+	 var st;
+	 var c_name = "login_implies";
+	 function shownNotLoggedIn()
+            {
+                document.getElementById('notLoggedIn').className = 'content';
+                document.getElementById('login').className = 'hidden';
+                document.getElementById('newlogin').className = 'hidden';
+                
+            }
 	function makeRequestlogin(url)
+            {
+                http_request = new XMLHttpRequest();
+                http_request.onreadystatechange = alertContents; // set callback
+                http_request.open('GET', url, true); // initialize
+                http_request.send(null); // run
+            }
+     function makeRequestSetCookie(url)
+            {
+                http_request = new XMLHttpRequest();
+                http_request.onreadystatechange = alertContents; // set callback
+                http_request.open('GET', url, true); // initialize
+                http_request.send(null); // run
+            }
+     function makeRequestGetSession(url)
             {
                 http_request = new XMLHttpRequest();
                 http_request.onreadystatechange = alertContents; // set callback
@@ -50,12 +54,8 @@
                 { // javascript code
                     if(http_request.status == 200)
                     { // http code
-                        if(http_request.responseText == "Success")
-                        {
-                            alert("Logged in");
-                            setCookie("login", yes, 2);
-                        }
-                        else if(http_request.responseText == "Incorrect")
+                        
+                        if(http_request.responseText == "Incorrect")
                         {
                             alert("Username or Password is incorrect");
                         }
@@ -67,6 +67,22 @@
                         {
 							alert("Please choose a different username");
 						}
+						else if(http_request.responseText == "Session"){
+							isLoggedIn = true;
+							loginTest();
+						}
+						else if(http_request.responseText == "No session"){
+							isLoggedIn = false;
+							loginTest();
+						}
+						else
+                        {
+							var response = http_request.responseText;
+							alert(response);
+                            setCookie("login_implies", response, 2);
+                            isLoggedIn = true;
+                            loginTest();
+                        }
 
                     }
                     else
@@ -88,24 +104,93 @@
             
             function newlogin(form)
             {
+				var email = form.Email.value;
                 var username = form.Username.value;
                 var password = form.Password.value;
-                var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/newlogin.cgi?';
-                myURL = myURL + 'username=' + encodeURI(username);
-                myURL = myURL + '&password=' + encodeURI(password);
-                makeRequestlogin(myURL);
+                var password2 = form.Password2.value;
+                if(password == password2){
+					var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/newlogin.cgi?';
+					myURL = myURL + 'email=' + encodeURI(email);
+					myURL = myURL + '&username=' + encodeURI(username);
+					myURL = myURL + '&password=' + encodeURI(password);
+					makeRequestlogin(myURL);
+				}
+				else{
+					alert("Passwords don't match");
+					document.getElementById("passerror").innerHTML = "Passwords did not match, please re-enter passwords";
+					document.getElementById("Password").value = '';
+					document.getElementById("Password2").value = '';
+					
+				}
             }
+            
+            function setCookie(c_name,value,exdays)
+			{
+				
+				var exdate=new Date();
+				exdate.setDate(exdate.getDate() + exdays);
+				var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+				document.cookie=c_name + "=" + c_value + exdate+"; path=/";
+			}
+			
+			function getCookie()
+			{                
+				
+				var i,x,y,ARRcookies=document.cookie.split(";");
+				for (i=0;i<ARRcookies.length;i++)
+				{
+				  x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+				  y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+				  x=x.replace(/^\s+|\s+$/g,"");
+				  if (x=="login_implies")
+					{
+					sessionID = y;
+					}
+				  }
+                
+                sessionTest(sessionID);
+			}
+			
+			function sessionTest(sesID)
+			{	sessionID = sesID;
+				var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/sessiontest.cgi?';
+				myURL = myURL + '&sessionID=' + encodeURI(sessionID);
+				makeRequestGetSession(myURL);
+			}
+			
+			function loginTest()
+			{
+				if (isLoggedIn)
+				{
+					st = document.getElementById("status");
+					st.innerHTML = "Logged in. Click here to log out";
+					st.setAttribute('href', 'logout.html');
+				}
+				else if(!isLoggedIn)
+				{
+					st = document.getElementById("status");
+					st.innerHTML = "Log in";
+					st.setAttribute('href', 'login.html')
+				}
+			}
+			function shownewlogin()
+			{
+				document.getElementById('login').className = 'hidden';
+                document.getElementById('newlogin').className = 'content';
+			}
+			
   </script>
 </head>
 
-<body>
+<body onload="getCookie()">
   <div id="container">
     <div id="banner">
       <h1>Reverse Mathematics Zoo</h1>
 
       <div id="centeredmenu">
         <ul>
-          <li><a href="introduction.html" class="active">Introduction</a></li>
+          <li><a href="introduction.html" class=
+          "active">Introduction</a></li>
 
           <li><a href="explore.html">Explore</a></li>
 
@@ -117,7 +202,7 @@
         </ul>
       </div>
 
-      <p id="layoutdims"><a href="login.html">Log in</a></p>
+      <p id="layoutdims"><a id="status" href="login.html">Log in</a></p>
     </div>
 
     <div id="nav">
@@ -130,34 +215,64 @@
 
       </ul>
     </div>
-
-    <div class="content">
+	        <div class="hidden" id="notLoggedIn">
+	  <h2>You must be logged in to do that.</h2>
+  </div>
+    <div id = "login" class="content">
       <h2>Please enter username and password</h2><br/>
       <FORM NAME="form" ACTION="" METHOD="get">
-			<p>User name:
+			<p>
+				User name:
 				<input type="text" name="Username" value=""></input>
 				<br/>
 				<br/>Password
 				<input type="password" name="Password" value=""></input>
-				<br/>
 			</p>
 			<br/>
 			<br/>
 			<p>
 				<input type="button" id="mybutton_login" name="mybutton_login" value="Login" onClick="login(this.form)"></input>
-				<input type="button" id="mybutton_newlogin" name="mybutton_newlogin" value="New Login" onClick="newlogin(this.form)"></input>
+				<br/><br/>
+				Don't have an account? <a href="#" onclick="shownewlogin()">Create new account</a>
 
+			</p>
+		</FORM>
+    </div>
+    
+    <div id = "newlogin" class="hidden">
+      <h2>Please enter email, username and password</h2><br/>
+	  <h3 id="passerror" style="color:red"></h3>
+      <FORM NAME="form" ACTION="" METHOD="get">
+			<p>
+				Email:
+				<input type = "text" name = "Email" value=""></input><br/><br/>
+				User name:
+				<input type="text" name="Username" value=""></input>
+				<br/>
+				<br/>Password
+				<input type="password" id="Password" name="Password" value=""></input>
+				<br/>
+				<br/> Retype Password
+				<input type="password" id="Password2" name="Password2" value=""></input>
+				<br/>
+				
+			</p>
+			<br/>
+			<br/>
+			<p>
+			<input type="button" id="mybutton_newlogin" name="mybutton_newlogin" value="Create" onClick="newlogin(this.form)"></input>
 			</p>
 		</FORM>
     </div>
 
     <div id="push"></div>
-  </div>
+    </div>
 
   <div id="footer">
     <p><a href="about.html">About this site</a> &bull; <a href=
     "copyright.html">Copyright</a> &bull; <a href="about.html">Contact
     us</a></p>
   </div>
+  
 </body>
 </html>

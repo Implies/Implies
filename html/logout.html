@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 25 March 2009), see www.w3.org" />
+
+  <title>Welcome - Reverse Mathematics Zoo</title>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700'
+  rel='stylesheet' type='text/css' />
+  <link rel="stylesheet" type="text/css" href="style.css" media=
+  "screen" />
+  <link rel="stylesheet" type="text/css" href="centered.css" media=
+  "screen" />
+  
+  <script type="text/javascript">
+	  var sessionID;
+	  var c_name = "login_implies";
+	function makeRequestlogout(url)
+            {
+                http_request = new XMLHttpRequest();
+                http_request.onreadystatechange = alertContents; // set callback
+                http_request.open('GET', url, true); // initialize
+                http_request.send(null); // run
+            }
+     function alertContents()
+            { // callback
+
+                if(http_request.readyState == 4)
+                { // javascript code
+                    if(http_request.status == 200)
+                    { // http code
+                        
+                        if(http_request.responseText == "Error")
+                        {
+                            document.getElementById("response").innerHTML = "There was an error";
+                        }
+                        else if(http_request.responseText == "Success")
+                        {
+                            document.getElementById("response").innerHTML = "Logged out";
+                            deletecookie(login_implies);
+						}
+						else
+                        {
+                            alert("There was a problem");
+                        }
+                    }
+                    else
+                    {
+                        alert('There was a problem with the request ' + http_request.status);
+                    }
+                }
+			}  
+			
+			function getCookie(c_name)
+			{                
+				var nameEQ = name + "=";
+				var ca = document.cookie.split(';');
+				for(var i=0;i < ca.length;i++) {
+					var c = ca[i];
+					while (c.charAt(0)==' ') c = c.substring(1,c.length);
+					if (c.indexOf(nameEQ) == 0) sessionID =  c.substring(nameEQ.length,c.length);
+					alert("sessionID");
+				}
+				logout();
+				return null;
+				
+			}
+			
+			function delcookie(c_name) {
+				document.cookie = c_name +'=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
+			}
+			
+			function logout(){;
+                var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/logout.cgi?';
+                myURL = myURL + 'sessionID=' + encodeURI(sessionID);
+                makeRequestlogout(myURL);
+
+			}
+			
+  </script>
+</head>
+
+<body onload="getCookie()">
+  <div id="container">
+    <div id="banner">
+      <h1>Reverse Mathematics Zoo</h1>
+
+      <div id="centeredmenu">
+        <ul>
+          <li><a href="introduction.html" class=
+          "active">Introduction</a></li>
+
+          <li><a href="explore.html">Explore</a></li>
+
+          <li><a href="edit.html">Edit</a></li>
+
+          <li><a href="bibliography.html">Bibliography</a></li>
+
+          <li><a href="news.html">News</a></li>
+        </ul>
+      </div>
+
+      <p id="layoutdims"><a href="login.html">Log in</a></p>
+    </div>
+
+    <div id="nav">
+    </div>
+
+    <div id = "logout" class="content">
+      <h2 id = "response"></h2><br/>
+    </div>
+
+    <div id="push"></div>
+    </div>
+
+  <div id="footer">
+    <p><a href="about.html">About this site</a> &bull; <a href=
+    "copyright.html">Copyright</a> &bull; <a href="about.html">Contact
+    us</a></p>
+  </div>
+  
+</body>
+</html>
+

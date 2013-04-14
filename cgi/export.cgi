@@ -1,146 +1,68 @@
 #!/usr/bin/perl
-use Data::Dumper;
 
-use strict; 
-use DBI; 
-use CGI;
-use JSON;
-use DBD::mysql;
+use strict;
+use DBI;
 
-#my $tmpdir = "dot/";
-my $xmldir = "/home/implies/public_html/xml/";
-#my $xmldir = "/home/ubuntu/public_html/html/dot/";
-my $url = "http://reu.marshall.edu/~implies/dot/";
-#my $url = "/localhost/ubuntu/dot/";
-my $xmlext = ".xml";
+my $filename = "Zoo.xml";
+my $xmldir = "/home/implies/public_html/html/";
 
-my %tex = [];
-my %data;# = {};
-my $cgi = CGI->new();
+open (OUTFILE, ">", $xmldir . $filename);
 
-print "content-type: text/html\n\n";
-
-#my $upper = $cgi->param('upper') || $ARGV[0] || 'ACA';
-#my $lower = $cgi->param('lower') || $ARGV[1] || 'WKL';
-#my $filename = $upper. "_". $lower;
-
-
-#my $filename = "$$";
-open (OUTFILE, ">", $xmldir . $filename . $gvext) or die "777 Can't open: $xmldir$filename$xmlext  $!\n";   # FIXME
-my $count = 0;
 my $dbh = DBI->connect('DBI:mysql:Zoo', 'root', 'implies') or
 die "Couldn't open database: + $DBI::errstr; stopped";
-# my $sth = $dbh->prepare(<<End_SQL) or die "Couldn't prepare statement: + $DBI::errstr; stopped";
 
+print OUTFILE "<?xml version=\"1.0\"?>\n";
+print OUTFILE "<zoo>\n";
 
-#my $response = {};
-#$response->{'upper'} = $upper;
-#$response->{'lower'} = $lower;
+my $sql = "SELECT * FROM Subsystems";
+my $sth = $dbh->prepare ($sql);
+$sth->execute ();
 
-# define queries
-my $query0 = "SELECT cd ..Subsystems.sub_Ascii, Subsystems.sub_Latex FROM Subsystems;";
+print OUTFILE " <subsystems>\n";
 
-# prepare first query
-my $sth = $dbh->prepare($query0);
-
-# Execute the query
-$sth->execute() or die "Couldn't execute statement: $DBI::errstr; stopped";
-#$sth->execute($upper, $upper, $lower, $lower) or die "Couldn't execute statement: $DBI::errstr; stopped";
-
-# Pull from Subsystem Table
-while ( my ($field1, $field2,) = $sth->fetchrow_array() )
+while (my ($name, $latex, $freetext, $citation) = $sth->fetchrow_array ())
 {
-  $field2 =~ s!\\!\\\\!g;
-   $tex{$field1} = $field2;
+    print OUTFILE "   <subsystem>\n";
+    print OUTFILE "    <name>" . $name . "</name>\n";
+    print OUTFILE "    <latex>" . $latex  . "</latex>\n";
+    print OUTFILE "    <freetext>" . $freetext . "</freetext>\n";
+    print OUTFILE "    <citation>" . $citation . "</citation>\n";
+    print OUTFILE "   </subsystem>\n";
 }
+    print OUTFILE "  </subsystems>\n";
 
-# prepare next query
-my $sth = $dbh->prepare($query1);
+my $sql = "SELECT * FROM Theorems";
+my $sth = $dbh->prepare ($sql);
+$sth->execute ();
 
-# execute query
-$sth->execute($upper, $upper, $lower, $lower) or die "Couldn't execute statement: $DBI::errstr; stopped";
+    print OUTFILE "  <theorems>\n";
 
-my $database = {};
-
-# Pull from Theorem Table
-my ($left, $right, $relate, $reason);
-while ( my ($left,$right, $relate, $reason) = $sth->fetchrow_array() )
-{    
-  #print "$left $relate $right \n";
-
-  if ( $relate eq 'imply' ) { 
-
-    my $sys = get_system($database, $left);
-    $sys->{'children'}->{$right} = 1;
-    
-    $sys = get_system($database, $right);
-    $sys->{'parents'}->{$left} = 1;
-  }
-
-} 
-my ($node, $parent, $child);
-
-foreach $node ( keys %$database ) { 
-  foreach $parent ( keys %{$database->{$node}->{'parents'}} ) { 
-    foreach $child ( keys %{$database->{$parent}->{'children'}} ) { 
-
-        #print "N: $node P: $parent C: $child\n";
-   
-       if ( exists $database->{$child}->{'children'}->{$node} ) { 
-		#print ".. delete\n";
-
-           delete $database->{$parent}->{'children'}->{$node};
-           delete $database->{$node}->{'parents'}->{$parent};
-       }
-    }
-  }
+while (my ($left, $relate, $right, $citation) = $sth->fetchrow_array ())
+{
+    print OUTFILE "   <theorem>\n";
+    print OUTFILE "    <left>" . $left . "</left>\n";
+    print OUTFILE "    <relate>" . $relate  . "</relate>\n";
+    print OUTFILE "    <right>" . $right . "</right>\n";
+    print OUTFILE "    <citation>" . $citation . "</citation>\n";
+    print OUTFILE "   </theorem>\n";
 }
+    print OUTFILE "  </theorems>\n";
 
+my $sql = "SELECT * FROM Citations";
+my $sth = $dbh->prepare ($sql);
+$sth->execute ();
 
-#print Dumper($database);
+    print OUTFILE "  <bibliography>\n";
 
-sub get_system { 
-  my $database = shift;
-  my $system = shift;
-
-  if ( ! ( exists $database->{$system} ) ) { 
-    $database->{$system} = {};
-    $database->{$system}->{'name'} = $system;
-    $database->{$system}->{'latexname'} = $tex{$system};
-    $database->{$system}->{'parents'} = {};
-    $database->{$system}->{'children'} = {};
-  }
-
-  return $database->{$system};
+while (my ($key, $mrn, $freetext) = $sth->fetchrow_array ())
+{
+    print OUTFILE "   <citation>\n";
+    print OUTFILE "    <key>" . $key . "</key>\n";
+    print OUTFILE "    <mrn>" . $mrn  . "</mrn>\n";
+    print OUTFILE "    <freetext>" . $freetext . "</freetext>\n";
+    print OUTFILE "   </citation>\n";
 }
+    print OUTFILE "  </bibliography>\n";
 
-# Graphviz Header
-print OUTFILE "digraph G" . "\n" . "{graph[ratio=.5]" . "\n"
-			 . "\n" . "{node [shape=none, margin=0];" . "\n \n";
-
-for $node ( values $database ) { 
-
-  #print "N " . $node->{'name'} . " L " . $node->{'latexname'} . "\n";
-	
-  my $key;
-  foreach $key (keys $node->{'children'})
-  {
-     print OUTFILE "\"" . $node->{'name'} . "\"" . " -> " . "\"" . "$key"  . "\"" . "[weight=0]" . ";" . "\n";
-  }
-
-  print OUTFILE "\"" . $node->{'name'} . "\"" 
-		. ' [id ="' . $node->{'name'} . '" '
-        . 'label="' . "\\\\" . "(" . $node->{'latexname'} . "\\\\" . ")" . '" ' 
-        . ' href="javascript:void(click_node(' . "'" . $node->{'name'} . "'" . '))"];' . "\n";
-}
-
-# Close Graphviz Brace
-print OUTFILE "}";
-print OUTFILE "}";
-
-# Compile
-system("dot", "-Txdot", $xmldir . $filename . $xmlext, "-o", $xmldir . $filename . $xmlext);
-
-# Disconnect from the database
-$dbh->disconnect();
-
+$dbh->disconnect ();
+print OUTFILE "</zoo>\n";

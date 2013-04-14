@@ -9,7 +9,11 @@
         <script type="text/javascript" src="prototype.js"></script>
         <script type="text/javascript" src="path.js"></script>
         <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>		
-        <script type="text/javascript">			
+        <script type="text/javascript">	
+			var isLoggedIn;
+			var sessionID;
+			var st;
+			var c_name = "login_implies"
             var http_request = false;
             var http_request2 = false;
             var side;
@@ -20,7 +24,91 @@
             var systems = new Array();
             var tar = document.getElementById("target");
             var freetext = new Array();
+            function shownNotLoggedIn()
+            {
+                document.getElementById('notLoggedIn').className = 'content';
+                document.getElementById('content').className = 'hidden';
+            }
+            function makeRequestSession(url)
+            {
+                http_request = new XMLHttpRequest();
+                http_request.onreadystatechange = alertContentsSession; // set callback
+                http_request.open('GET', url, true); // initialize
+                http_request.send(null); // run
+            }
+            
+            function alertContentsSession()
+            { // callback
+
+                if(http_request.readyState == 4)
+                { // javascript code
+                    if(http_request.status == 200)
+                    { // http code
+                        
+						if(http_request.responseText == "Session"){
+							isLoggedIn = true;
+							loginTest();
+						}
+						else if(http_request.responseText == "No session"){
+							isLoggedIn = false;
+							loginTest();
+						}
+						else
+                        {
+                            alert("There was an error");
+                        }
+
+                    }
+                    else
+                    {
+                        alert('There was a problem with the request ' + http_request.status);
+                    }
+                }
+			}
+            function getCookie()
+			{                
+				
+				var i,x,y,ARRcookies=document.cookie.split(";");
+				for (i=0;i<ARRcookies.length;i++)
+				{
+				  x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+				  y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+				  x=x.replace(/^\s+|\s+$/g,"");
+				  if (x==c_name)
+					{
+					sessionID = y;
+					}
+				  }
+                
+                sessionTest(sessionID);
+			}
+			
+			function sessionTest(sesID)
+			{	sessionID = sesID;
+				var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/sessiontest.cgi?';
+				myURL = myURL + 'sessionID=' + encodeURI(sessionID);
+				makeRequestSession(myURL);
+			}
+			
+			function loginTest()
+			{
+				if (isLoggedIn)
+				{
+					st = document.getElementById("status");
+					st.innerHTML = "Logged in. Click here to log out";
+					st.setAttribute('href', 'logout.html');
+					shownewresult();
+				}
+				else if(!isLoggedIn)
+				{
+					st = document.getElementById("status");
+					st.innerHTML = "Log in";
+					showNotLoggedIn();
+					st.setAttribute('href', 'login.html')
+				}
+			}
             //New Sub functions
+            
             function makeRequestnewsub(url)
             {
                 http_request = new XMLHttpRequest();
@@ -83,21 +171,28 @@
                 document.getElementById('mybutton_deletesub').disabled = false;
 				document.getElementById('mybutton_confirmdeletesub').disabled = true;
             }
+            
+            function deleteresult()
+			{
+				document.getElementById('mybutton_deleteresult').disabled =true;
+				document.getElementById('mybutton_confirmdeleteresult').disabled =false;
+			}
                         
-            function deleteresult(form)
+            function editresult(form, Overwrite)
             {
                 var Left = document.getElementById("uppersubsystem").label;
                 var Right = document.getElementById("lowersubsystem").label;
                 var Relate = document.getElementById("relation").label;
                 var Citation = form.Reference.value;
-                var Overwrite = 1;
-                var myURL = 'http://reu.marshall.edu/~mummertc/cgi-bin/newresult.cgi?';
+                var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/newresult.cgi?';
                 myURL = myURL + 'Left=' + encodeURI(Left);
                 myURL = myURL + '&Right=' + encodeURI(Right);
                 myURL = myURL + '&Relate=' + encodeURI(Relate);
                 myURL = myURL + '&Citation=' + encodeURI(Citation);
                 myURL = myURL + '&Overwrite=' + encodeURI(Overwrite);
                 makeRequestnewresult(myURL);
+                document.getElementById('mybutton_deleteresult').disabled = false;
+				document.getElementById('mybutton_confirmdeleteresult').disabled = true;
             }
 
             function makeRequestnewresult(url)
@@ -156,7 +251,7 @@
 
             function shownewresult()
             {
-                document.getElementById('main').className = 'hidden';
+               // document.getElementById('main').className = 'hidden';
                 document.getElementById('newresult').className = 'content';
                 document.getElementById('newsub').className = 'hidden';
                 document.getElementById('target').style.display = "none";
@@ -164,15 +259,15 @@
 
             function shownewsub()
             {
-                document.getElementById('main').className = 'hidden';
+              //  document.getElementById('main').className = 'hidden';
                 document.getElementById('newresult').className = 'hidden';
                 document.getElementById('newsub').className = 'content';
                 document.getElementById('target').style.display = "none";
             }
 
-            function showmain()
+            function showNotLoggedIn()
             {
-                document.getElementById('main').className = 'content';
+                document.getElementById('notLoggedIn').className = 'content';
                 document.getElementById('newresult').className = 'hidden';
                 document.getElementById('newsub').className = 'hidden';
                 document.getElementById('target').style.display = "none";
@@ -371,7 +466,7 @@
         </script>
         </head>
         
-        <body onload="showmain()">
+        <body onload="getCookie()">
             <div id="container">
                 <div id="banner">
                      <h1>Reverse Mathematics Zoo</h1>
@@ -385,7 +480,7 @@
                         </ul>
                     </div>
                     <p id="layoutdims">
-                        <a href="login.html">Log in</a>
+                        <a href="login.html" id = "status">Log in</a>
                     </p>
                 </div>
                 <div id="nav">
@@ -394,11 +489,7 @@
                         <li><a href="#" onclick="shownewresult()">Results</a></li>
                         <li><a href="#" onclick="shownewsub()">Subsystem</a></li>
                     </ul>                     
-                </div>                
-                <div class="hidden" id="main">
-                     <h2>Log in</h2>
-                    <p>Test</p>
-                </div>                
+                </div>                                
                 <div class="hidden" id="newsub">
 					<div style="Float:left">
 						<FORM NAME="myform_newsub" ACTION="" METHOD="get">
@@ -432,7 +523,10 @@
 							<input type="button" id="mybutton_confirmdeletesub" name="mybutton_confirmdeletesub" value="Confirm Delete?" onClick="editsub(this.form, 2)" disabled></input>
 						</FORM>
                     </div> 
-                </div>                
+                </div>      
+            <div class="hidden" id="notLoggedIn">
+				<h2>You must be logged in to do that.</h2>
+			</div>          
                 <!--div for newresult-->
                 <div class="hidden" id="newresult">
                     <div style="Float:left">
@@ -458,10 +552,12 @@
                             <br/>
                             <p id="select"></p>
                             <br/>
-                            <input type="button" name="button" value="Submit" onClick="inputnewresult(this.form)"></input>
-                            <input type="button" id="mybutton_deleteresult" name="mybutton_deleteresult" value="Delete" onClick="askdelete()"></input>                            
+                            <input type="button" name="button" value="Submit" onClick="editresult(this.form, 0)"></input>
+                            <input type="button" id="mybutton_deleteresult" name="mybutton_editsub" value="Delete" onClick="deleteresult()"></input>
+							<input type="button" id="mybutton_confirmdeleteresult" name="mybutton_confirmdeletesub" value="Confirm Delete" onClick="editresult(this.form, 1)" disabled></input>
                         </FORM>
                     </div>
+
                 <!-- list of subsystems-->               
              </div>
               <div class="content" id="target" style="Float:right"></div>               

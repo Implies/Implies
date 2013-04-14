@@ -1,0 +1,28 @@
+#!/usr/bin/perl
+
+use strict;
+use DBI;
+
+my $filename = "Zoo.xml";
+
+open (OUTFILE, ">", $filename);
+
+my $dbh = DBI->connect('DBI:mysql:Zoo', 'root', 'implies') or
+die "Couldn't open database: + $DBI::errstr; stopped";
+
+my $sth = $dbh->prepare ("SELECT sub_Ascii, sub_Latex FROM Subsystems");
+$sth->execute ();
+
+print OUTFILE "<?xml version=\"1.0\"?>\n";
+print OUTFILE "<>\n";
+
+while (my ($name, $category) = $sth->fetchrow_array ())
+{
+    print OUTFILE " <subsystem>\n";
+    print OUTFILE "  <name>$name</name>\n";
+    print OUTFILE "  <category>$category</category>\n";
+    print OUTFILE " </subsystem>\n";
+}
+
+$dbh->disconnect ();
+print OUTFILE "</dataset>\n";

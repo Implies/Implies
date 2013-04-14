@@ -9,7 +9,8 @@ print "content-type: text/html\n\n";
 my $cgi = CGI->new;
 my $username = $cgi->param("username") || $ARGV[0];
 my $password = $cgi->param("password") || $ARGV[1];
-
+my $sesID = sha1($username.$password);
+print $sesID;
 ## connect to the database
 my $dbh=DBI->connect('dbi:mysql:Zoo','root','implies');
 
@@ -35,6 +36,7 @@ if ($c != 0)
 		## successful login
 		else
 		{
+			$sql = "INSET INTO Sessions values(?,?,?,?)";
 			print "Success";
 		}
 

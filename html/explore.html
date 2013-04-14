@@ -35,7 +35,6 @@
         <script type="text/javascript">
             var http_request = false;
             var http_request2 = false;
-            //var hostname = "http://localhost/~ubuntu/";
             var hostname = "http://reu.marshall.edu/~implies/";
             var side;
             var upper;
@@ -44,11 +43,13 @@
             var systems = new Array();
             var freetext = new Array();
             var canvas_count = 0;
-            var canvas_name = 'canviz_canvas_' + canvas_count.toString();
+            var canvas_name;// = 'canviz_canvas_' + canvas_count.toString();
+            var canvas_height;
+            var canvas_width;
 
             document.observe('dom:loaded', function ()
             {
-                makeRequest(hostname + 'cgi-bin/listsubsystems.cgi');
+                listSubSystemRequest(hostname + 'cgi-bin/listsubsystems.cgi');
             });
 
             function click_node(ascii)
@@ -57,15 +58,15 @@
                 MathJax.Hub.Typeset();
             }
 
-            function makeRequest(url)
+            function listSubSystemRequest(url)
             {
                 http_request = new XMLHttpRequest();
-                http_request.onreadystatechange = alertContents; // set callback
+                http_request.onreadystatechange = getSubSystems; // set callback
                 http_request.open('GET', url, true); // initialize
                 http_request.send(null); // run
             }
 
-            function alertContents()
+            function getSubSystems()
             {
                 if(http_request.readyState == 4)
                 {
@@ -82,7 +83,7 @@
                             var itm = document.createElement('li');
                             var lnk = document.createElement('a');
                             var str = '\\(\\\\' + obj[i][1] + '\\)';
-                            var js = 'javascript:switchSub("' + obj[i][0] + '");';
+                            var js = 'javascript:populateBound("' + obj[i][0] + '");';
                             lnk.innerHTML = str;
                             lnk.href = js;
                             itm.appendChild(lnk);
@@ -98,7 +99,7 @@
                 }
             }
 
-            function alertContents2()
+            function genGraph()
             {
                 if(http_request2.readyState == 4)
                 {
@@ -125,6 +126,8 @@
                             MathJax.Hub.Typeset();
                         }, 1000); // HACK 
 
+						//alert(canvas_width + "" + canvas_height);
+
                         return false;
 
                     }
@@ -146,17 +149,29 @@
                 url = url + '&lower=' + encodeURI(lower);
 
                 http_request2 = new XMLHttpRequest();
-                http_request2.onreadystatechange = alertContents2; // set callback
+                http_request2.onreadystatechange = genGraph; // set callback
                 http_request2.open('GET', url, true); // initialize
                 http_request2.send(null); // run
                 
                 canvas_count++;
                 canvas_name = 'canviz_canvas_' + canvas_count.toString();
+                
+                //alert(canvas_name);
+                
+                //canvas_width = document.getElementById(canvas_name).width;
+                canvas_height = document.getElementById(canvas_name).height;
+                //alert(canvas_width + "" + canvas_height);
+                
+                var newheight = "'" + canvas_height + "px" + "'";
+                
+                document.getElementById('canviz').height = newheight;
+                
+                alert(newheight);
 
                 return false;
             }
 
-            function changeSub(end)
+            function changeBound(end)
             {
                 var str;
                 side = end;
@@ -177,7 +192,7 @@
                 MathJax.Hub.Typeset();
             }
 
-            function switchSub(ascii)
+            function populateBound(ascii)
             {
                 document.getElementById(side).innerHTML = '\\(' + systems[ascii] + '\\)';
                 document.getElementById(side).label = ascii;
@@ -207,10 +222,6 @@
 			}
 			
         </script>
-    
-       
-    <!--<script src="https://raw.github.com/gist/839879/12ac5cc115a0c1d65645bde038404d9a02957fee/gistfile1.js"></script>
-    <!--<canvas id="canvas" width='800' height='400'></canvas>-->
     
     </head>
     
@@ -249,7 +260,7 @@
                     <ul class="select">
                         <li id="uppersubsystem">None Selected</li>
                         <li>
-                            <a class="selectsubsystem" href="#" name="uppersubsystem" onclick='changeSub("uppersubsystem");'>[change]</a>
+                            <a class="selectsubsystem" href="#" name="uppersubsystem" onclick='changeBound("uppersubsystem");'>[change]</a>
                         </li>
                     </ul>
                      <h3>Lower bound</h3>
@@ -257,7 +268,7 @@
                     <ul class="select">
                         <li id="lowersubsystem">None Selected</li>
                         <li>
-                            <a id="lowersubsystem" class="selectsubsystem" href="#" name="lowersubsystem" onclick='changeSub("lowersubsystem");'>[change]</a>
+                            <a id="lowersubsystem" class="selectsubsystem" href="#" name="lowersubsystem" onclick='changeBound("lowersubsystem");'>[change]</a>
                         </li>
                     </ul>
                     <ul>
