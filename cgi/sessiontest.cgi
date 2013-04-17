@@ -16,9 +16,8 @@ my $sql = sprintf "select * from Sessions where sesID = %s;",
     $dbh->quote($sesID);
 my $sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
 my $c = $sth->execute();
-my @row;
-if(@row = $sth->fetchrow_array()) {
-    print "@row";
+if($c != 0) {
+    print "Session";
 }
 else{
 	print "No session";
