@@ -3,7 +3,7 @@ use CGI;
 use DBI;
 use strict;
 use warnings;
-use Digest::SHA qw(sha1);
+use Digest::SHA qw(sha1_hex);
 use Email::MIME;
 use Email::Sender::Simple qw(sendmail);
 
@@ -34,7 +34,7 @@ my $cgi = CGI->new;
 my $email = $cgi->param("email") || $ARGV[0];
 my $username = $cgi->param("username") || $ARGV[1];
 my $password = $cgi->param("password") || $ARGV[2];
-my $digest = sha1($password);
+my $digest = sha1_hex($password);
 
 my $dbh=DBI->connect('dbi:mysql:Zoo','root','implies');
 
