@@ -3,7 +3,7 @@ use CGI;
 use DBI;
 use strict;
 use warnings;
-use Digest::SHA qw(sha1);
+use Digest::SHA qw(sha1_hex);
 use POSIX qw/strftime/;
 print "content-type: text/html\n\n";
 
@@ -11,7 +11,7 @@ my $cgi = CGI->new;
 my $username = $cgi->param("username") || $ARGV[0];
 my $password = $cgi->param("password") || $ARGV[1];
 my $date = strftime("%Y-%m-%d", localtime);
-my $sesID = sha1($username.$password);
+my $sesID = sha1_hex($username.$password);
 
 ## connect to the database
 my $dbh=DBI->connect('dbi:mysql:Zoo','root','implies');
@@ -25,7 +25,7 @@ my $c = $sth->execute($username);
 if ($c != 0)
 	{
 
-		my $digest = sha1($password);
+		my $digest = sha1_hex($password);
 		my $sql = "SELECT * FROM Users WHERE username=? AND password=?";
 		
 		$sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
