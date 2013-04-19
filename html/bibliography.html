@@ -9,6 +9,10 @@
         <script type="text/javascript" src="path.js"></script>
         <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/javascript">
+            var isLoggedIn;
+            var sessionID;
+            var st;
+            var c_name = "login_implies";
             var http_request = false;
             var systems = new Array();
             var freetext = new Array();
@@ -18,9 +22,80 @@
 
             function startup()
             {
+            	getCookie();
                 makeRequest('http://reu.marshall.edu/~implies/cgi-bin/listCitations.cgi');
                 showbib();
             }
+            
+            function getCookie()
+	    {                
+		var i,x,y,ARRcookies=document.cookie.split(";");
+		for (i=0;i<ARRcookies.length;i++)
+		{
+		  x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+		  y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+		  x=x.replace(/^\s+|\s+$/g,"");
+		  if (x=="login_implies")
+			{
+			sessionID = y;
+			}
+		  }
+                
+                sessionTest(sessionID);
+	    }
+	    function sessionTest(sesID)
+		{	sessionID = sesID;
+			var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/sessiontest.cgi?';
+			myURL = myURL + '&sessionID=' + encodeURI(sessionID);
+			makeRequestGetSession(myURL);
+		}
+	    function loginTest()
+		{
+			if (isLoggedIn)
+			{
+				st = document.getElementById("status");
+				st.innerHTML = "Logged in. Click here to log out";
+				st.setAttribute('href', 'logout.html');
+			}
+			else if(!isLoggedIn)
+			{
+				st = document.getElementById("status");
+				st.innerHTML = "Log in";
+				st.setAttribute('href', 'login.html')
+			}
+		}
+	    function makeRequestGetSession(url)
+            {
+                http_request = new XMLHttpRequest();
+                http_request.onreadystatechange = alertContentsCookie; // set callback
+                http_request.open('GET', url, true); // initialize
+                http_request.send(null); // run
+            }
+            function alertContentsCookie()
+            { // callback
+
+                if(http_request.readyState == 4)
+                { // javascript code
+                    if(http_request.status == 200)
+                    { // http code
+                        
+			if(http_request.responseText == "Session"){
+			
+				isLoggedIn=true;
+				loginTest();	
+			}
+			else{
+				isLoggedIn = false;
+				loginTest();
+			}
+                        }
+
+                    }
+                    else
+                    {
+                        alert('There was a problem with the request ' + http_request.status);
+                    }
+                }
 
             function makeRequestnewref(url)
             {
