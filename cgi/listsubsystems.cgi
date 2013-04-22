@@ -13,10 +13,10 @@ print "content-type: text/html\n\n";
 my $x = $cgi->param('a') || $ARGV[0];
 my $y = $cgi->param('b') || $ARGV[1];
 
-my $dbh = DBI->connect('DBI:mysql:Zoo', 'root', 'implies') or
-die "Couldn't open database: + $DBI::errstr; stopped";
-# my $sth = $dbh->prepare(<<End_SQL) or die "Couldn't prepare statement: + $DBI::errstr; stopped";
-
+my $dbh=DBI->connect("DBI:mysql:database=Zoo;" 
+             . "mysql_read_default_file=/home/implies/.my.cnf", 
+               "", "", {'AutoCommit'=>0}),
+   or die "Can't connect: $!\n";
 my $query;
 if($x)
 {
@@ -49,10 +49,12 @@ my $sth = $dbh->prepare($query);
 if($x)
 { 
    $sth->execute(@ARGV[0]) or die "Couldn't execute statement: $DBI::errstr; stopped";
+   $sth->finish();
 }
 else
 {
    $sth->execute() or die "Couldn't execute statement: $DBI::errstr; stopped";
+   $sth->finish();
 }
 
 my $names = {};   # hash reference

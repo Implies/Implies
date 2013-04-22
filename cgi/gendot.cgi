@@ -29,10 +29,10 @@ my $filename = $upper. "_". $lower;
 #my $filename = "$$";
 open (OUTFILE, ">", $dotdir . $filename . $gvext) or die "777 Can't open: $dotdir$filename$gvext  $!\n";   # FIXME
 my $count = 0;
-my $dbh = DBI->connect('DBI:mysql:Zoo', 'root', 'implies') or
-die "Couldn't open database: + $DBI::errstr; stopped";
-# my $sth = $dbh->prepare(<<End_SQL) or die "Couldn't prepare statement: + $DBI::errstr; stopped";
-
+my $dbh=DBI->connect("DBI:mysql:database=Zoo;" 
+             . "mysql_read_default_file=/home/implies/.my.cnf", 
+               "", "", {'AutoCommit'=>0}),
+   or die "Can't connect: $!\n";
 
 my $response = {};
 $response->{'upper'} = $upper;
@@ -70,18 +70,14 @@ my $sth = $dbh->prepare($query0);
 
 # Execute the query
 $sth->execute() or die "Couldn't execute statement: $DBI::errstr; stopped";
-#$sth->execute($upper, $upper, $lower, $lower) or die "Couldn't execute statement: $DBI::errstr; stopped";
+$sth->finish();
 
 # Pull from Subsystem Table
 while ( my ($field1, $field2,) = $sth->fetchrow_array() )
 {
   $field2 =~ s!\\!\\\\!g;
    $tex{$field1} = $field2;
-  # print $data{$field1};   
 
-    # print OUTFILE "\"$field1\" [id =\"$field1\" label=\"\\\\($field2\\\\\)\" " 
-    #             . " href=\"javascript:void(click_node(\'$field1\'))\"];\n";    
-     #$count++;
 }
 
 # prepare next query
@@ -89,7 +85,7 @@ $sth = $dbh->prepare($query1);
 
 # execute query
 $sth->execute($upper, $upper, $lower, $lower) or die "Couldn't execute statement: $DBI::errstr; stopped";
-
+$sth->finish();
 # Pull from Theorem Table
 my ($left, $right, $relate, $reason);
 while ( my ($left,$right, $relate, $reason) = $sth->fetchrow_array() )

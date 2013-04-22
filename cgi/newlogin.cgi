@@ -36,13 +36,16 @@ my $username = $cgi->param("username") || $ARGV[1];
 my $password = $cgi->param("password") || $ARGV[2];
 my $digest = sha1_hex($password);
 
-my $dbh=DBI->connect('dbi:mysql:Zoo','root','implies');
+my $dbh=DBI->connect("DBI:mysql:database=Zoo;" 
+             . "mysql_read_default_file=/home/implies/.my.cnf", 
+               "", "", {'AutoCommit'=>0}),
+   or die "Can't connect: $!\n";
 
 ## Test to see if the username already exists
 my $sql = "SELECT * FROM Users WHERE username=?";
 my $sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
 my $c = $sth->execute($username);
-
+$sth->finish();
 ## It's a unique username
 if ($c == 0)
 	{
@@ -56,6 +59,7 @@ if ($c == 0)
 		
 		$sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
 		$c = $sth->execute( $username, $digest, "", $authkey, $email);
+		$sth->finish();
 		print "Success New";
 		# sendEmail("$username", "implies\@reu.marshall.edu", 
 		#	"Email authentication for IMPLIES", "Your authentication code for IMPLIES:"."$authkey");

@@ -14,12 +14,16 @@ my $date = strftime("%Y-%m-%d", localtime);
 my $sesID = sha1_hex($username.$password);
 
 ## connect to the database
-my $dbh=DBI->connect('dbi:mysql:Zoo','root','implies');
+my $dbh=DBI->connect("DBI:mysql:database=Zoo;" 
+             . "mysql_read_default_file=/home/implies/.my.cnf", 
+               "", "", {'AutoCommit'=>0}),
+   or die "Can't connect: $!\n";
 
 my $sql = "SELECT password FROM Users WHERE username=?";
 my $sth = $dbh->prepare($sql)
   or die $dbh->errstr;
 my $c = $sth->execute($username);
+$sth->finish();
 
 ## if there is a match for the username
 if ($c != 0)
@@ -30,6 +34,7 @@ if ($c != 0)
 		
 		$sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
 		my $test = $sth->execute($username, $digest);
+		$sth->finish();
 		
 		## pair did not exist
 		if($test == 0)
@@ -45,6 +50,7 @@ if ($c != 0)
 			$sql = "INSERT INTO Sessions VALUES (?,?,?)";
 			$sth = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
 			$test = $sth->execute($username, $date, $sesID);
+			$sth->finish();
 			print "$sesID";
 		}
 
