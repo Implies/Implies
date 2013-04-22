@@ -4,248 +4,166 @@
    <subsystem>
     <name>ACA</name>
     <latex>\mathsf{ACA}_0</latex>
-    <freetext>ACA_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>WKL</name>
     <latex>\mathsf{WKL}_0</latex>
-    <freetext>WKL_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>RCA</name>
     <latex>\mathsf{RCA}_0</latex>
-    <freetext>RCA_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>RT22</name>
     <latex>\mathsf{RT}^2_2</latex>
-    <freetext>RT22_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>EM</name>
     <latex>\mathsf{EM}</latex>
-    <freetext>EM_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>SRT22</name>
     <latex>\mathsf{SRT}^2_2</latex>
-    <freetext>SRT22_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>COH</name>
     <latex>\mathsf{COH}</latex>
-    <freetext>COH_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>DNR</name>
     <latex>\mathsf{DNR}</latex>
-    <freetext>DNR_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>WWKL</name>
     <latex>\mathsf{WWKL}_0</latex>
-    <freetext>WWKL_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>ISig2</name>
     <latex>\mathsf{I}\Sigma^0_2</latex>
-    <freetext>ISig2_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>BSig2</name>
     <latex>\mathsf{B}\Sigma^0_2</latex>
-    <freetext>BSig2_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>PART</name>
     <latex>\mathsf{PART}</latex>
-    <freetext>PART_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>SADS</name>
     <latex>\mathsf{SADS}</latex>
-    <freetext>SADS_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>SCAC</name>
     <latex>\mathsf{SCAC}</latex>
-    <freetext>SCAC_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>CRT22</name>
     <latex>\mathsf{CRT}^2_2</latex>
-    <freetext>CRT22_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>StCRT22</name>
     <latex>\mathsf{StCRT}^2_2</latex>
-    <freetext>StCRT22_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>StCADS</name>
     <latex>\mathsf{StCADS}</latex>
-    <freetext>StCADS_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>CAC</name>
     <latex>\mathsf{CAC}</latex>
-    <freetext>CAC_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>ADS</name>
     <latex>\mathsf{ADS}</latex>
-    <freetext>ADS_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>StCOH</name>
     <latex>\mathsf{StCOH}</latex>
-    <freetext>StCOH_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>IPT22</name>
     <latex>\mathsf{IPT}^2_2</latex>
-    <freetext>IPT22_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>SIPT22</name>
     <latex>\mathsf{SIPT}^2_2</latex>
-    <freetext>SIPT22_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>PT22</name>
     <latex>\mathsf{PT}^2_2</latex>
-    <freetext>PT22_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>SPT22</name>
     <latex>\mathsf{SPT}^2_2</latex>
-    <freetext>SPT22_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>D22</name>
     <latex>\mathsf{D}^2_2</latex>
-    <freetext>D22_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>RT12</name>
     <latex>\mathsf{RT}^1_2</latex>
-    <freetext>RT12_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>CCAC</name>
     <latex>\mathsf{CCAC}</latex>
-    <freetext>CCAC_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>CADS</name>
     <latex>\mathsf{CADS}</latex>
-    <freetext>CADS_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>Pi01G</name>
     <latex>\Pi^0_1\mathsf{G}</latex>
-    <freetext>Pi01G_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>AMT</name>
     <latex>\mathsf{AMT}</latex>
-    <freetext>AMT_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>OPT</name>
     <latex>\mathsf{OPT}</latex>
-    <freetext>OPT_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>AST</name>
     <latex>\mathsf{AST}</latex>
-    <freetext>AST_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>ASRT22</name>
     <latex>\mathsf{ASRT}^2_2</latex>
-    <freetext>ASRT22_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>ASRAM</name>
     <latex>\mathsf{ASRAM}</latex>
-    <freetext>ASRAM_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>SRAM</name>
     <latex>\mathsf{SRAM}</latex>
-    <freetext>SRAM_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>FIP</name>
     <latex>\mathsf{FIP}</latex>
-    <freetext>FIP_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name>nD2IP</name>
     <latex>\overline{D}_2\mathsf{IP}</latex>
-    <freetext>nD2IP_Freetext</freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name></name>
     <latex></latex>
-    <freetext></freetext>
-    <citation></citation>
    </subsystem>
    <subsystem>
     <name></name>
     <latex>0</latex>
-    <freetext>0</freetext>
-    <citation>0</citation>
    </subsystem>
    <subsystem>
     <name></name>
     <latex>0</latex>
-    <freetext>0</freetext>
-    <citation>0</citation>
    </subsystem>
    <subsystem>
     <name>null</name>
     <latex>0</latex>
-    <freetext>0</freetext>
-    <citation>0</citation>
    </subsystem>
   </subsystems>
   <theorems>
@@ -253,409 +171,266 @@
     <left>ACA</left>
     <relate>imply</relate>
     <right>WKL</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>WKL</left>
     <relate>imply</relate>
     <right>RCA</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>ACA</left>
     <relate>imply</relate>
     <right>RT22</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>RT22</left>
     <relate>imply</relate>
     <right>IPT22</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>IPT22</left>
     <relate>imply</relate>
     <right>SIPT22</right>
-    <citation>by \cite[Proposition 3.1~(3)]{DH-2009}</citation>
    </theorem>
    <theorem>
     <left>SRT22</left>
     <relate>imply</relate>
     <right>SPT22</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>SPT22</left>
     <relate>imply</relate>
     <right>SIPT22</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>SIPT22</left>
     <relate>imply</relate>
     <right>D22</right>
-    <citation>by \cite[Proposition 3.4]{DH-2009}</citation>
    </theorem>
    <theorem>
     <left>PART</left>
     <relate>imply</relate>
     <right>BSig2</right>
-    <citation>by \cite[Theorem 1.2]{CLY-2010}</citation>
    </theorem>
    <theorem>
     <left>SRT22</left>
     <relate>imply</relate>
     <right>DNR</right>
-    <citation>by \cite[Theorem 2.3]{HJKLS-2006}</citation>
    </theorem>
    <theorem>
     <left>WKL</left>
     <relate>imply</relate>
     <right>WWKL</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>WWKL</left>
     <relate>imply</relate>
     <right>DNR</right>
-    <citation>by \cite[Theorem 1.7]{AKLS-2004}</citation>
    </theorem>
    <theorem>
     <left>COH</left>
     <relate>notimply</relate>
     <right>BSig2</right>
-    <citation>by \cite[Corollary 2.21]{HS-2007}</citation>
    </theorem>
    <theorem>
     <left>ISig2</left>
     <relate>imply</relate>
     <right>BSig2</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>BSig2</left>
     <relate>notimply</relate>
     <right>ISig2</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>ACA</left>
     <relate>imply</relate>
     <right>ISig2</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>RCA</left>
     <relate>notimply</relate>
     <right>BSig2</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>WKL</left>
     <relate>notimply</relate>
     <right>BSig2</right>
-    <citation>because $\mathsf{WKL}_0$ is $\Pi^1_1$ conservative over $\mathsf{RCA}_0$ by a result of Harrington (see \cite[Section IX.2]{Simpson-2009})</citation>
    </theorem>
    <theorem>
     <left>RT22</left>
     <relate>imply</relate>
     <right>CAC</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>CAC</left>
     <relate>imply</relate>
     <right>ADS</right>
-    <citation>by \cite[Proposition 3.1]{HS-2007}</citation>
    </theorem>
    <theorem>
     <left>ADS</left>
     <relate>imply</relate>
     <right>COH</right>
-    <citation>by \cite[Proposition 2.10]{HS-2007}</citation>
    </theorem>
    <theorem>
     <left>CAC</left>
     <relate>imply</relate>
     <right>SCAC</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>SRT22</left>
     <relate>imply</relate>
     <right>SCAC</right>
-    <citation>by \cite[Proposition 3.3]{HS-2007}</citation>
    </theorem>
    <theorem>
     <left>ADS</left>
     <relate>imply</relate>
     <right>SADS</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>SADS</left>
     <relate>imply</relate>
     <right>PART</right>
-    <citation>by \cite[Proposition 4.6]{HS-2007}</citation>
    </theorem>
    <theorem>
     <left>BSig2</left>
     <relate>imply</relate>
     <right>PART</right>
-    <citation>by the proof of Proposition 4.4 in \cite{HS-2007}</citation>
    </theorem>
    <theorem>
     <left>SCAC</left>
     <relate>imply</relate>
     <right>SADS</right>
-    <citation>by \cite[Proposition 3.3]{HS-2007}</citation>
    </theorem>
    <theorem>
     <left>StCOH</left>
     <relate>imply</relate>
     <right>COH</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>COH</left>
     <relate>imply</relate>
     <right>CRT22</right>
-    <citation>by \cite[Proposition 1.4]{HS-2007}</citation>
    </theorem>
    <theorem>
     <left>CRT22</left>
     <relate>imply</relate>
     <right>CADS</right>
-    <citation>by \cite[Proposition 2.9]{HS-2007}</citation>
    </theorem>
    <theorem>
     <left>Pi01G</left>
     <relate>imply</relate>
     <right>AMT</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>AMT</left>
     <relate>notimply</relate>
     <right>Pi01G</right>
-    <citation>because $\mathsf{AMT}$ is $\Pi^1_1$ conservative over $\mathsf{B}\Sigma^0_2$ by \cite[Theorem 4.4]{HSS-2009} and $\Pi^0_1\mathsf{G}+\mathsf{B}\Sigma^0_2$ implies $\mathsf{I}\Sigma^0_2$ by \cite[Theorem 4.3]{HSS-2009}</citation>
    </theorem>
    <theorem>
     <left>SADS</left>
     <relate>imply</relate>
     <right>AMT</right>
-    <citation>by \cite[Theorem 4.1]{HSS-2009}</citation>
    </theorem>
    <theorem>
     <left>AMT</left>
     <relate>imply</relate>
     <right>OPT</right>
-    <citation>by \cite[Corollary 5.8]{HSS-2009}</citation>
    </theorem>
    <theorem>
     <left>OPT</left>
     <relate>imply</relate>
     <right>AST</right>
-    <citation>by \cite[Section 6]{HSS-2009}</citation>
    </theorem>
    <theorem>
     <left>COH</left>
     <relate>imply</relate>
     <right>OPT</right>
-    <citation>by \cite[Corollary 5.9]{HSS-2009}</citation>
    </theorem>
    <theorem>
     <left>ACA</left>
     <relate>imply</relate>
     <right>SRAM</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>SRAM</left>
     <relate>imply</relate>
     <right>ASRAM</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>SRAM</left>
     <relate>imply</relate>
     <right>SRT22</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>ASRAM</left>
     <relate>imply</relate>
     <right>ASRT22</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>SRT22</left>
     <relate>imply</relate>
     <right>ASRT22</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>ASRT22</left>
     <relate>imply</relate>
     <right>DNR</right>
-    <citation>by \cite[Proposition 5.6]{Dzhafarov-2010}</citation>
    </theorem>
    <theorem>
     <left>Pi01G</left>
     <relate>imply</relate>
     <right>FIP</right>
-    <citation>by \cite[Proposition 3.27]{DM-ta}</citation>
    </theorem>
    <theorem>
     <left>FIP</left>
     <relate>imply</relate>
     <right>nD2IP</right>
-    <citation>by \cite[Proposition 3.7~(1)]{DM-ta}</citation>
    </theorem>
    <theorem>
     <left>nD2IP</left>
     <relate>imply</relate>
     <right>OPT</right>
-    <citation>by \cite[Corollary 3.23]{DM-ta}</citation>
    </theorem>
    <theorem>
     <left>DNR</left>
     <relate>imply</relate>
     <right>AST</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>CADS</left>
     <relate>imply</relate>
     <right>AST</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>ACA</left>
     <relate>imply</relate>
     <right>ACA</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>RCA</left>
     <relate>imply</relate>
     <right>RCA</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>ACA</left>
     <relate>imply</relate>
     <right>RCA</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>WKL</left>
     <relate>notimply</relate>
     <right>ACA</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>RCA</left>
     <relate>notimply</relate>
     <right>WKL</right>
-    <citation></citation>
    </theorem>
    <theorem>
     <left>RT22</left>
     <relate>imply</relate>
     <right>RCA</right>
-    <citation></citation>
-   </theorem>
-   <theorem>
-    <left></left>
-    <relate></relate>
-    <right></right>
-    <citation></citation>
-   </theorem>
-   <theorem>
-    <left></left>
-    <relate></relate>
-    <right></right>
-    <citation></citation>
-   </theorem>
-   <theorem>
-    <left></left>
-    <relate></relate>
-    <right></right>
-    <citation></citation>
-   </theorem>
-   <theorem>
-    <left></left>
-    <relate></relate>
-    <right></right>
-    <citation></citation>
-   </theorem>
-   <theorem>
-    <left></left>
-    <relate></relate>
-    <right></right>
-    <citation></citation>
-   </theorem>
-   <theorem>
-    <left></left>
-    <relate></relate>
-    <right></right>
-    <citation></citation>
-   </theorem>
-   <theorem>
-    <left></left>
-    <relate></relate>
-    <right></right>
-    <citation></citation>
-   </theorem>
-   <theorem>
-    <left></left>
-    <relate></relate>
-    <right></right>
-    <citation></citation>
-   </theorem>
-   <theorem>
-    <left></left>
-    <relate></relate>
-    <right></right>
-    <citation></citation>
-   </theorem>
-   <theorem>
-    <left></left>
-    <relate></relate>
-    <right></right>
-    <citation></citation>
-   </theorem>
-   <theorem>
-    <left></left>
-    <relate></relate>
-    <right></right>
-    <citation></citation>
-   </theorem>
-   <theorem>
-    <left></left>
-    <relate></relate>
-    <right></right>
-    <citation></citation>
-   </theorem>
-   <theorem>
-    <left></left>
-    <relate></relate>
-    <right></right>
-    <citation></citation>
-   </theorem>
-   <theorem>
-    <left>AAA</left>
-    <relate>imply</relate>
-    <right>BBB</right>
-    <citation></citation>
-   </theorem>
-   <theorem>
-    <left>undefined</left>
-    <relate></relate>
-    <right>undefined</right>
-    <citation></citation>
    </theorem>
   </theorems>
   <bibliography>

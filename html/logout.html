@@ -53,19 +53,22 @@
                 }
 			}  
 			
-			function getCookie(c_name)
+			function getCookie()
 			{                
-				var nameEQ = name + "=";
-				var ca = document.cookie.split(';');
-				for(var i=0;i < ca.length;i++) {
-					var c = ca[i];
-					while (c.charAt(0)==' ') c = c.substring(1,c.length);
-					if (c.indexOf(nameEQ) == 0) sessionID =  c.substring(nameEQ.length,c.length);
-					alert("sessionID");
-				}
-				logout();
-				return null;
 				
+				var i,x,y,ARRcookies=document.cookie.split(";");
+				for (i=0;i<ARRcookies.length;i++)
+				{
+				  x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+				  y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+				  x=x.replace(/^\s+|\s+$/g,"");
+				  if (x=="login_implies")
+					{
+					sessionID = y;
+					}
+				  }
+                
+                logout();
 			}
 			
 			function delcookie(c_name) {

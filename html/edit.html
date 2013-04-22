@@ -13,14 +13,14 @@
 			var isLoggedIn;
 			var sessionID;
 			var st;
-			var c_name = "login_implies"
+			var c_name = "login_implies";
             var http_request = false;
             var http_request2 = false;
             var side;
             var right;
             var ul;
             var ul2;
-            var left;// = document.getElementById("leftsubsystem");
+            var left;
             var systems = new Array();
             var tar = document.getElementById("target");
             var freetext = new Array();
@@ -207,6 +207,11 @@
                 var Left = document.getElementById("uppersubsystem").label;
                 var Right = document.getElementById("lowersubsystem").label;
                 var Relate = document.getElementById("relation").label;
+                if(Left == "" || Right == "" || Relate == "")
+                {
+					alert("All fields are required");
+					return;
+				}
                 var Citation = form.Reference.value;
                 alert(Left + " " + Right);
                 var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/newresult.cgi?';

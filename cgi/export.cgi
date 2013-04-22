@@ -25,8 +25,14 @@ while (my ($name, $latex, $freetext, $citation) = $sth->fetchrow_array ())
     print OUTFILE "   <subsystem>\n";
     print OUTFILE "    <name>" . $name . "</name>\n";
     print OUTFILE "    <latex>" . $latex  . "</latex>\n";
+    if($freetext !="")
+    {
     print OUTFILE "    <freetext>" . $freetext . "</freetext>\n";
+    }
+    if($citation !="")
+    {
     print OUTFILE "    <citation>" . $citation . "</citation>\n";
+    }
     print OUTFILE "   </subsystem>\n";
 }
     print OUTFILE "  </subsystems>\n";
@@ -43,7 +49,10 @@ while (my ($left, $relate, $right, $citation) = $sth->fetchrow_array ())
     print OUTFILE "    <left>" . $left . "</left>\n";
     print OUTFILE "    <relate>" . $relate  . "</relate>\n";
     print OUTFILE "    <right>" . $right . "</right>\n";
+    if($citation !="")
+    {
     print OUTFILE "    <citation>" . $citation . "</citation>\n";
+    }
     print OUTFILE "   </theorem>\n";
 }
     print OUTFILE "  </theorems>\n";
@@ -58,8 +67,14 @@ while (my ($key, $mrn, $freetext) = $sth->fetchrow_array ())
 {
     print OUTFILE "   <citation>\n";
     print OUTFILE "    <key>" . $key . "</key>\n";
+    if($mrn !="")
+    {
     print OUTFILE "    <mrn>" . $mrn  . "</mrn>\n";
+    }
+    #if($freetext !="")
+    #{
     print OUTFILE "    <freetext>" . $freetext . "</freetext>\n";
+    #}
     print OUTFILE "   </citation>\n";
 }
     print OUTFILE "  </bibliography>\n";

@@ -224,6 +224,9 @@ a.selectsubsystem {
 #graph { 
   border: 1px solid green;
   min-height: 4in;
+  height: auto;
+  position: relative;
+  overflow: auto;
 }
 
 #info { 

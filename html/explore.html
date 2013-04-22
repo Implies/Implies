@@ -16,7 +16,8 @@
             {
                 extensions: ["tex2jax.js"],
                 jax: ["input/TeX", "output/HTML-CSS"],
-                tex2jax: {
+                tex2jax:
+                {
                     inlineMath: [
                         ['$', '$'],
                         ["\\(", "\\)"]
@@ -27,26 +28,123 @@
                     ],
                     processEscapes: true
                 },
-                "HTML-CSS": {
+                "HTML-CSS":
+                {
                     availableFonts: ["TeX"]
                 }
             });
         </script>
         <script type="text/javascript">
+            var isLoggedIn;
+            var sessionID;
+            var st;
+            var c_name = "login_implies"
             var http_request = false;
             var http_request2 = false;
             var hostname = "http://reu.marshall.edu/~implies/";
             var side;
             var upper;
             var lower;
+            //var json;
             var obj;
             var systems = new Array();
             var freetext = new Array();
             var canvas_count = 0;
-            var canvas_name;// = 'canviz_canvas_' + canvas_count.toString();
+            var canvas_name;
             var canvas_height;
-            var canvas_width;
 
+            function alertContents()
+            { // callback
+
+                if (http_request.readyState == 4)
+                { // javascript code
+                    if (http_request.status == 200)
+                    { // http code
+
+                        if (http_request.responseText == "Session")
+                        {
+                            isLoggedIn = true;
+                            loginTest();
+                        }
+                        else if (http_request.responseText == "No session")
+                        {
+                            isLoggedIn = false;
+                            loginTest();
+                        }
+                        else
+                        {
+                            var response = http_request.responseText;
+                            alert(response);
+                            setCookie("login_implies", response, 2);
+                            isLoggedIn = true;
+                            loginTest();
+                        }
+
+                    }
+                    else
+                    {
+                        alert('There was a problem with the request ' + http_request.status);
+                    }
+                }
+            }
+
+            function makeRequestGetSession(url)
+            {
+                http_request = new XMLHttpRequest();
+                http_request.onreadystatechange = alertContents; // set callback
+                http_request.open('GET', url, true); // initialize
+                http_request.send(null); // run
+            }
+
+            function shownNotLoggedIn()
+            {
+                document.getElementById('notLoggedIn').className = 'content';
+                document.getElementById('login').className = 'hidden';
+                document.getElementById('newlogin').className = 'hidden';
+
+            }
+
+            function getCookie()
+            {
+
+                var i, x, y, ARRcookies = document.cookie.split(";");
+                for (i = 0; i < ARRcookies.length; i++)
+                {
+                    x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+                    y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+                    x = x.replace(/^\s+|\s+$/g, "");
+                    if (x == "login_implies")
+                    {
+                        sessionID = y;
+                    }
+                }
+
+                sessionTest(sessionID);
+            }
+
+            function sessionTest(sesID)
+            {
+                sessionID = sesID;
+                var myURL = 'http://reu.marshall.edu/~implies/cgi-bin/sessiontest.cgi?';
+                myURL = myURL + '&sessionID=' + encodeURI(sessionID);
+                makeRequestGetSession(myURL);
+            }
+
+            function loginTest()
+            {
+                if (isLoggedIn)
+                {
+                    st = document.getElementById("status");
+                    st.innerHTML = "Logged in. Click here to log out";
+                    st.setAttribute('href', 'logout.html');
+                }
+                else if (!isLoggedIn)
+                {
+                    st = document.getElementById("status");
+                    st.innerHTML = "Log in";
+                    st.setAttribute('href', 'login.html')
+                }
+            }
             document.observe('dom:loaded', function ()
             {
                 listSubSystemRequest(hostname + 'cgi-bin/listsubsystems.cgi');
@@ -66,7 +164,7 @@
                 http_request.send(null); // run
             }
 
-            function getSubSystems()
+			function getSubSystems()
             {
                 if(http_request.readyState == 4)
                 {
@@ -99,14 +197,12 @@
                 }
             }
 
-            function genGraph()
+			function genGraph()
             {
                 if(http_request2.readyState == 4)
                 {
                     if(http_request2.status == 200)
                     {
-                        //var response = JSON.parse(http_request2.responseText);
-
                         document.getElementById('canviz').style.display = "block";
                         document.getElementById('target').style.display = "none";
                         document.getElementById('select').style.display = "none";
@@ -120,13 +216,22 @@
 
                         var filename = upper + "_" + lower;
                         canviz = new Canviz('canviz', hostname + '/dot/' + filename);
+                        
+                        canvas_count++;
+                        canvas_name = 'canviz_canvas_' + canvas_count.toString();
+                        
+                        canvas_height = $(canvas_name).height;
 
                         setTimeout(function ()
                         {
                             MathJax.Hub.Typeset();
-                        }, 1000); // HACK 
+                        }, 1000); // HACK
 
-						//alert(canvas_width + "" + canvas_height);
+						alert(canvas_name);
+						alert(canvas_height);
+						var newheight = "'" + canvas_height + "px" + "'";
+
+						alert(canvas_name);
 
                         return false;
 
@@ -137,8 +242,8 @@
                     }
                 }
             }
-
-            function updateGraph()
+            
+			function updateGraph()
             {
                 var url = 'http://reu.marshall.edu/~implies/cgi-bin/gendot2.cgi?';
 
@@ -153,20 +258,19 @@
                 http_request2.open('GET', url, true); // initialize
                 http_request2.send(null); // run
                 
-                canvas_count++;
-                canvas_name = 'canviz_canvas_' + canvas_count.toString();
+
                 
                 //alert(canvas_name);
                 
                 //canvas_width = document.getElementById(canvas_name).width;
-                canvas_height = document.getElementById(canvas_name).height;
+                //canvas_height = document.getElementById(canvas_name).height;
                 //alert(canvas_width + "" + canvas_height);
                 
-                var newheight = "'" + canvas_height + "px" + "'";
+                //var newheight = "'" + canvas_height + "px" + "'";
                 
-                document.getElementById('canviz').height = newheight;
+                //document.getElementById('canviz').height = newheight;
                 
-                alert(newheight);
+                //alert(newheight);
 
                 return false;
             }
@@ -175,12 +279,12 @@
             {
                 var str;
                 side = end;
-                document.getElementById('canviz').style.display = "none";
-                document.getElementById('info').style.display = "none";
-                document.getElementById('target').style.display = "";
-                document.getElementById('select').style.display = "";
+                $('canviz').style.display = "none";
+                $('info').style.display = "none";
+                $('target').style.display = "";
+                $('select').style.display = "";
 
-                if(side.localeCompare('uppersubsystem'))
+                if (side.localeCompare('uppersubsystem'))
                 {
                     var str = "Lower"
                 }
@@ -188,69 +292,51 @@
                 {
                     str = "Upper"
                 }
-                document.getElementById('select').innerHTML = "Choose " + str + " Subsystem";
+                $('select').innerHTML = "Choose " + str + " Subsystem";
                 MathJax.Hub.Typeset();
             }
 
             function populateBound(ascii)
             {
-                document.getElementById(side).innerHTML = '\\(' + systems[ascii] + '\\)';
-                document.getElementById(side).label = ascii;
-                document.getElementById('canviz').style.display = "";
-                document.getElementById('info').style.display = "";
-                document.getElementById('target').style.display = "none";
-                document.getElementById('select').style.display = "none";
+                $(side).innerHTML = '\\(' + systems[ascii] + '\\)';
+                $(side).label = ascii;
+                $('canviz').style.display = "";
+                $('info').style.display = "";
+                $('target').style.display = "none";
+                $('select').style.display = "none";
                 MathJax.Hub.Typeset(side);
             }
-            
-            function savegraph()
-            {
-				canvas_name = 'canviz_canvas_' + canvas_count.toString();
-				alert(canvas_name);				
-			}
-			
-			
-			function savegraph() 
-			{
-				alert(canvas_name);
-				var canvas = document.getElementById(canvas_name);
-				var url = canvas.toDataURL();
- 
-				var newImg = document.createElement("img");
-				newImg.src = url;
-				document.body.appendChild(newImg);
-			}
-			
         </script>
-    
     </head>
     
-    <body>
+    <body onload="getCookie()">
         <div id="container">
             <div id="banner">
                  <h1>Reverse Mathematics Zoo</h1>
 
                 <div id="centeredmenu">
                     <ul>
-                        <li>
-                            <a href="introduction.html">Introduction</a>
+                        <li> <a href="introduction.html">Introduction</a>
+
                         </li>
-                        <li>
-                            <a href="explore.html" class="active">Explore</a>
+                        <li> <a href="explore.html" class="active">Explore</a>
+
                         </li>
-                        <li>
-                            <a href="edit.html">Edit</a>
+                        <li> <a href="edit.html">Edit</a>
+
                         </li>
-                        <li>
-                            <a href="bibliography.html">Bibliography</a>
+                        <li> <a href="bibliography.html">Bibliography</a>
+
                         </li>
-                        <li>
-                            <a href="news.html">News</a>
+                        <li> <a href="news.html">News</a>
+
+                            <p id="layoutdims"><a id="status" href="login.html">Log in</a>
+                            </p>
                         </li>
                     </ul>
                 </div>
-                <p id="layoutdims">
-                    <a href="login.html">Log in</a>
+                <p id="layoutdims"> <a href="login.html">Log in</a>
+
                 </p>
             </div>
             <div id="nav">
@@ -259,16 +345,16 @@
 
                     <ul class="select">
                         <li id="uppersubsystem">None Selected</li>
-                        <li>
-                            <a class="selectsubsystem" href="#" name="uppersubsystem" onclick='changeBound("uppersubsystem");'>[change]</a>
+                        <li> <a class="selectsubsystem" href="#" name="uppersubsystem" onclick='changeBound("uppersubsystem");'>[change]</a>
+
                         </li>
                     </ul>
                      <h3>Lower bound</h3>
 
                     <ul class="select">
                         <li id="lowersubsystem">None Selected</li>
-                        <li>
-                            <a id="lowersubsystem" class="selectsubsystem" href="#" name="lowersubsystem" onclick='changeBound("lowersubsystem");'>[change]</a>
+                        <li> <a id="lowersubsystem" class="selectsubsystem" href="#" name="lowersubsystem" onclick='changeBound("lowersubsystem");'>[change]</a>
+
                         </li>
                     </ul>
                     <ul>
@@ -277,15 +363,6 @@
                         </li>
                     </ul>
                 </form>
-                
-                <br />
-                <br />
-                <br />
-                <br />            
-                
-                <!--<a class="savegraph" href="#" name="savegraph" onclick='savegraph();'>Save Graph as SVG</a>-->
-                
-                
             </div>
             <div id="content">
                 <div id="select" class="content"></div>
@@ -301,10 +378,8 @@
             <div id="push"></div>
         </div>
         <div id="footer">
-            <p>
-                <a href="about.html">About this site</a>&bull;
-                <a href="copyright.html">Copyright</a>&bull;
-                <a href="about.html">Contact us</a>
+            <p> <a href="about.html">About this site</a>&bull; <a href="copyright.html">Copyright</a>&bull; <a href="about.html">Contact us</a>
+
             </p>
         </div>
     </body>
