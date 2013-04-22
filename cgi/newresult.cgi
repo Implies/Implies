@@ -13,13 +13,10 @@ my $lower = $q->param('Right') || $ARGV[1];
 my $relation = $q->param('Relate') || $ARGV[2];
 my $citation = $q->param('Citation') || $ARGV[3];
 my $overwrite = $q->param('Overwrite') || $ARGV[4] || 0;
-
-
-
-#print "$upper $lower $relation $citation $overwrite\n";
-#my $dbh=DBI->connect("DBI:mysql:database=Zoo;mysql_read_default_file=/home/implies/.my.cnf", "", "", {'AutoCommit'=>0});
-my $dbh = DBI->connect('DBI:mysql:Zoo', 'root', 'implies') or
-die "Couldn't open database: + $DBI::errstr; stopped";
+my $dbh=DBI->connect("DBI:mysql:database=Zoo;" 
+             . "mysql_read_default_file=/home/implies/.my.cnf", 
+               "", "", {'AutoCommit'=>0}),
+   or die "Can't connect: $!\n";
 
 if ($overwrite == 0){
 	my $sql = 'INSERT INTO Theorems (the_Left, the_Relate, the_Right, the_Citation) VALUES(?, ?, ?, ?)';
