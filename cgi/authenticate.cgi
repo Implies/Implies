@@ -12,21 +12,17 @@ my $cgi = CGI->new;
 
 my $username = $cgi->param("username") || $ARGV[0];
 my $authkey = $cgi->param("authkey") || $ARGV[1];
-
-
-#my $dbh=DBI->connect("DBI:mysql:database=Zoo;" 
- #            . "mysql_read_default_file=/home/implies/.my.cnf", 
-  #             "", "", {'AutoCommit'=>0}),
-   #or die "Can't connect: $!\n";
-my $dbh = DBI->connect("DBI:mysql:database=Zoo;host=localhost;","root", "implies") 
-  or die $DBI::errstr;
+my $dbh=DBI->connect("DBI:mysql:database=Zoo;" 
+             . "mysql_read_default_file=/home/implies/.my.cnf", 
+               "", "", {'AutoCommit'=>0}),
+   or die "Can't connect: $!\n";
 
 my $sql = "select * from Users where username = ?
 		AND authkey = ?"; 
-		
+
 my $sth = $dbh->prepare($sql);
 my $c = $sth->execute($username, $authkey);
-
+$sth->finish();
 
 if($c != 0){
 	$sql = "UPDATE Users
