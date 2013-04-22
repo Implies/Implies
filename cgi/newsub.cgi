@@ -20,7 +20,10 @@ open MYFILE, '>>', "/tmp/log.txt" or die $!;
 print MYFILE "$date $ASCIIName\t $LaTexName\t $Reference\t $FreeText\n";
 close MYFILE;
 
-my $dbh=DBI->connect('dbi:mysql:Zoo','root','implies');
+my $dbh=DBI->connect("DBI:mysql:database=Zoo;" 
+             . "mysql_read_default_file=/home/implies/.my.cnf", 
+               "", "", {'AutoCommit'=>0}),
+   or die "Can't connect: $!\n";
 
 my $sql = "select * from Subsystems where sub_Ascii = ?";  # because sub_Ascii is a unique key
 my $sh = $dbh->prepare($sql);
@@ -48,6 +51,7 @@ elsif( $Overwrite > 0 )
     $sql = "INSERT INTO Subsystems VALUES(?, ?, ?, ?)";
     $sh = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
     $sh->execute($ASCIIName, $LaTexName, $Reference, $FreeText) or die "Connection Error: $dbh->errstr";
+    $sh->finish();
     print "Updated\n";
 
   }
