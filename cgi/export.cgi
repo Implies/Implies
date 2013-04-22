@@ -8,8 +8,10 @@ my $xmldir = "/home/implies/public_html/html/";
 
 open (OUTFILE, ">", $xmldir . $filename);
 
-my $dbh = DBI->connect('DBI:mysql:Zoo', 'root', 'implies') or
-die "Couldn't open database: + $DBI::errstr; stopped";
+my $dbh=DBI->connect("DBI:mysql:database=Zoo;" 
+             . "mysql_read_default_file=/home/implies/.my.cnf", 
+               "", "", {'AutoCommit'=>0}),
+   or die "Can't connect: $!\n";
 
 print OUTFILE "<?xml version=\"1.0\"?>\n";
 print OUTFILE "<zoo>\n";
@@ -17,7 +19,7 @@ print OUTFILE "<zoo>\n";
 my $sql = "SELECT * FROM Subsystems";
 my $sth = $dbh->prepare ($sql);
 $sth->execute ();
-
+$sth->finish();
 print OUTFILE " <subsystems>\n";
 
 while (my ($name, $latex, $freetext, $citation) = $sth->fetchrow_array ())
