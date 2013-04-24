@@ -71,3 +71,4 @@ else
 		print "Duplicate"	
 	}
 	
+$dbh->disconnect();

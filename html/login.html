@@ -61,7 +61,9 @@
                         }
                         else if(http_request.responseText == "Success New")
                         {
-							alert("New user has been created");
+							document.getElementById('newlogin').className = 'hidden';
+							document.getElementById('result').className = 'content';
+							login(newloginform);
 						}
 						else if(http_request.responseText == "Duplicate")
                         {
@@ -78,10 +80,12 @@
 						else
                         {
 							var response = http_request.responseText;
-							alert(response);
                             setCookie("login_implies", response, 2);
                             isLoggedIn = true;
                             loginTest();
+                            document.getElementById('resulttext').innerHTML = "Successfully logged in";
+                            document.getElementById('login').className = 'hidden';
+							document.getElementById('result').className = 'content';
                         }
 
                     }
@@ -116,8 +120,7 @@
 					makeRequestlogin(myURL);
 				}
 				else{
-					alert("Passwords don't match");
-					document.getElementById("passerror").innerHTML = "Passwords did not match, please re-enter passwords";
+					document.getElementById("passerror").innerHTML = "Passwords did not match, please re-enter passwords <br/><br />";
 					document.getElementById("Password").value = '';
 					document.getElementById("Password2").value = '';
 					
@@ -215,17 +218,17 @@
 
       </ul>
     </div>
-	        <div class="hidden" id="notLoggedIn">
+	<div class="hidden" id="notLoggedIn">
 	  <h2>You must be logged in to do that.</h2>
   </div>
     <div id = "login" class="content">
       <h2>Please enter username and password</h2><br/>
       <FORM NAME="form" ACTION="" METHOD="get">
 			<p>
-				User name:
+				User name:<br />
 				<input type="text" name="Username" value=""></input>
 				<br/>
-				<br/>Password
+				<br/>Password <br />
 				<input type="password" name="Password" value=""></input>
 			</p>
 			<br/>
@@ -242,17 +245,17 @@
     <div id = "newlogin" class="hidden">
       <h2>Please enter email, username and password</h2><br/>
 	  <h3 id="passerror" style="color:red"></h3>
-      <FORM NAME="form" ACTION="" METHOD="get">
+      <FORM NAME="newloginform" ACTION="" METHOD="get">
 			<p>
-				Email:
+				Email: <br />
 				<input type = "text" name = "Email" value=""></input><br/><br/>
-				User name:
+				User name: <br />
 				<input type="text" name="Username" value=""></input>
 				<br/>
-				<br/>Password
+				<br/>Password<br />
 				<input type="password" id="Password" name="Password" value=""></input>
 				<br/>
-				<br/> Retype Password
+				<br/> Retype Password<br />
 				<input type="password" id="Password2" name="Password2" value=""></input>
 				<br/>
 				
@@ -264,9 +267,15 @@
 			</p>
 		</FORM>
     </div>
+        <div id="result" class="hidden">
+		<p>
+			<h2 id="resulttext">New user has been created. Please check your email for a verification code.</h2>
+		</p>
+    </div>
 
     <div id="push"></div>
     </div>
+
 
   <div id="footer">
     <p><a href="about.html">About this site</a> &bull; <a href=

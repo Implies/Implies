@@ -9,23 +9,20 @@ print "content-type: text/plain\n\n";
 my $q=new CGI;
 
 my $ASCIIName = $q->param('ASCIIName') || $ARGV[0];
-my $LaTexName = $q->param('LaTexName') || $ARGV[2] || 0;
-my $Reference = $q->param('Reference') || $ARGV[3] || 0;
-my $FreeText = $q->param('FreeText')   || $ARGV[4] || 0;
+my $LaTexName = $q->param('LaTexName') || $ARGV[2] || "";
+my $Reference = $q->param('Reference') || $ARGV[4] || "";
+my $FreeText  = $q->param('FreeText')  || $ARGV[3] || "";
 my $Overwrite = $q->param('Overwrite') || $ARGV[1] || 0;
 
 my $date = `/bin/date`;
 chomp $date;
-open MYFILE, '>>', "/tmp/log.txt" or die $!;
+#open MYFILE, '>>', "/tmp/log.txt" or die $!;
 print MYFILE "$date $ASCIIName\t $LaTexName\t $Reference\t $FreeText\n";
 close MYFILE;
 
-my $dbh=DBI->connect("DBI:mysql:database=Zoo;" 
-             . "mysql_read_default_file=/home/implies/.my.cnf", 
-               "", "", {'AutoCommit'=>0}),
-   or die "Can't connect: $!\n";
+my $dbh=DBI->connect('dbi:mysql:Zoo','root','implies');
 
-my $sql = "select * from Subsystems where sub_Ascii = ?";  # because sub_Ascii is a unique key
+my $sql = "select * from Subsystems where sub_Ascii = ?"; # because sub_Ascii is a unique key
 my $sh = $dbh->prepare($sql);
 my $c = $sh->execute($ASCIIName);
 $sh->finish();
@@ -35,9 +32,9 @@ if ( $c == 0) {
   $sql = "INSERT INTO Subsystems VALUES(?, ?, ?, ?)";
 
   $sh = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
-  $sh->execute($ASCIIName, $LaTexName, $Reference, $FreeText);
+  $sh->execute($ASCIIName, $LaTexName, $FreeText, $Reference);
   print "Added\n";
-} 
+}
 elsif( $Overwrite > 0 )
 {
     $sql = "delete from Subsystems where sub_Ascii = ?";
@@ -46,19 +43,19 @@ elsif( $Overwrite > 0 )
     $sh->finish();
     print ("Deleted\n");
     
-  if ($Overwrite == 1) 
+  if ($Overwrite == 1)
   {
+	print $ASCIIName . $LaTexName . $Reference . $FreeText;  
     $sql = "INSERT INTO Subsystems VALUES(?, ?, ?, ?)";
     $sh = $dbh->prepare($sql) or die "Can't prepare $sql: $dbh->errstrn";
     $sh->execute($ASCIIName, $LaTexName, $Reference, $FreeText) or die "Connection Error: $dbh->errstr";
-    $sh->finish();
     print "Updated\n";
 
   }
 }
 else
 {
-	print "Duplicate\n"
+print "Duplicate\n"
 }
 
 

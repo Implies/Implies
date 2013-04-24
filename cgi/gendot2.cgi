@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 use Data::Dumper;
 
-use strict; 
-use DBI; 
+use strict;
+use DBI;
 use CGI;
 use JSON;
 use DBD::mysql;
@@ -28,12 +28,21 @@ my $filename = $upper. "_". $lower;
 
 
 #my $filename = "$$";
-open (OUTFILE, ">", $dotdir . $filename . $gvext) or die "777 Can't open: $dotdir$filename$gvext  $!\n";   # FIXME
+open (OUTFILE, ">", $dotdir . $filename . $gvext) or die "777 Can't open: $dotdir$filename$gvext $!\n"; # FIXME
 my $count = 0;
+
 my $dbh=DBI->connect("DBI:mysql:database=Zoo;" 
              . "mysql_read_default_file=/home/implies/.my.cnf", 
                "", "", {'AutoCommit'=>0}),
    or die "Can't connect: $!\n";
+
+#my $dbh = DBI->connect('DBI:mysql:Zoo', 'root', 'implies') or
+#die "Couldn't open database: + $DBI::errstr; stopped";
+
+
+
+# my $sth = $dbh->prepare(<<End_SQL) or die "Couldn't prepare statement: + $DBI::errstr; stopped";
+
 
 my $response = {};
 $response->{'upper'} = $upper;
@@ -67,7 +76,8 @@ my $sth = $dbh->prepare($query0);
 
 # Execute the query
 $sth->execute() or die "Couldn't execute statement: $DBI::errstr; stopped";
-$sth->finish();
+#$sth->execute($upper, $upper, $lower, $lower) or die "Couldn't execute statement: $DBI::errstr; stopped";
+
 # Pull from Subsystem Table
 while ( my ($field1, $field2,) = $sth->fetchrow_array() )
 {
@@ -80,16 +90,16 @@ my $sth = $dbh->prepare($query1);
 
 # execute query
 $sth->execute($upper, $upper, $lower, $lower) or die "Couldn't execute statement: $DBI::errstr; stopped";
-$sth->finish();
+
 my $database = {};
 
 # Pull from Theorem Table
 my ($left, $right, $relate, $reason);
 while ( my ($left,$right, $relate, $reason) = $sth->fetchrow_array() )
-{    
+{
   #print "$left $relate $right \n";
 
-  if ( $relate eq 'imply' ) { 
+  if ( $relate eq 'imply' ) {
 
     my $sys = get_system($database, $left);
     $sys->{'children'}->{$right} = 1;
@@ -98,17 +108,17 @@ while ( my ($left,$right, $relate, $reason) = $sth->fetchrow_array() )
     $sys->{'parents'}->{$left} = 1;
   }
 
-} 
+}
 my ($node, $parent, $child);
 
-foreach $node ( keys %$database ) { 
-  foreach $parent ( keys %{$database->{$node}->{'parents'}} ) { 
-    foreach $child ( keys %{$database->{$parent}->{'children'}} ) { 
+foreach $node ( keys %$database ) {
+  foreach $parent ( keys %{$database->{$node}->{'parents'}} ) {
+    foreach $child ( keys %{$database->{$parent}->{'children'}} ) {
 
         #print "N: $node P: $parent C: $child\n";
    
-       if ( exists $database->{$child}->{'children'}->{$node} ) { 
-		#print ".. delete\n";
+       if ( exists $database->{$child}->{'children'}->{$node} ) {
+#print ".. delete\n";
 
            delete $database->{$parent}->{'children'}->{$node};
            delete $database->{$node}->{'parents'}->{$parent};
@@ -121,11 +131,11 @@ foreach $node ( keys %$database ) {
 
 #print Dumper($database);
 
-sub get_system { 
+sub get_system {
   my $database = shift;
   my $system = shift;
 
-  if ( ! ( exists $database->{$system} ) ) { 
+  if ( ! ( exists $database->{$system} ) ) {
     $database->{$system} = {};
     $database->{$system}->{'name'} = $system;
     $database->{$system}->{'latexname'} = $tex{$system};
@@ -138,21 +148,21 @@ sub get_system {
 
 # Graphviz Header
 print OUTFILE "digraph G" . "\n" . "{graph[ratio=.5]" . "\n"
-			 . "\n" . "{node [shape=none, margin=0];" . "\n \n";
+. "\n" . "{node [shape=none, margin=0];" . "\n \n";
 
-for $node ( values $database ) { 
+for $node ( values $database ) {
 
   #print "N " . $node->{'name'} . " L " . $node->{'latexname'} . "\n";
-	
+
   my $key;
   foreach $key (keys $node->{'children'})
   {
-     print OUTFILE "\"" . $node->{'name'} . "\"" . " -> " . "\"" . "$key"  . "\"" . "[weight=0]" . ";" . "\n";
+     print OUTFILE "\"" . $node->{'name'} . "\"" . " -> " . "\"" . "$key" . "\"" . "[weight=0]" . ";" . "\n";
   }
 
-  print OUTFILE "\"" . $node->{'name'} . "\"" 
-		. ' [id ="' . $node->{'name'} . '" '
-        . 'label="' . "\\\\" . "(" . $node->{'latexname'} . "\\\\" . ")" . '" ' 
+  print OUTFILE "\"" . $node->{'name'} . "\""
+. ' [id ="' . $node->{'name'} . '" '
+        . 'label="' . "\\\\" . "(" . $node->{'latexname'} . "\\\\" . ")" . '" '
         . ' href="javascript:void(click_node(' . "'" . $node->{'name'} . "'" . '))"];' . "\n";
 }
 
@@ -165,4 +175,3 @@ system("dot", "-Txdot", $dotdir . $filename . $gvext, "-o", $dotdir . $filename 
 
 # Disconnect from the database
 $dbh->disconnect();
-

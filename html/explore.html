@@ -39,7 +39,9 @@
             var sessionID;
             var st;
             var c_name = "login_implies"
-            var http_request = false;
+            var gendot_request = false;
+            var subsystem_request = false;
+            var cookie_request = false;
             var http_request2 = false;
             var hostname = "http://reu.marshall.edu/~implies/";
             var side;
@@ -53,47 +55,52 @@
             var canvas_name;
             var canvas_height;
 
+			function onload()
+			{
+				listSubSystemRequest(hostname + 'cgi-bin/listsubsystems.cgi');				
+				getCookie();				
+			}
+
             function alertContents()
             { // callback
 
-                if (http_request.readyState == 4)
+                if (cookie_request.readyState == 4)
                 { // javascript code
-                    if (http_request.status == 200)
+                    if (cookie_request.status == 200)
                     { // http code
 
-                        if (http_request.responseText == "Session")
+                        if (cookie_request.responseText == "Session")
                         {
                             isLoggedIn = true;
                             loginTest();
                         }
-                        else if (http_request.responseText == "No session")
+                        else if (cookie_request.responseText == "No session")
                         {
                             isLoggedIn = false;
                             loginTest();
                         }
                         else
                         {
-                            var response = http_request.responseText;
+                            var response = cookie_request.responseText;
                             alert(response);
                             setCookie("login_implies", response, 2);
                             isLoggedIn = true;
                             loginTest();
                         }
-
                     }
                     else
                     {
-                        alert('There was a problem with the request ' + http_request.status);
+                        alert('There was a problem with the request ' + cookie_request.status);
                     }
                 }
             }
 
             function makeRequestGetSession(url)
             {
-                http_request = new XMLHttpRequest();
-                http_request.onreadystatechange = alertContents; // set callback
-                http_request.open('GET', url, true); // initialize
-                http_request.send(null); // run
+                cookie_request = new XMLHttpRequest();
+                cookie_request.onreadystatechange = alertContents; // set callback
+                cookie_request.open('GET', url, true); // initialize
+                cookie_request.send(null); // run
             }
 
             function shownNotLoggedIn()
@@ -145,10 +152,6 @@
                     st.setAttribute('href', 'login.html')
                 }
             }
-            document.observe('dom:loaded', function ()
-            {
-                listSubSystemRequest(hostname + 'cgi-bin/listsubsystems.cgi');
-            });
 
             function click_node(ascii)
             {
@@ -156,21 +159,21 @@
                 MathJax.Hub.Typeset();
             }
 
-            function listSubSystemRequest(url)
+			function listSubSystemRequest(url)
             {
-                http_request = new XMLHttpRequest();
-                http_request.onreadystatechange = getSubSystems; // set callback
-                http_request.open('GET', url, true); // initialize
-                http_request.send(null); // run
+                subsystem_request = new XMLHttpRequest();
+                subsystem_request.onreadystatechange = getSubSystems; // set callback
+                subsystem_request.open('GET', url, true); // initialize
+                subsystem_request.send(null); // run
             }
 
 			function getSubSystems()
             {
-                if(http_request.readyState == 4)
+                if(subsystem_request.readyState == 4)
                 {
-                    if(http_request.status == 200)
+                    if(subsystem_request.status == 200)
                     {
-                        obj = JSON.parse(http_request.responseText);
+                        obj = JSON.parse(subsystem_request.responseText);
                         var tar = document.getElementById("target");
                         var ul = document.createElement('ul');
                         tar.appendChild(ul);
@@ -192,7 +195,7 @@
                     }
                     else
                     {
-                        alert('There was a problem A ' + http_request.status);
+                        alert('There was a problem A ' + subsystem_request.status);
                     }
                 }
             }
@@ -203,6 +206,8 @@
                 {
                     if(http_request2.status == 200)
                     {
+                        //var response = JSON.parse(http_request2.responseText);
+
                         document.getElementById('canviz').style.display = "block";
                         document.getElementById('target').style.display = "none";
                         document.getElementById('select').style.display = "none";
@@ -215,25 +220,12 @@
                         graph.appendChild(newCanviz);
 
                         var filename = upper + "_" + lower;
-                        canviz = new Canviz('canviz', hostname + '/dot/' + filename);
-                        
-                        canvas_count++;
-                        canvas_name = 'canviz_canvas_' + canvas_count.toString();
-                        
-                        canvas_height = $(canvas_name).height;
+                        canviz = new Canviz('canviz', hostname + 'dot/' + filename);
 
                         setTimeout(function ()
                         {
                             MathJax.Hub.Typeset();
                         }, 1000); // HACK
-
-						alert(canvas_name);
-						alert(canvas_height);
-						var newheight = "'" + canvas_height + "px" + "'";
-
-						alert(canvas_name);
-						
-						$('canviz').height = newheight;
 
                         return false;
 
@@ -244,8 +236,8 @@
                     }
                 }
             }
-            
-			function updateGraph()
+
+            function updateGraph()
             {
                 var url = 'http://reu.marshall.edu/~implies/cgi-bin/gendot2.cgi?';
 
@@ -260,17 +252,23 @@
                 http_request2.open('GET', url, true); // initialize
                 http_request2.send(null); // run
                 
-
+                canvas_count++;
+                canvas_name = 'canviz_canvas_' + canvas_count.toString();
                 
-                //alert(canvas_name);
+                alert(canvas_name);
                 
                 //canvas_width = document.getElementById(canvas_name).width;
-                //canvas_height = document.getElementById(canvas_name).height;
+                canvas_height = $(canvas_name).getHeight();
                 //alert(canvas_width + "" + canvas_height);
                 
-                //var newheight = "'" + canvas_height + "px" + "'";
+                var newheight = "'" + canvas_height.toString() + "px" + "'";
                 
-                //document.getElementById('canviz').height = newheight;
+                document.getElementById('graph').style.height = $(canvas_name).getHeight();
+                                        
+                                        setTimeout(function ()
+                        {
+                            MathJax.Hub.Typeset();
+                        }, 1000); // HACK
                 
                 //alert(newheight);
 
@@ -311,7 +309,7 @@
         </script>
     </head>
     
-    <body onload="getCookie()">
+    <body onload="onload()">
         <div id="container">
             <div id="banner">
                  <h1>Reverse Mathematics Zoo</h1>
@@ -331,13 +329,10 @@
 
                         </li>
                         <li> <a href="news.html">News</a>
-
-                            <p id="layoutdims"><a id="status" href="login.html">Log in</a>
-                            </p>
                         </li>
                     </ul>
                 </div>
-                <p id="layoutdims"> <a href="login.html">Log in</a>
+                <p id="layoutdims"> <a id="status" href="login.html">Log in</a>
 
                 </p>
             </div>

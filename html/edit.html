@@ -24,11 +24,7 @@
             var systems = new Array();
             var tar = document.getElementById("target");
             var freetext = new Array();
-            function shownNotLoggedIn()
-            {
-                document.getElementById('notLoggedIn').className = 'content';
-                document.getElementById('content').className = 'hidden';
-            }
+
             function makeRequestSession(url)
             {
                 http_request = new XMLHttpRequest();
@@ -256,18 +252,30 @@
 
             function shownewresult()
             {
-               // document.getElementById('main').className = 'hidden';
-                document.getElementById('newresult').className = 'content';
-                document.getElementById('newsub').className = 'hidden';
-                document.getElementById('target').style.display = "none";
+				if(isLoggedIn){
+					document.getElementById('newresult').className = 'content';
+					document.getElementById('newsub').className = 'hidden';
+					document.getElementById('target').style.display = "none";
+					
+				}
+				
+               else{
+				   showNotLoggedIn();
+			   }
+                
             }
 
             function shownewsub()
             {
-              //  document.getElementById('main').className = 'hidden';
-                document.getElementById('newresult').className = 'hidden';
-                document.getElementById('newsub').className = 'content';
-                document.getElementById('target').style.display = "none";
+              if(isLoggedIn){
+					document.getElementById('newresult').className = 'hidden';
+					document.getElementById('newsub').className = 'content';
+					document.getElementById('target').style.display = "none";
+				}
+				else{
+					showNotLoggedIn();
+				}
+				
             }
 
             function showNotLoggedIn()
@@ -280,15 +288,20 @@
 			
 			function showeditsub()
             {
-				while (document.getElementById('target').hasChildNodes()) 
-				{
-				   document.getElementById('target').removeChild(document.getElementById('target').lastChild);
+				if(isLoggedIn){
+					while (document.getElementById('target').hasChildNodes()) 
+					{
+					   document.getElementById('target').removeChild(document.getElementById('target').lastChild);
+					}
+					
+					document.getElementById('target').appendChild(ul2);
+					shownewsub();
+					document.getElementById('target').style.display = "";	
+					MathJax.Hub.Typeset();
 				}
-				
-				document.getElementById('target').appendChild(ul2);
-				shownewsub();
-				document.getElementById('target').style.display = "";	
-				MathJax.Hub.Typeset();
+				else{
+					showNotLoggedIn();
+				}
 			}
 
 			function makeRequest(url)
@@ -525,7 +538,7 @@
 							<input type="button" id="mybutton_newsub" name="mybutton_newsub" value="Submit" onClick="editsub(this.form, 1)"></input>
 							<input type="button" id="mybutton_editsub" name="mybutton_editsub" value="Edit existing" onClick="showeditsub();"></input>
 							<input type="button" id="mybutton_deletesub" name="mybutton_editsub" value="Delete" onClick="deletesub()"></input>
-							<input type="button" id="mybutton_confirmdeletesub" name="mybutton_confirmdeletesub" value="Confirm Delete?" onClick="editsub(this.form, 2)" disabled></input>
+							<input type="button" id="mybutton_confirmdeletesub" name="mybutton_confirmdeletesub" value="Confirm Delete?" onClick="editsub(this.form, 2)" disabled = "true"></input>
 						</FORM>
                     </div> 
                 </div>      

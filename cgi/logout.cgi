@@ -26,3 +26,4 @@ if ($c == 0){
 else{
 	print "Success";
 }
+$dbh->disconnect();
